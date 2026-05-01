@@ -1,0 +1,1304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Orbital Mechanics Calculator | Romer Industries</title>
+<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg0:#0B0D10;--bg1:#0F1215;--bg2:#141820;--bg3:#1A1F2A;
+  --iv:#F2F1EC;--iv2:#A8A79E;--iv3:#5A5952;
+  --cu:#B87333;--go:#C9A24A;--te:#4EC5C1;
+  --te2:rgba(78,197,193,.15);--te3:rgba(78,197,193,.07);
+  --cy:#00E5FF;--bd:#1E2530;--bh:#2A3545;
+  --dn:#E8896A;--wn:#C9A24A;
+  --fh:'Inter',system-ui,sans-serif;
+  --fd:'JetBrains Mono',ui-monospace,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--fh);background:var(--bg0);color:var(--iv);min-height:100vh;font-size:14px;line-height:1.5}
+/* OPS HEADER */
+.oh{background:var(--bg0);border-bottom:2px solid var(--te);width:100%}
+.oh-h{background:var(--bg1);padding:.5rem 1rem;display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;border-bottom:1px solid var(--bd)}
+.oh-ic{font-size:1rem;color:var(--te)}
+.oh-t{flex:1;min-width:160px}
+.oh-t h2{font-size:.78rem;font-weight:700;color:var(--te);letter-spacing:.08em;text-transform:uppercase;margin:0}
+.oh-t p{font-size:.6rem;color:var(--iv3);margin:0;font-family:var(--fd)}
+.oh-f{display:flex;gap:.22rem;flex-wrap:wrap}
+.oh-f a{padding:.16rem .38rem;border-radius:3px;font-size:.6rem;font-weight:600;text-decoration:none;color:var(--iv3);background:var(--bg2);border:1px solid var(--bd);transition:all .15s}
+.oh-f a:hover{color:var(--iv);border-color:var(--iv3)}
+.oh-f a.a1{color:#00d4ff;border-color:rgba(0,212,255,.35)}
+.oh-f a.a2{color:#7b2cbf;border-color:rgba(123,44,191,.35)}
+.oh-f a.a3{color:#ff3366;border-color:rgba(255,51,102,.35)}
+.oh-f a.a4{color:#ffaa00;border-color:rgba(255,170,0,.35)}
+.oh-f a.a5{color:#00ff88;border-color:rgba(0,255,136,.35)}
+.oh-f a.a6{color:#ff6b9d;border-color:rgba(255,107,157,.35)}
+.oh-f a.al{color:var(--cu);border-color:rgba(184,115,51,.35)}
+.oh-f a.ad{color:var(--go);border-color:rgba(201,162,74,.35)}
+.oh-f a.on{color:var(--te);border-color:var(--te);background:var(--te2)}
+.oh-m{background:var(--bg2);padding:.18rem 1rem;display:flex;align-items:center;gap:.7rem;font-size:.58rem;color:var(--iv3);flex-wrap:wrap;font-family:var(--fd)}
+.oh-pl{padding:.04rem .26rem;border-radius:2px;font-size:.56rem;font-weight:700;background:var(--te2);color:var(--te)}
+/* LAYOUT */
+.cc{max-width:1460px;margin:0 auto;padding:.9rem}
+.ch{padding:.65rem .9rem;margin-bottom:.9rem;border-bottom:1px solid var(--bd)}
+.ch h1{font-size:1.3rem;font-weight:700;color:var(--iv);letter-spacing:.02em}
+.ch .sub{font-size:.68rem;color:var(--iv3);font-family:var(--fd);margin-top:.18rem}
+.br{display:flex;gap:.4rem;margin-top:.35rem;flex-wrap:wrap}
+.bge{padding:.08rem .36rem;border-radius:3px;font-size:.58rem;font-weight:700;font-family:var(--fd);background:var(--bg2);border:1px solid var(--bd);color:var(--iv3)}
+.bge.te{color:var(--te);border-color:rgba(78,197,193,.28);background:var(--te3)}
+.bge.go{color:var(--go);border-color:rgba(201,162,74,.25)}
+.bge.cu{color:var(--cu);border-color:rgba(184,115,51,.25)}
+.mg{display:grid;grid-template-columns:300px 1fr;gap:.9rem}
+@media(max-width:880px){.mg{grid-template-columns:1fr}}
+.pn{background:var(--bg1);border:1px solid var(--bd);border-radius:5px;overflow:hidden}
+.pt{font-size:.67rem;font-weight:700;color:var(--te);letter-spacing:.07em;text-transform:uppercase;padding:.52rem .85rem;background:var(--bg2);border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:.4rem}
+.pt::before{content:'';width:3px;height:11px;background:var(--te);border-radius:2px;flex-shrink:0}
+.pb{padding:.65rem .85rem}
+/* FORMS */
+.fr{margin-bottom:.58rem}
+.fr label{display:block;font-size:.62rem;font-weight:600;color:var(--iv2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.25rem}
+.fr input,.fr select{width:100%;padding:.42rem .6rem;background:var(--bg0);border:1px solid var(--bh);border-radius:4px;color:var(--iv);font-family:var(--fd);font-size:.75rem;transition:border-color .2s}
+.fr input:focus,.fr select:focus{outline:none;border-color:var(--te);box-shadow:0 0 0 2px rgba(78,197,193,.1)}
+.fr select option{background:var(--bg1)}
+.hi{font-size:.57rem;color:var(--iv3);margin-top:.18rem;font-family:var(--fd)}
+.fs{margin-bottom:.8rem;padding-bottom:.8rem;border-bottom:1px solid var(--bd)}
+.fs:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.fst{font-size:.6rem;font-weight:700;color:var(--cu);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.42rem}
+.f2{display:grid;grid-template-columns:1fr 1fr;gap:.4rem}
+/* BUTTONS */
+.btn{padding:.4rem .8rem;border:1px solid var(--bh);border-radius:4px;font-family:var(--fh);font-size:.7rem;font-weight:600;cursor:pointer;transition:all .2s;text-transform:uppercase;letter-spacing:.04em}
+.bp{background:var(--te);color:var(--bg0);border-color:var(--te)}
+.bp:hover{background:#5FD8D4;box-shadow:0 0 10px rgba(78,197,193,.3)}
+.bs{background:var(--bg2);color:var(--iv2);border-color:var(--bh)}
+.bs:hover{border-color:var(--te);color:var(--te)}
+.bc{background:transparent;color:var(--cu);border-color:var(--cu)}
+.bc:hover{background:rgba(184,115,51,.1)}
+.bg{background:transparent;color:var(--go);border-color:var(--go)}
+.bg:hover{background:rgba(201,162,74,.08)}
+.bsm{padding:.25rem .55rem;font-size:.62rem}
+.bgrp{display:flex;gap:.35rem;flex-wrap:wrap;margin-top:.55rem}
+/* PRESETS */
+.prg{display:grid;grid-template-columns:1fr 1fr;gap:.35rem;margin-top:.35rem}
+.prb{padding:.32rem .45rem;background:var(--bg3);border:1px solid var(--bd);border-radius:3px;color:var(--iv3);font-size:.6rem;font-weight:600;cursor:pointer;text-align:center;transition:all .2s;font-family:var(--fh)}
+.prb:hover{border-color:var(--go);color:var(--go)}
+/* TABS */
+.tb{display:flex;border-bottom:1px solid var(--bd);background:var(--bg2)}
+.tbb{padding:.42rem .72rem;font-size:.65rem;font-weight:600;color:var(--iv3);background:transparent;border:none;border-bottom:2px solid transparent;cursor:pointer;transition:all .2s;text-transform:uppercase;letter-spacing:.04em;font-family:var(--fh)}
+.tbb:hover{color:var(--iv)}
+.tbb.ac{color:var(--te);border-bottom-color:var(--te)}
+.tc{display:none;padding:.65rem}
+.tc.ac{display:block}
+/* STATS */
+.sg{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:.42rem;margin-bottom:.65rem}
+.sc{background:var(--bg2);border:1px solid var(--bd);border-radius:4px;padding:.48rem .6rem;position:relative;overflow:hidden}
+.sc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--te)}
+.sc.w::before{background:var(--go)}
+.sc.d::before{background:var(--dn)}
+.sl{font-size:.56rem;color:var(--iv3);text-transform:uppercase;letter-spacing:.04em;font-family:var(--fd);margin-bottom:.2rem}
+.sv{font-size:1rem;font-weight:700;color:var(--iv);font-family:var(--fd);line-height:1.1}
+.su{font-size:.58rem;color:var(--iv3);font-weight:400}
+.sv.te{color:var(--te)}.sv.go{color:var(--go)}.sv.cu{color:var(--cu)}.sv.ok{color:#4EC5C1}.sv.wn{color:var(--go)}.sv.dn{color:var(--dn)}
+/* DATA */
+.dp{background:var(--bg0);border:1px solid var(--bd);border-radius:4px;padding:.55rem;font-family:var(--fd);font-size:.67rem;color:var(--te);line-height:1.6;overflow-x:auto;white-space:pre-wrap;max-height:260px;overflow-y:auto}
+.dp.iv{color:var(--iv2)}
+.sb{background:var(--bg2);border:1px solid var(--bd);border-left:3px solid var(--te);padding:.45rem .7rem;font-family:var(--fd);font-size:.67rem;color:var(--te);border-radius:4px;margin-bottom:.58rem;line-height:1.5}
+/* PLOTS */
+.pw{background:var(--bg0);border:1px solid var(--bd);border-radius:4px;width:100%;min-height:360px}
+.pws{background:var(--bg0);border:1px solid var(--bd);border-radius:4px;width:100%;min-height:280px}
+/* TABLE */
+.ct{width:100%;border-collapse:collapse;font-size:.65rem;font-family:var(--fd)}
+.ct th{background:var(--bg2);color:var(--cu);text-transform:uppercase;letter-spacing:.04em;padding:.36rem .55rem;border:1px solid var(--bd);text-align:left;font-size:.58rem}
+.ct td{padding:.3rem .55rem;border:1px solid var(--bd);color:var(--iv2)}
+.ct tr:hover td{background:var(--bg3);color:var(--iv)}
+.ct td.hi{color:var(--te)}.ct td.wi{color:var(--go)}
+/* SWEEP */
+.swg{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.45rem;margin-bottom:.58rem}
+/* DATASPACE SEND */
+.dsp{background:var(--bg2);border:1px solid var(--bd);border-top:2px solid var(--go);border-radius:4px;padding:.58rem .72rem;margin-top:.65rem}
+.dspt{font-size:.6rem;font-weight:700;color:var(--go);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.42rem}
+.dsg{display:grid;grid-template-columns:repeat(auto-fit,minmax(115px,1fr));gap:.3rem}
+.dsb{padding:.28rem .45rem;border-radius:3px;font-size:.6rem;font-weight:700;cursor:pointer;border:1px solid;text-align:center;transition:all .2s;font-family:var(--fh);text-transform:uppercase;letter-spacing:.02em}
+.dsb:hover{opacity:.8;transform:translateY(-1px)}
+.dw1{color:#00d4ff;border-color:rgba(0,212,255,.35);background:rgba(0,212,255,.05)}
+.dw2{color:#7b2cbf;border-color:rgba(123,44,191,.3);background:rgba(123,44,191,.05)}
+.dw3{color:#ff3366;border-color:rgba(255,51,102,.3);background:rgba(255,51,102,.05)}
+.dw4{color:#ffaa00;border-color:rgba(255,170,0,.3);background:rgba(255,170,0,.05)}
+.dw5{color:#00ff88;border-color:rgba(0,255,136,.3);background:rgba(0,255,136,.05)}
+.dw6{color:#ff6b9d;border-color:rgba(255,107,157,.3);background:rgba(255,107,157,.05)}
+.dex{color:var(--te);border-color:rgba(78,197,193,.35);background:var(--te3)}
+.dgm{color:var(--cu);border-color:rgba(184,115,51,.35);background:rgba(184,115,51,.05)}
+.dsc{font-size:.58rem;color:var(--te);margin-top:.35rem;font-family:var(--fd);min-height:.8rem}
+/* ALERTS */
+.al{padding:.45rem .65rem;border-radius:4px;font-size:.68rem;margin-bottom:.58rem;border-left:3px solid}
+.ali{background:var(--te3);border-color:var(--te);color:var(--te)}
+.alw{background:rgba(201,162,74,.07);border-color:var(--go);color:var(--go)}
+/* STATUS */
+.stb{padding:.28rem .65rem;background:var(--bg2);border-top:1px solid var(--bd);display:flex;align-items:center;gap:.65rem;font-size:.58rem;color:var(--iv3);font-family:var(--fd);flex-wrap:wrap}
+.std{width:7px;height:7px;border-radius:50%;background:var(--te);animation:pu 2s infinite;flex-shrink:0}
+.std.id{background:var(--iv3);animation:none}
+@keyframes pu{0%,100%{opacity:1}50%{opacity:.35}}
+/* FOOTER */
+.of{background:var(--bg1);padding:.28rem .9rem;display:flex;align-items:center;gap:.65rem;border-top:1px solid var(--bd);flex-wrap:wrap}
+.ofl{font-size:.58rem;color:var(--iv3);font-family:var(--fd)}
+.olb{padding:.18rem .5rem;border-radius:3px;font-size:.6rem;font-weight:700;text-decoration:none;cursor:pointer;border:1px solid;transition:all .2s;font-family:var(--fh)}
+.olb.tl{border-color:var(--te);color:var(--te);background:var(--te3)}
+.olb.tl:hover{background:var(--te2)}
+.olb.gl{border-color:var(--go);color:var(--go);background:rgba(201,162,74,.05)}
+.olb.cl{border-color:var(--cu);color:var(--cu);background:rgba(184,115,51,.04)}
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:var(--bg0)}
+::-webkit-scrollbar-thumb{background:var(--bh);border-radius:2px}
+@media(max-width:680px){.f2{grid-template-columns:1fr}.sg{grid-template-columns:repeat(2,1fr)}.dsg{grid-template-columns:repeat(2,1fr)}.prg{grid-template-columns:1fr 1fr}}
+</style></head><body>
+
+<div class="oh">
+<div class="oh-h">
+  <div class="oh-ic">&#9881;</div>
+  <div class="oh-t">
+    <h2>ORBITAL MECHANICS CALCULATOR </h2>
+    <p>Keplerian propagation &middot; J2 perturbations &middot; Transfer &Delta;V &middot; Sweep analysis &middot; Universal tool /calc/orbital</p>
+  </div>
+  <div class="oh-f">
+      <a href="/calc/orbital" class="on">ORB</a>
+      <a href="/calc/launch">LW</a>
+      <a href="/calc/magnetostatics">MAG</a>
+      <a href="/calc/energy">PWR</a>
+      <a href="/calc/fluids">FLD</a>
+      <a href="/sims/rfs-extraction">RFS</a>
+      <a href="/sim/node">EMFF</a>
+      <a href="/sim/fields">EMF</a>
+      <a href="/sim/re-entry">ENTRY</a>
+      <a href="/w1/data" class="a1">W1</a>
+      <a href="/w2/data" class="a2">W2</a>
+      <a href="/w3/data" class="a3">W3</a>
+      <a href="/w4/data" class="a4">W4</a>
+      <a href="/w5/data" class="a5">W5</a>
+      <a href="/w6/data" class="a6">W6</a>
+      <a href="/data/achilles">ACH</a>
+      <a href="/library" class="al">LIB</a>
+      <a href="/gmat">GMAT</a>
+      <a href="/dash" class="ad">DASH</a>
+    </div>
+    <div class="br">
+      <span class="bge te"></span>
+      <span class="bge">SI Units</span>
+      <span class="bge cu">Universal Tool &mdash; W1&ndash;W6 callable</span>
+      <span class="bge go">Plotly Visualisation</span>
+      <span class="bge">JetBrains Mono &middot; Inter</span>
+    </div>
+  </div>
+
+  <div class="mg">
+    <!-- LEFT CONFIG -->
+    <div>
+      <div class="pn">
+        <div class="pt">Configuration</div>
+        <div class="pb">
+
+          <div class="fs">
+            <div class="fst">Central Body</div>
+            <div class="fr">
+              <label>Body Preset</label>
+              <select id="body" onchange="onBodyChange()">
+                <option value="Earth">Earth (&#956; = 3.986&times;10&sup1;&sup4; m&sup3;/s&sup2;)</option>
+                <option value="Mars">Mars (&#956; = 4.283&times;10&sup1;&sup3; m&sup3;/s&sup2;)</option>
+                <option value="Moon">Moon (&#956; = 4.905&times;10&sup1;&sup2; m&sup3;/s&sup2;)</option>
+                <option value="Sun">Sun (&#956; = 1.327&times;10&sup2;&sup0; m&sup3;/s&sup2;)</option>
+                <option value="Custom">Custom</option>
+              </select>
+            </div>
+            <div class="f2" id="cbf" style="display:none">
+              <div class="fr"><label>&#956; (m&sup3;/s&sup2;)</label><input type="number" id="mu" value="3.986004418e14" step="any"></div>
+              <div class="fr"><label>Radius (m)</label><input type="number" id="radius" value="6378137" step="any"></div>
+            </div>
+            <div class="fr">
+              <label style="display:flex;align-items:center;gap:.35rem;font-size:.62rem;color:var(--iv2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:0">
+                <input type="checkbox" id="useJ2" checked style="width:auto;margin-right:.2rem"> Enable J2 Perturbation
+              </label>
+              <div class="hi">Nodal precession from equatorial oblateness (J2 = 0.001083 Earth default)</div>
+            </div>
+          </div>
+
+          <div class="fs">
+            <div class="fst">Orbital Presets</div>
+            <div class="prg">
+              <button class="prb" onclick="loadPreset('LEO')">LEO 400 km</button>
+              <button class="prb" onclick="loadPreset('MEO')">MEO 20,200 km</button>
+              <button class="prb" onclick="loadPreset('GEO')">GEO 35,786 km</button>
+              <button class="prb" onclick="loadPreset('HEO')">HEO 400&times;36k</button>
+              <button class="prb" onclick="loadPreset('SSO')">SSO Dawn</button>
+              <button class="prb" onclick="loadPreset('Molniya')">Molniya</button>
+              <button class="prb" onclick="loadPreset('Mars_LLO')">Mars LLO</button>
+              <button class="prb" onclick="loadPreset('Asteroid')">Asteroid Belt</button>
+            </div>
+          </div>
+
+          <div class="fs">
+            <div class="fst">Initial State</div>
+            <div class="fr">
+              <label>State Representation</label>
+              <select id="stateMode" onchange="toggleStateMode()">
+                <option value="keplerian">Keplerian Elements</option>
+                <option value="cartesian">Cartesian (r, v)</option>
+              </select>
+            </div>
+            <div id="keplerianInputs">
+              <div class="f2">
+                <div class="fr"><label>a &mdash; Semi-major axis (m)</label><input type="number" id="a" value="6778137" step="1000"></div>
+                <div class="fr"><label>e &mdash; Eccentricity</label><input type="number" id="e" value="0.0" step="0.001" min="0" max="0.999"></div>
+                <div class="fr"><label>i &mdash; Inclination (&deg;)</label><input type="number" id="i" value="51.6" step="0.1"></div>
+                <div class="fr"><label>&Omega; &mdash; RAAN (&deg;)</label><input type="number" id="raan" value="0" step="0.1"></div>
+                <div class="fr"><label>&omega; &mdash; Arg. Perigee (&deg;)</label><input type="number" id="argp" value="0" step="0.1"></div>
+                <div class="fr"><label>&nu; &mdash; True Anomaly (&deg;)</label><input type="number" id="ta" value="0" step="0.1"></div>
+              </div>
+            </div>
+            <div id="cartesianInputs" style="display:none">
+              <div class="f2">
+                <div class="fr"><label>rx (m)</label><input type="number" id="rx" value="6778137" step="1000"></div>
+                <div class="fr"><label>ry (m)</label><input type="number" id="ry" value="0" step="1000"></div>
+                <div class="fr"><label>rz (m)</label><input type="number" id="rz" value="0" step="1000"></div>
+                <div class="fr"><label>vx (m/s)</label><input type="number" id="vx" value="0" step="10"></div>
+                <div class="fr"><label>vy (m/s)</label><input type="number" id="vy" value="7784" step="10"></div>
+                <div class="fr"><label>vz (m/s)</label><input type="number" id="vz" value="0" step="10"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="fs">
+            <div class="fst">Propagation</div>
+            <div class="f2">
+              <div class="fr"><label>Duration (s)</label><input type="number" id="duration" value="86400" step="3600"><div class="hi">86400 s = 1 day</div></div>
+              <div class="fr"><label>Time step (s)</label><input type="number" id="step" value="60" step="10"></div>
+            </div>
+          </div>
+
+          <div class="fs">
+            <div class="fst">Transfer Analysis</div>
+            <div class="fr">
+              <label>Transfer Type</label>
+              <select id="transferType" onchange="toggleTransfer()">
+                <option value="hohmann">Hohmann (2-burn)</option>
+                <option value="bielliptic">Bi-elliptic (3-burn)</option>
+              </select>
+            </div>
+            <div class="f2">
+              <div class="fr"><label>Target orbit a&#8322; (m)</label><input type="number" id="a2" value="42164000" step="10000"></div>
+              <div class="fr" id="bieg" style="display:none"><label>Intermediate a&#7522; (m)</label><input type="number" id="a_int" value="100000000" step="1000000"></div>
+            </div>
+          </div>
+
+          <div class="bgrp">
+            <button class="btn bp" onclick="runCalculator()">&#9654; Propagate &amp; Analyse</button>
+            <button class="btn bs" onclick="addToComparison()">+ Compare</button>
+            <button class="btn bc bsm" onclick="clearAll()">Clear</button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT RESULTS -->
+    <div>
+      <div class="pn">
+        <div class="tb">
+          <button class="tbb ac" onclick="switchTab('orbit')">Orbit</button>
+          <button class="tbb" onclick="switchTab('trajectory')">Trajectory</button>
+          <button class="tbb" onclick="switchTab('transfer')">Transfer &Delta;V</button>
+          <button class="tbb" onclick="switchTab('compare')">Compare</button>
+          <button class="tbb" onclick="switchTab('sweep')">Sweep</button>
+          <button class="tbb" onclick="switchTab('export')">Export</button>
+        </div>
+
+        <div id="tab-orbit" class="tc ac">
+          <div class="sb" id="sbOrbit">Run calculation to see orbital summary.</div>
+          <div class="sg" id="sgOrbit"></div>
+          <div id="pOrbit" class="pw"></div>
+        </div>
+
+        <div id="tab-trajectory" class="tc">
+          <div class="sb" id="sbTraj">Run calculation to see trajectory data.</div>
+          <div class="sg" id="sgTraj"></div>
+          <div id="pTraj" class="pw"></div>
+          <div style="margin-top:.58rem">
+            <div class="pt" style="border-radius:3px 3px 0 0;margin-bottom:0">State Vectors at Key Points</div>
+            <div class="dp" id="stateVec">&#8212;</div>
+          </div>
+        </div>
+
+        <div id="tab-transfer" class="tc">
+          <div class="sb" id="sbTx">Run calculation to see transfer analysis.</div>
+          <div class="sg" id="sgTx"></div>
+          <div id="pTx" class="pws"></div>
+          <div style="margin-top:.58rem">
+            <div class="pt" style="border-radius:3px 3px 0 0;margin-bottom:0">Burn Sequence</div>
+            <div class="dp" id="burnSeq">&#8212;</div>
+          </div>
+        </div>
+
+        <div id="tab-compare" class="tc">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.58rem">
+            <span style="font-size:.65rem;color:var(--iv3)">Multi-orbit comparison. Add configurations via the left panel.</span>
+            <div style="display:flex;gap:.3rem">
+              <button class="btn bs bsm" onclick="clearComparison()">Clear</button>
+              <button class="btn bg bsm" onclick="exportComparison()">CSV</button>
+            </div>
+          </div>
+          <div id="pComp" class="pws" style="margin-bottom:.58rem"></div>
+          <div style="overflow-x:auto">
+            <table class="ct">
+              <thead><tr><th>#</th><th>Label</th><th>a (km)</th><th>e</th><th>i (&deg;)</th><th>Period (min)</th><th>v&#7488; (m/s)</th><th>&Delta;V&rarr;GEO (m/s)</th><th></th></tr></thead>
+              <tbody id="compBody"><tr><td colspan="9" style="color:var(--iv3);text-align:center;padding:.65rem">No orbits added yet</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div id="tab-sweep" class="tc">
+          <div class="al ali">Parameter sweep &mdash; vary one variable across a range and map system-wide response. Results route to active workspace dataspace.</div>
+          <div class="swg">
+            <div class="fr">
+              <label>Sweep Variable</label>
+              <select id="sweepVar" onchange="updateSweepRange()">
+                <option value="altitude">Altitude (km)</option>
+                <option value="eccentricity">Eccentricity</option>
+                <option value="inclination">Inclination (&deg;)</option>
+                <option value="sma">Semi-major Axis (km)</option>
+                <option value="dv_target">Target Alt &Delta;V (km)</option>
+                <option value="transfer_ratio">Transfer Ratio a&#8322;/a&#8321;</option>
+                <option value="j2_drift">J2 Nodal Drift vs Alt</option>
+              </select>
+            </div>
+            <div class="fr"><label>Range Start</label><input type="number" id="swStart" value="300" step="any"></div>
+            <div class="fr"><label>Range End</label><input type="number" id="swEnd" value="40000" step="any"></div>
+            <div class="fr"><label>Steps</label><input type="number" id="swSteps" value="35" min="5" max="100"></div>
+          </div>
+          <div class="fr">
+            <label>Output Metrics</label>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.25rem;margin-top:.28rem">
+              <label style="display:flex;align-items:center;gap:.3rem;font-size:.65rem;color:var(--iv2);text-transform:none;letter-spacing:0"><input type="checkbox" id="sm_per" checked style="width:auto"> Period</label>
+              <label style="display:flex;align-items:center;gap:.3rem;font-size:.65rem;color:var(--iv2);text-transform:none;letter-spacing:0"><input type="checkbox" id="sm_vc" checked style="width:auto"> Circular Velocity</label>
+              <label style="display:flex;align-items:center;gap:.3rem;font-size:.65rem;color:var(--iv2);text-transform:none;letter-spacing:0"><input type="checkbox" id="sm_dv" checked style="width:auto"> &Delta;V to GEO</label>
+              <label style="display:flex;align-items:center;gap:.3rem;font-size:.65rem;color:var(--iv2);text-transform:none;letter-spacing:0"><input type="checkbox" id="sm_j2" checked style="width:auto"> RAAN Drift (&deg;/day)</label>
+              <label style="display:flex;align-items:center;gap:.3rem;font-size:.65rem;color:var(--iv2);text-transform:none;letter-spacing:0"><input type="checkbox" id="sm_en" checked style="width:auto"> Specific Energy</label>
+              <label style="display:flex;align-items:center;gap:.3rem;font-size:.65rem;color:var(--iv2);text-transform:none;letter-spacing:0"><input type="checkbox" id="sm_hi" style="width:auto"> Hill Sphere</label>
+            </div>
+          </div>
+          <div class="bgrp">
+            <button class="btn bp" onclick="runSweep()">&#9654; Run Sweep</button>
+            <button class="btn bg bsm" onclick="exportSweepCSV()">Export CSV</button>
+            <button class="btn bc bsm" onclick="sendSweepToDS()">&#8594; Send to Dataspace</button>
+          </div>
+          <div id="pSweep" class="pw" style="margin-top:.58rem;min-height:320px"></div>
+          <div style="margin-top:.42rem">
+            <div class="pt" style="border-radius:3px 3px 0 0;margin-bottom:0">Sweep Statistics</div>
+            <div class="dp iv" id="swStats">Run sweep to see statistical summary.</div>
+          </div>
+        </div>
+
+        <div id="tab-export" class="tc">
+          <div class="al ali">All exports include full state manifest. GMAT scripts are ready for /data/w5 integration. Workspace sends route to localStorage (Achilles-compatible &mdash; no duplicate data layers).</div>
+          <div class="pt" style="border-radius:3px;margin-bottom:.42rem">File Exports</div>
+          <div class="bgrp" style="margin-bottom:.75rem">
+            <button class="btn bs bsm" onclick="exportJSON()">JSON</button>
+            <button class="btn bs bsm" onclick="exportCSV()">CSV</button>
+            <button class="btn bs bsm" onclick="exportTXT()">TXT Manifest</button>
+            <button class="btn bs bsm" onclick="exportYAML()">YAML</button>
+            <button class="btn bc bsm" onclick="exportGMAT()">GMAT Script</button>
+            <button class="btn bg bsm" onclick="exportPNG()">Plot PNG</button>
+          </div>
+          <div class="dsp">
+            <div class="dspt">&#8594; Send to Workspace Dataspace</div>
+            <div style="font-size:.6rem;color:var(--iv3);margin-bottom:.42rem;font-family:var(--fd)">Routes results to Achilles localStorage layer. Single record per workspace &mdash; no duplicate data sets.</div>
+            <div class="dsg">
+              <button class="dsb dw1" onclick="sendToDS('W1')">&#8594; W1 Deposit</button>
+              <button class="dsb dw2" onclick="sendToDS('W2')">&#8594; W2 Luke II</button>
+              <button class="dsb dw3" onclick="sendToDS('W3')">&#8594; W3 RFS/EMFF</button>
+              <button class="dsb dw4" onclick="sendToDS('W4')">&#8594; W4 Supply Chain</button>
+              <button class="dsb dw5" onclick="sendToDS('W5')">&#8594; W5 Mission</button>
+              <button class="dsb dw6" onclick="sendToDS('W6')">&#8594; W6 Asset Lib</button>
+            </div>
+            <div class="dsc" id="dsConf">&#8212;</div>
+          </div>
+          <div style="margin-top:.65rem">
+            <div class="pt" style="border-radius:3px 3px 0 0;margin-bottom:0">Export Preview</div>
+            <div class="dp" id="expInfo">Select format above to preview export content.</div>
+          </div>
+        </div>
+
+      </div>
+      <div class="stb">
+        <span class="std id" id="stDot"></span>
+        <span id="stMsg">Ready &mdash; configure parameters and run calculation</span>
+        <span style="margin-left:auto;font-size:.58rem;color:var(--iv3);font-family:var(--fd)" id="stTime"></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="of">
+  <span class="ofl">Universal Calculator | Callable by all workspaces:</span>
+  <a href="/w5/data" class="olb tl">W5 DATASPACE</a>
+  <a href="/w4/data" class="olb gl">W4 DATASPACE</a>
+  <a href="/dash" class="olb cl">ACHILLES DASH</a>
+  <span id="bcSt" style="margin-left:auto;font-size:.58rem;color:var(--iv3);font-family:var(--fd)">&#9679; initialising beacon...</span>
+</div>
+<script>
+// ============================================================
+// ORBITAL MECHANICS CALCULATOR 
+// Romer Industries / EMASSC
+// Carbon Black theme | Römer Scientific Palette
+// Universal: callable by all workspaces W1-W6
+// ============================================================
+
+const BODIES = {
+  Earth:{ mu:3.986004418e14, radius:6378137, J2:0.00108263, name:"Earth", sidereal:86164.0905 },
+  Mars:{ mu:4.282837e13, radius:3389500, J2:0.001964, name:"Mars", sidereal:88642.6848 },
+  Moon:{ mu:4.9048695e12, radius:1737400, J2:0.0002027, name:"Moon", sidereal:2360591.6 },
+  Sun:{ mu:1.32712440018e20, radius:695700000, J2:0.0, name:"Sun", sidereal:2164320000 },
+  Custom:{ mu:3.986004418e14, radius:6378137, J2:0.00108263, name:"Custom", sidereal:86164.0905 }
+};
+
+const PRESETS = {
+  LEO:{ a:6778137, e:0.0, i:51.6, raan:0, argp:0, ta:0, dur:5400, step:30 },
+  MEO:{ a:26560000, e:0.01, i:55.0, raan:0, argp:0, ta:0, dur:43200, step:120 },
+  GEO:{ a:42164000, e:0.0, i:0.0, raan:0, argp:0, ta:0, dur:86400, step:300 },
+  HEO:{ a:21578500, e:0.74, i:63.4, raan:0, argp:270, ta:0, dur:43200, step:120 },
+  SSO:{ a:6971000, e:0.001, i:97.8, raan:0, argp:0, ta:0, dur:5676, step:30 },
+  Molniya:{ a:26560000, e:0.74, i:63.4, raan:0, argp:270, ta:0, dur:43200, step:120 },
+  Mars_LLO:{ a:3589500, e:0.005, i:45.0, raan:0, argp:0, ta:0, dur:21600, step:60 },
+  Asteroid:{ a:414000000000, e:0.07, i:5.0, raan:80, argp:73, ta:0, dur:315360000, step:86400 }
+};
+
+const D2R = Math.PI/180, R2D = 180/Math.PI;
+let lastResult = null, compList = [], sweepResult = null;
+
+// ── MATH HELPERS ──
+function keplerian2cartesian(a,e,i_deg,raan_deg,argp_deg,ta_deg,mu){
+  const i=i_deg*D2R, raan=raan_deg*D2R, argp=argp_deg*D2R, ta=ta_deg*D2R;
+  const p = a*(1-e*e);
+  const r_s = p/(1+e*Math.cos(ta));
+  const x_s = r_s*Math.cos(ta), y_s = r_s*Math.sin(ta);
+  const vx_s = -Math.sqrt(mu/p)*Math.sin(ta);
+  const vy_s = Math.sqrt(mu/p)*(e+Math.cos(ta));
+  const cos_r=Math.cos(raan),sin_r=Math.sin(raan);
+  const cos_a=Math.cos(argp),sin_a=Math.sin(argp);
+  const cos_i=Math.cos(i),sin_i=Math.sin(i);
+  const Qxx=cos_r*cos_a-sin_r*sin_a*cos_i, Qxy=-cos_r*sin_a-sin_r*cos_a*cos_i;
+  const Qyx=sin_r*cos_a+cos_r*sin_a*cos_i, Qyy=-sin_r*sin_a+cos_r*cos_a*cos_i;
+  const Qzx=sin_a*sin_i, Qzy=cos_a*sin_i;
+  return {
+    rx:Qxx*x_s+Qxy*y_s, ry:Qyx*x_s+Qyy*y_s, rz:Qzx*x_s+Qzy*y_s,
+    vx:Qxx*vx_s+Qxy*vy_s, vy:Qyx*vx_s+Qyy*vy_s, vz:Qzx*vx_s+Qzy*vy_s
+  };
+}
+
+function cartesian2keplerian(rx,ry,rz,vx,vy,vz,mu){
+  const r=Math.sqrt(rx*rx+ry*ry+rz*rz);
+  const v=Math.sqrt(vx*vx+vy*vy+vz*vz);
+  const eps=0.5*v*v - mu/r;
+  const a_k=-mu/(2*eps);
+  const hx=ry*vz-rz*vy, hy=rz*vx-rx*vz, hz=rx*vy-ry*vx;
+  const h=Math.sqrt(hx*hx+hy*hy+hz*hz);
+  const ex=(vy*hz-vz*hy)/mu - rx/r;
+  const ey=(vz*hx-vx*hz)/mu - ry/r;
+  const ez=(vx*hy-vy*hx)/mu - rz/r;
+  const e_k=Math.sqrt(ex*ex+ey*ey+ez*ez);
+  const i_k=Math.acos(Math.max(-1,Math.min(1,hz/h)))*R2D;
+  const nx=-hy, ny=hx;
+  const n=Math.sqrt(nx*nx+ny*ny);
+  let raan_k=n>1e-10?Math.acos(Math.max(-1,Math.min(1,nx/n)))*R2D:0;
+  if(ny<0) raan_k=360-raan_k;
+  let argp_k=0;
+  if(n>1e-10&&e_k>1e-10){
+    argp_k=Math.acos(Math.max(-1,Math.min(1,(nx*ex+ny*ey)/(n*e_k))))*R2D;
+    if(ez<0) argp_k=360-argp_k;
+  }
+  const rdotv=rx*vx+ry*vy+rz*vz;
+  let ta_k=e_k>1e-10?Math.acos(Math.max(-1,Math.min(1,(ex*rx+ey*ry+ez*rz)/(e_k*r))))*R2D:0;
+  if(rdotv<0) ta_k=360-ta_k;
+  return {a:a_k, e:e_k, i:i_k, raan:raan_k, argp:argp_k, ta:ta_k};
+}
+
+function propagateKepler(rx0,ry0,rz0,vx0,vy0,vz0,dt,mu,J2,R,useJ2){
+  let rx=rx0,ry=ry0,rz=rz0,vx=vx0,vy=vy0,vz=vz0;
+  const substeps=10;
+  const h=dt/substeps;
+  for(let s=0;s<substeps;s++){
+    const r=Math.sqrt(rx*rx+ry*ry+rz*rz);
+    const r3=r*r*r;
+    let ax=-mu*rx/r3, ay=-mu*ry/r3, az=-mu*rz/r3;
+    if(useJ2&&J2>0){
+      const r5=r3*r*r, R2=R*R;
+      const f=1.5*J2*mu*R2/r5;
+      const zr2=(rz/r)*(rz/r);
+      ax+=f*rx*(5*zr2-1);
+      ay+=f*ry*(5*zr2-1);
+      az+=f*rz*(5*zr2-3);
+    }
+    rx+=vx*h+0.5*ax*h*h;
+    ry+=vy*h+0.5*ay*h*h;
+    rz+=vz*h+0.5*az*h*h;
+    vx+=ax*h; vy+=ay*h; vz+=az*h;
+  }
+  return {rx,ry,rz,vx,vy,vz};
+}
+
+function hohmannDeltaV(a1,a2,mu){
+  const at=(a1+a2)/2;
+  const v1=Math.sqrt(mu/a1);
+  const vt1=Math.sqrt(mu*(2/a1-1/at));
+  const vt2=Math.sqrt(mu*(2/a2-1/at));
+  const v2=Math.sqrt(mu/a2);
+  const dv1=Math.abs(vt1-v1), dv2=Math.abs(v2-vt2);
+  const tof=Math.PI*Math.sqrt(at*at*at/mu);
+  return {dv1, dv2, dvTotal:dv1+dv2, tof, at};
+}
+
+function biellipticDeltaV(a1,a2,ai,mu){
+  const at1=(a1+ai)/2, at2=(ai+a2)/2;
+  const v1=Math.sqrt(mu/a1);
+  const vt1a=Math.sqrt(mu*(2/a1-1/at1));
+  const vt1b=Math.sqrt(mu*(2/ai-1/at1));
+  const vt2a=Math.sqrt(mu*(2/ai-1/at2));
+  const vt2b=Math.sqrt(mu*(2/a2-1/at2));
+  const v2=Math.sqrt(mu/a2);
+  const dv1=Math.abs(vt1a-v1);
+  const dv2=Math.abs(vt2a-vt1b);
+  const dv3=Math.abs(v2-vt2b);
+  const tof=Math.PI*(Math.sqrt(at1*at1*at1/mu)+Math.sqrt(at2*at2*at2/mu));
+  return {dv1, dv2, dv3, dvTotal:dv1+dv2+dv3, tof};
+}
+</script>
+<script>
+// ── UI HELPERS ──
+function switchTab(t){
+  document.querySelectorAll('.tbb').forEach(b=>b.classList.remove('ac'));
+  document.querySelectorAll('.tc').forEach(c=>c.classList.remove('ac'));
+  document.getElementById('tab-'+t).classList.add('ac');
+  event.target.classList.add('ac');
+}
+function toggleStateMode(){
+  const m=document.getElementById('stateMode').value;
+  document.getElementById('keplerianInputs').style.display=m==='keplerian'?'block':'none';
+  document.getElementById('cartesianInputs').style.display=m==='cartesian'?'block':'none';
+}
+function onBodyChange(){
+  const b=document.getElementById('body').value;
+  document.getElementById('cbf').style.display=b==='Custom'?'grid':'none';
+}
+function toggleTransfer(){
+  document.getElementById('bieg').style.display=
+    document.getElementById('transferType').value==='bielliptic'?'block':'none';
+}
+function setStatus(msg,active){
+  const d=document.getElementById('stDot');
+  document.getElementById('stMsg').textContent=msg;
+  if(d){d.className=active?'std':'std id';}
+}
+function setLastTime(){
+  const t=document.getElementById('stTime');
+  if(t) t.textContent='Last calc: '+new Date().toUTCString().replace('GMT','UTC');
+}
+function fmtN(n,d=2){
+  if(!isFinite(n)||isNaN(n)) return 'N/A';
+  if(Math.abs(n)>=1e9) return (n/1e9).toFixed(d)+'G';
+  if(Math.abs(n)>=1e6) return (n/1e6).toFixed(d)+'M';
+  if(Math.abs(n)>=1e3) return (n/1e3).toFixed(d)+'k';
+  return n.toFixed(d);
+}
+function fmtE(n){ return n.toExponential(3); }
+function getBody(){
+  const b=document.getElementById('body').value;
+  if(b==='Custom'){
+    return {
+      mu:parseFloat(document.getElementById('mu').value),
+      radius:parseFloat(document.getElementById('radius').value),
+      J2:0.00108263, name:'Custom', sidereal:86164
+    };
+  }
+  return BODIES[b];
+}
+function loadPreset(k){
+  const p=PRESETS[k]; if(!p) return;
+  document.getElementById('stateMode').value='keplerian';
+  toggleStateMode();
+  document.getElementById('a').value=p.a;
+  document.getElementById('e').value=p.e;
+  document.getElementById('i').value=p.i;
+  document.getElementById('raan').value=p.raan;
+  document.getElementById('argp').value=p.argp;
+  document.getElementById('ta').value=p.ta;
+  document.getElementById('duration').value=p.dur;
+  document.getElementById('step').value=p.step;
+}
+function clearAll(){
+  lastResult=null;
+  document.getElementById('sbOrbit').textContent='Run calculation to see orbital summary.';
+  document.getElementById('sgOrbit').innerHTML='';
+  if(document.getElementById('pOrbit')) Plotly.purge('pOrbit');
+  setStatus('Cleared','');
+}
+// ── PLOTLY THEME ──
+const PLY={
+  bg:'#0B0D10', paper:'#0B0D10', grid:'#1E2530',
+  axis:'#5A5952', text:'#A8A79E', te:'#4EC5C1', go:'#C9A24A', cu:'#B87333',
+  w1:'#00d4ff', w2:'#7b2cbf', w3:'#ff3366', w4:'#ffaa00', w5:'#00ff88', w6:'#ff6b9d'
+};
+function plyLayout(title,xl,yl){
+  return {
+    title:{text:title,font:{color:PLY.text,size:12,family:'Inter'}},
+    paper_bgcolor:PLY.bg, plot_bgcolor:PLY.bg,
+    font:{color:PLY.text,family:'JetBrains Mono'},
+    xaxis:{title:{text:xl,font:{color:PLY.axis}},color:PLY.axis,gridcolor:PLY.grid,zerolinecolor:PLY.grid},
+    yaxis:{title:{text:yl,font:{color:PLY.axis}},color:PLY.axis,gridcolor:PLY.grid,zerolinecolor:PLY.grid},
+    margin:{l:55,r:20,t:36,b:48},
+    legend:{bgcolor:'rgba(0,0,0,0)',font:{color:PLY.text,size:10}},
+    hovermode:'x unified',
+    hoverlabel:{bgcolor:'#141820',bordercolor:PLY.te,font:{color:PLY.iv,family:'JetBrains Mono',size:11}}
+  };
+}
+function plyConfig(){ return {displayModeBar:true,displaylogo:false,modeBarButtonsToRemove:['lasso2d','select2d']}; }
+</script>
+<script>
+// ── MAIN CALCULATOR ──
+function runCalculator(){
+  setStatus('Calculating...', true);
+  setTimeout(()=>{
+    try{
+      const body=getBody();
+      const mu=body.mu, R=body.radius, J2=body.J2;
+      const useJ2=document.getElementById('useJ2').checked;
+      const dur=parseFloat(document.getElementById('duration').value);
+      const stp=parseFloat(document.getElementById('step').value);
+      const txType=document.getElementById('transferType').value;
+      const a2_tx=parseFloat(document.getElementById('a2').value);
+      const a_int=parseFloat(document.getElementById('a_int').value);
+      let kep;
+      if(document.getElementById('stateMode').value==='keplerian'){
+        const a=parseFloat(document.getElementById('a').value);
+        const e=parseFloat(document.getElementById('e').value);
+        const i_v=parseFloat(document.getElementById('i').value);
+        const raan_v=parseFloat(document.getElementById('raan').value);
+        const argp_v=parseFloat(document.getElementById('argp').value);
+        const ta_v=parseFloat(document.getElementById('ta').value);
+        kep={a,e,i:i_v,raan:raan_v,argp:argp_v,ta:ta_v};
+      } else {
+        const rx=parseFloat(document.getElementById('rx').value);
+        const ry=parseFloat(document.getElementById('ry').value);
+        const rz=parseFloat(document.getElementById('rz').value);
+        const vx=parseFloat(document.getElementById('vx').value);
+        const vy=parseFloat(document.getElementById('vy').value);
+        const vz=parseFloat(document.getElementById('vz').value);
+        kep=cartesian2keplerian(rx,ry,rz,vx,vy,vz,mu);
+      }
+      const {a,e,i,raan,argp,ta}=kep;
+      const cart0=keplerian2cartesian(a,e,i,raan,argp,ta,mu);
+      // Derived orbital parameters
+      const T=2*Math.PI*Math.sqrt(a*a*a/mu);
+      const rp=a*(1-e), ra=a*(1+e);
+      const hp=rp-R, ha=ra-R;
+      const vp=Math.sqrt(mu*(2/rp-1/a));
+      const va=Math.sqrt(mu*(2/ra-1/a));
+      const eps=-mu/(2*a);
+      const h_ang=Math.sqrt(mu*a*(1-e*e));
+      // J2 nodal precession
+      const n=Math.sqrt(mu/(a*a*a));
+      const raan_dot=useJ2&&J2>0 ? -1.5*n*J2*(R/a)*(R/a)*Math.cos(i*D2R)/(1-e*e)/(1-e*e) * R2D * 86400 : 0;
+      // Propagate
+      const nSteps=Math.min(Math.ceil(dur/stp), 2000);
+      const dtS=dur/nSteps;
+      const tArr=[],xArr=[],yArr=[],zArr=[],vArr=[],rArr=[];
+      let {rx,ry,rz,vx,vy,vz}=cart0;
+      for(let k=0;k<=nSteps;k++){
+        tArr.push(k*dtS);
+        xArr.push(rx/1000); yArr.push(ry/1000); zArr.push(rz/1000);
+        vArr.push(Math.sqrt(vx*vx+vy*vy+vz*vz));
+        rArr.push(Math.sqrt(rx*rx+ry*ry+rz*rz)/1000);
+        if(k<nSteps){
+          const nxt=propagateKepler(rx,ry,rz,vx,vy,vz,dtS,mu,J2,R,useJ2);
+          rx=nxt.rx;ry=nxt.ry;rz=nxt.rz;vx=nxt.vx;vy=nxt.vy;vz=nxt.vz;
+        }
+      }
+      // Transfer
+      let txData;
+      if(txType==='hohmann') txData=hohmannDeltaV(a,a2_tx,mu);
+      else txData=biellipticDeltaV(a,a2_tx,a_int,mu);
+      // Store
+      lastResult={kep,cart0,body:body.name,T,rp,ra,hp,ha,vp,va,eps,h_ang,
+        raan_dot,tArr,xArr,yArr,zArr,vArr,rArr,txData,txType,a2_tx,
+        useJ2,J2,timestamp:new Date().toISOString()};
+      // Render
+      renderOrbitTab(lastResult);
+      renderTrajTab(lastResult);
+      renderTransferTab(lastResult);
+      setStatus('Complete — '+nSteps+' steps propagated | Body: '+body.name, false);
+      setLastTime();
+    } catch(ex){
+      setStatus('Error: '+ex.message, false);
+      console.error(ex);
+    }
+  },80);
+}
+
+function renderOrbitTab(r){
+  const {kep,T,rp,ra,hp,ha,vp,va,eps,raan_dot,body,xArr,yArr,zArr}=r;
+  const hpKm=hp/1000, haKm=ha/1000;
+  const stats=[
+    {l:'Semi-major axis',v:fmtN(kep.a/1000),u:'km',cls:'te'},
+    {l:'Eccentricity',v:kep.e.toFixed(5),u:'',cls:''},
+    {l:'Inclination',v:kep.i.toFixed(3),u:'deg',cls:''},
+    {l:'Period',v:fmtN(T/60),u:'min',cls:'go'},
+    {l:'Periapsis alt',v:fmtN(hpKm),u:'km',cls:(hpKm<100?'dn':'ok')},
+    {l:'Apoapsis alt',v:fmtN(haKm),u:'km',cls:''},
+    {l:'v at periapsis',v:fmtN(vp),u:'m/s',cls:'te'},
+    {l:'v at apoapsis',v:fmtN(va),u:'m/s',cls:''},
+    {l:'Specific energy',v:fmtE(eps),u:'J/kg',cls:''},
+    {l:'RAAN drift',v:raan_dot.toFixed(4),u:'deg/day',cls:Math.abs(raan_dot)>1?'wn':''},
+  ];
+  document.getElementById('sgOrbit').innerHTML=stats.map(s=>
+    `<div class="sc ${s.cls==='dn'?'d':s.cls==='wn'?'w':''}">
+      <div class="sl">${s.l}</div>
+      <div class="sv ${s.cls}">${s.v}<span class="su"> ${s.u}</span></div>
+    </div>`
+  ).join('');
+  document.getElementById('sbOrbit').textContent=
+    `${body} | a=${fmtN(kep.a/1000)}km | e=${kep.e.toFixed(4)} | i=${kep.i.toFixed(2)}deg | T=${fmtN(T/60,1)}min | hp=${fmtN(hpKm,0)}km`;
+  // Orbit plot — 3D scatter
+  const orbitTrace={
+    type:'scatter3d', mode:'lines',
+    x:xArr, y:yArr, z:zArr,
+    line:{color:PLY.te, width:2},
+    name:'Orbit track'
+  };
+  const bodyTrace={
+    type:'scatter3d', mode:'markers',
+    x:[0],y:[0],z:[0],
+    marker:{size:8, color:PLY.cu, symbol:'circle'},
+    name:body
+  };
+  const layout3d={
+    ...plyLayout('Orbit Track — '+body,'',''),
+    scene:{
+      xaxis:{title:'X (km)',color:PLY.axis,gridcolor:PLY.grid,backgroundcolor:PLY.bg},
+      yaxis:{title:'Y (km)',color:PLY.axis,gridcolor:PLY.grid,backgroundcolor:PLY.bg},
+      zaxis:{title:'Z (km)',color:PLY.axis,gridcolor:PLY.grid,backgroundcolor:PLY.bg},
+      bgcolor:PLY.bg
+    }
+  };
+  Plotly.react('pOrbit',[orbitTrace,bodyTrace],layout3d,plyConfig());
+}
+
+function renderTrajTab(r){
+  const {tArr,vArr,rArr,kep,body,cart0}=r;
+  const tH=tArr.map(t=>t/3600);
+  const tr1={type:'scatter',mode:'lines',x:tH,y:vArr,name:'Speed (m/s)',
+    line:{color:PLY.te,width:2}};
+  const tr2={type:'scatter',mode:'lines',x:tH,y:rArr,name:'Radius (km)',
+    yaxis:'y2',line:{color:PLY.go,width:2}};
+  const ly={
+    ...plyLayout('Trajectory: Speed & Radius','Time (hours)','Speed (m/s)'),
+    yaxis2:{title:{text:'Radius (km)',font:{color:PLY.go}},color:PLY.go,
+      overlaying:'y',side:'right',gridcolor:PLY.grid}
+  };
+  Plotly.react('pTraj',[tr1,tr2],ly,plyConfig());
+  // State vectors
+  const k=cart0;
+  document.getElementById('stateVec').textContent=
+    `INITIAL STATE (ECI)
+r = [${(k.rx/1e3).toFixed(3)}, ${(k.ry/1e3).toFixed(3)}, ${(k.rz/1e3).toFixed(3)}] km
+v = [${k.vx.toFixed(4)}, ${k.vy.toFixed(4)}, ${k.vz.toFixed(4)}] m/s
+|r| = ${(Math.sqrt(k.rx*k.rx+k.ry*k.ry+k.rz*k.rz)/1e3).toFixed(3)} km
+|v| = ${Math.sqrt(k.vx*k.vx+k.vy*k.vy+k.vz*k.vz).toFixed(4)} m/s
+
+KEPLERIAN ELEMENTS
+a     = ${(kep.a/1e3).toFixed(3)} km
+e     = ${kep.e.toFixed(6)}
+i     = ${kep.i.toFixed(4)} deg
+RAAN  = ${kep.raan.toFixed(4)} deg
+argp  = ${kep.argp.toFixed(4)} deg
+ta    = ${kep.ta.toFixed(4)} deg`;
+  document.getElementById('sbTraj').textContent=
+    'Trajectory propagated over '+fmtN(r.tArr[r.tArr.length-1]/3600,1)+' hours | '+r.tArr.length+' data points | Body: '+r.body;
+}
+
+function renderTransferTab(r){
+  const {txData,txType,kep,a2_tx,body}=r;
+  const isDv3=txType==='bielliptic';
+  const dvT=txData.dvTotal;
+  const tofH=txData.tof/3600;
+  const stats=[
+    {l:'dv1 (m/s)',v:fmtN(txData.dv1),u:'m/s',cls:'te'},
+    {l:'dv2 (m/s)',v:fmtN(txData.dv2),u:'m/s',cls:'te'},
+    isDv3?{l:'dv3 (m/s)',v:fmtN(txData.dv3),u:'m/s',cls:'te'}:null,
+    {l:'Total dv',v:fmtN(dvT),u:'m/s',cls:'go'},
+    {l:'TOF',v:fmtN(tofH,1),u:'hrs',cls:''},
+    {l:'From a',v:fmtN(kep.a/1e3),u:'km',cls:''},
+    {l:'To a',v:fmtN(a2_tx/1e3),u:'km',cls:''},
+  ].filter(Boolean);
+  document.getElementById('sgTx').innerHTML=stats.map(s=>
+    `<div class="sc"><div class="sl">${s.l}</div><div class="sv ${s.cls}">${s.v}<span class="su"> ${s.u}</span></div></div>`
+  ).join('');
+  document.getElementById('sbTx').textContent=
+    `${txType==='hohmann'?'Hohmann':'Bi-elliptic'} transfer | dv_total=${fmtN(dvT)} m/s | TOF=${fmtN(tofH,1)} hrs`;
+  // Transfer plot
+  const a1=kep.a, at=txType==='hohmann'?txData.at:null;
+  const ang=Array.from({length:361},(_,i)=>i*D2R);
+  function ellipseXY(a_el,e_el){
+    const p=a_el*(1-e_el*e_el);
+    return ang.map(th=>({x:p*Math.cos(th)/(1+e_el*Math.cos(th))/1e6,
+                          y:p*Math.sin(th)/(1+e_el*Math.cos(th))/1e6}));
+  }
+  const e2=0, e_tx=txType==='hohmann'?Math.abs(a2_tx-a1)/(a2_tx+a1):0.0;
+  const c1=ellipseXY(a1,kep.e);
+  const c2=ellipseXY(a2_tx,0);
+  const ct=txType==='hohmann'?ellipseXY((a1+a2_tx)/2,e_tx):[];
+  const trList=[
+    {type:'scatter',mode:'lines',x:c1.map(p=>p.x),y:c1.map(p=>p.y),name:'Initial orbit',line:{color:PLY.te,width:2}},
+    {type:'scatter',mode:'lines',x:c2.map(p=>p.x),y:c2.map(p=>p.y),name:'Target orbit',line:{color:PLY.go,width:2,dash:'dash'}},
+    txType==='hohmann'?{type:'scatter',mode:'lines',x:ct.map(p=>p.x),y:ct.map(p=>p.y),name:'Transfer arc',line:{color:PLY.cu,width:1.5,dash:'dot'}}:null,
+    {type:'scatter',mode:'markers',x:[0],y:[0],name:body,marker:{size:10,color:PLY.cu}},
+  ].filter(Boolean);
+  const txLayout={
+    ...plyLayout('Transfer Orbit — '+body,'X (Mm)','Y (Mm)'),
+    yaxis:{...plyLayout('','','').yaxis, scaleanchor:'x'}
+  };
+  Plotly.react('pTx',trList,txLayout,plyConfig());
+  document.getElementById('burnSeq').textContent=
+    isDv3?
+    `BURN SEQUENCE (Bi-elliptic)
+Burn 1: dv1 = +${txData.dv1.toFixed(2)} m/s  at periapsis a1
+Burn 2: dv2 = +${txData.dv2.toFixed(2)} m/s  at apoapsis of transfer 1
+Burn 3: dv3 = +${txData.dv3.toFixed(2)} m/s  at periapsis of transfer 2
+Total:  ${txData.dvTotal.toFixed(2)} m/s over ${(txData.tof/3600).toFixed(2)} hrs`:
+    `BURN SEQUENCE (Hohmann)
+Burn 1: dv1 = +${txData.dv1.toFixed(2)} m/s  at current periapsis
+Burn 2: dv2 = +${txData.dv2.toFixed(2)} m/s  at target orbit altitude
+Total:  ${txData.dvTotal.toFixed(2)} m/s over ${(txData.tof/3600).toFixed(2)} hrs`;
+}
+</script>
+<script>
+// ── COMPARISON ──
+function addToComparison(){
+  if(!lastResult){ alert('Run a calculation first.'); return; }
+  const r=lastResult;
+  const n=compList.length+1;
+  compList.push({n, label:'Orbit '+n,
+    a:r.kep.a, e:r.kep.e, i:r.kep.i, T:r.T, vp:r.vp, dvGEO:r.txData.dvTotal,
+    body:r.body, timestamp:r.timestamp});
+  renderCompTable();
+  renderCompPlot();
+}
+function renderCompTable(){
+  const tb=document.getElementById('compBody');
+  if(!compList.length){
+    tb.innerHTML='<tr><td colspan="9" style="color:var(--iv3);text-align:center;padding:.65rem">No orbits added yet</td></tr>';
+    return;
+  }
+  tb.innerHTML=compList.map((c,idx)=>
+    `<tr>
+      <td class="hi">${c.n}</td>
+      <td>${c.label}</td>
+      <td>${(c.a/1e3).toFixed(1)}</td>
+      <td class="hi">${c.e.toFixed(5)}</td>
+      <td>${c.i.toFixed(2)}</td>
+      <td class="wi">${(c.T/60).toFixed(1)}</td>
+      <td>${c.vp.toFixed(1)}</td>
+      <td>${c.dvGEO.toFixed(1)}</td>
+      <td><button class="btn bs bsm" onclick="removeComp(${idx})">&#10005;</button></td>
+    </tr>`
+  ).join('');
+}
+function removeComp(idx){ compList.splice(idx,1); renderCompTable(); renderCompPlot(); }
+function clearComparison(){ compList=[]; renderCompTable(); if(document.getElementById('pComp')) Plotly.purge('pComp'); }
+function renderCompPlot(){
+  if(!compList.length) return;
+  const cols=[PLY.te,PLY.go,PLY.cu,PLY.w1,PLY.w2,PLY.w3,PLY.w4,PLY.w5,PLY.w6];
+  const traces=compList.map((c,i)=>({
+    type:'scatter', mode:'markers',
+    x:[c.a/1e3], y:[c.dvGEO],
+    name:c.label,
+    marker:{size:14, color:cols[i%cols.length], symbol:'circle'},
+    text:[c.label+' | e='+c.e.toFixed(3)+' | i='+c.i.toFixed(1)+'deg'],
+    hovertemplate:'%{text}<br>a=%{x:.0f} km | dV=%{y:.1f} m/s<extra></extra>'
+  }));
+  Plotly.react('pComp',traces,
+    plyLayout('Orbit Comparison: Semi-major axis vs dV to GEO','Semi-major axis (km)','dV to GEO (m/s)'),
+    plyConfig());
+}
+function exportComparison(){
+  if(!compList.length){ alert('No orbits to export.'); return; }
+  let csv='Orbit,Label,a_km,e,i_deg,Period_min,Vp_ms,DV_GEO_ms,Body,Timestamp
+';
+  compList.forEach(c=>{
+    csv+=`${c.n},${c.label},${(c.a/1e3).toFixed(1)},${c.e.toFixed(6)},${c.i.toFixed(3)},${(c.T/60).toFixed(2)},${c.vp.toFixed(2)},${c.dvGEO.toFixed(2)},${c.body},${c.timestamp}
+`;
+  });
+  downloadFile(csv,'orbit_comparison.csv','text/csv');
+}
+
+// ── SWEEP ──
+function updateSweepRange(){
+  const v=document.getElementById('sweepVar').value;
+  const ranges={
+    altitude:{s:200,e:40000,st:50},
+    eccentricity:{s:0,e:0.9,st:0.05},
+    inclination:{s:0,e:180,st:5},
+    sma:{s:6600,e:50000,st:500},
+    dv_target:{s:400,e:40000,st:500},
+    transfer_ratio:{s:1.1,e:10,st:0.3},
+    j2_drift:{s:200,e:40000,st:500}
+  };
+  const rng=ranges[v]||{s:0,e:100,st:5};
+  document.getElementById('swStart').value=rng.s;
+  document.getElementById('swEnd').value=rng.e;
+}
+
+function runSweep(){
+  setStatus('Running sweep...', true);
+  setTimeout(()=>{
+    const body=getBody();
+    const mu=body.mu, R=body.radius, J2=body.J2;
+    const useJ2=document.getElementById('useJ2').checked;
+    const sVar=document.getElementById('sweepVar').value;
+    const sStart=parseFloat(document.getElementById('swStart').value);
+    const sEnd=parseFloat(document.getElementById('swEnd').value);
+    const sN=parseInt(document.getElementById('swSteps').value);
+    const baseKep={
+      a:parseFloat(document.getElementById('a').value),
+      e:parseFloat(document.getElementById('e').value),
+      i:parseFloat(document.getElementById('i').value)
+    };
+    const a2_tx=parseFloat(document.getElementById('a2').value);
+    const pts=[], metrics={period:[],vcirc:[],dvGEO:[],raanDot:[],energy:[],hill:[]};
+    for(let k=0;k<=sN;k++){
+      const frac=k/sN;
+      const val=sStart+(sEnd-sStart)*frac;
+      pts.push(val);
+      let a_s=baseKep.a, e_s=baseKep.e, i_s=baseKep.i;
+      let a2_s=a2_tx;
+      switch(sVar){
+        case 'altitude': a_s=(val*1000)+R; break;
+        case 'sma': a_s=val*1000; break;
+        case 'eccentricity': e_s=val; break;
+        case 'inclination': i_s=val; break;
+        case 'dv_target': a2_s=(val*1000)+R; break;
+        case 'transfer_ratio': a2_s=a_s*val; break;
+        case 'j2_drift': a_s=(val*1000)+R; break;
+      }
+      if(a_s<=R||e_s>=1||e_s<0) { metrics.period.push(null);metrics.vcirc.push(null);metrics.dvGEO.push(null);metrics.raanDot.push(null);metrics.energy.push(null);metrics.hill.push(null); continue; }
+      const T=2*Math.PI*Math.sqrt(a_s*a_s*a_s/mu);
+      const vcirc=Math.sqrt(mu/a_s);
+      const tx=hohmannDeltaV(a_s,a2_s,mu);
+      const n=Math.sqrt(mu/(a_s*a_s*a_s));
+      const raan_d=useJ2&&J2>0 ? -1.5*n*J2*(R/a_s)*(R/a_s)*Math.cos(i_s*D2R)/(1-e_s*e_s)/(1-e_s*e_s)*R2D*86400 : 0;
+      const eps=-mu/(2*a_s);
+      const hill_r=a_s*Math.pow(mu/(3*body.mu),1/3);
+      metrics.period.push(T/60);
+      metrics.vcirc.push(vcirc);
+      metrics.dvGEO.push(tx.dvTotal);
+      metrics.raanDot.push(raan_d);
+      metrics.energy.push(eps);
+      metrics.hill.push(hill_r/1000);
+    }
+    sweepResult={sVar,pts,metrics,body:body.name,timestamp:new Date().toISOString()};
+    renderSweepPlot(sweepResult);
+    renderSweepStats(sweepResult);
+    setStatus('Sweep complete — '+sN+' steps | Variable: '+sVar, false);
+    setLastTime();
+  },100);
+}
+
+function renderSweepPlot(r){
+  const {sVar,pts,metrics}=r;
+  const traces=[];
+  const axisLabels={
+    altitude:'Altitude (km)', eccentricity:'Eccentricity', inclination:'Inclination (deg)',
+    sma:'Semi-major Axis (km)', dv_target:'Target Altitude (km)',
+    transfer_ratio:'Transfer Ratio a2/a1', j2_drift:'Altitude (km)'
+  };
+  const xl=axisLabels[sVar]||sVar;
+  const defs=[
+    {key:'period', name:'Period (min)', col:PLY.te, ax:'y', chk:'sm_per'},
+    {key:'vcirc', name:'Circular v (m/s)', col:PLY.go, ax:'y2', chk:'sm_vc'},
+    {key:'dvGEO', name:'dV to GEO (m/s)', col:PLY.cu, ax:'y3', chk:'sm_dv'},
+    {key:'raanDot', name:'RAAN Drift (deg/day)', col:PLY.w3, ax:'y4', chk:'sm_j2'},
+    {key:'energy', name:'Spec. Energy (J/kg)', col:PLY.w4, ax:'y5', chk:'sm_en'},
+    {key:'hill', name:'Hill Sphere (km)', col:PLY.w5, ax:'y6', chk:'sm_hi'},
+  ];
+  let visCount=0;
+  defs.forEach(d=>{
+    const chk=document.getElementById(d.chk);
+    if(!chk||!chk.checked) return;
+    traces.push({
+      type:'scatter', mode:'lines+markers',
+      x:pts, y:metrics[d.key],
+      name:d.name,
+      line:{color:d.col, width:2},
+      marker:{size:3},
+      connectgaps:false
+    });
+    visCount++;
+  });
+  if(!traces.length) return;
+  const ly=plyLayout('Parameter Sweep: '+sVar,xl, traces[0]?traces[0].name:'');
+  Plotly.react('pSweep',traces,ly,plyConfig());
+}
+
+function renderSweepStats(r){
+  const {sVar,pts,metrics}=r;
+  const validPer=metrics.period.filter(v=>v!==null);
+  const validDv=metrics.dvGEO.filter(v=>v!==null);
+  const minDv=validDv.length?Math.min(...validDv):NaN;
+  const minDvIdx=validDv.indexOf(minDv);
+  const minT=validPer.length?Math.min(...validPer):NaN;
+  const maxT=validPer.length?Math.max(...validPer):NaN;
+  document.getElementById('swStats').textContent=
+    `SWEEP SUMMARY | Variable: ${sVar} | Steps: ${pts.length}
+Range: ${pts[0]} to ${pts[pts.length-1]}
+Period:        min=${minT.toFixed(2)} min | max=${maxT.toFixed(2)} min
+Min dV to GEO: ${isNaN(minDv)?'N/A':minDv.toFixed(2)} m/s at ${sVar}=${validDv.length&&pts[minDvIdx]!==undefined?pts[minDvIdx].toFixed(2):'?'}
+Generated: ${r.timestamp}`;
+}
+
+function exportSweepCSV(){
+  if(!sweepResult){ alert('Run sweep first.'); return; }
+  const {sVar,pts,metrics}=sweepResult;
+  let csv=`${sVar},Period_min,Vcirc_ms,DV_GEO_ms,RAAN_Dot_degday,Energy_Jkg,Hill_km
+`;
+  pts.forEach((v,i)=>{
+    csv+=`${v},${metrics.period[i]??''},${metrics.vcirc[i]??''},${metrics.dvGEO[i]??''},${metrics.raanDot[i]??''},${metrics.energy[i]??''},${metrics.hill[i]??''}
+`;
+  });
+  downloadFile(csv,'orbital_sweep.csv','text/csv');
+}
+
+function sendSweepToDS(){
+  if(!sweepResult){ alert('Run sweep first.'); return; }
+  const active=document.getElementById('body').value||'W5';
+  sendToDS('W5',sweepResult);
+}
+</script>
+<script>
+// ── EXPORT & DATASPACE ──
+function buildManifest(){
+  if(!lastResult) return null;
+  const r=lastResult;
+  return {
+    source:'calc/orbital',
+    version:'2.0.0',
+    timestamp:r.timestamp,
+    body:r.body,
+    keplerian:{
+      a_m:r.kep.a, e:r.kep.e, i_deg:r.kep.i,
+      raan_deg:r.kep.raan, argp_deg:r.kep.argp, ta_deg:r.kep.ta
+    },
+    cartesian_eci:{
+      rx:r.cart0.rx, ry:r.cart0.ry, rz:r.cart0.rz,
+      vx:r.cart0.vx, vy:r.cart0.vy, vz:r.cart0.vz
+    },
+    derived:{
+      period_s:r.T, periapsis_alt_m:r.hp, apoapsis_alt_m:r.ha,
+      vp_ms:r.vp, va_ms:r.va, specific_energy_Jkg:r.eps,
+      raan_drift_degday:r.raan_dot
+    },
+    transfer:{
+      type:r.txType, target_a_m:r.a2_tx,
+      dv_total_ms:r.txData.dvTotal, tof_s:r.txData.tof
+    }
+  };
+}
+
+function exportJSON(){
+  const m=buildManifest(); if(!m){ alert('Run calculation first.'); return; }
+  const json=JSON.stringify(m,null,2);
+  document.getElementById('expInfo').textContent=json;
+  downloadFile(json,'orbital_result.json','application/json');
+}
+
+function exportCSV(){
+  const m=buildManifest(); if(!m){ alert('Run calculation first.'); return; }
+  const r=lastResult;
+  let csv='parameter,value,unit
+';
+  csv+=`body,${m.body},
+`;
+  csv+=`a,${m.keplerian.a_m},m
+`;
+  csv+=`e,${m.keplerian.e},
+`;
+  csv+=`i,${m.keplerian.i_deg},deg
+`;
+  csv+=`period,${m.derived.period_s},s
+`;
+  csv+=`hp,${m.derived.periapsis_alt_m},m
+`;
+  csv+=`ha,${m.derived.apoapsis_alt_m},m
+`;
+  csv+=`dv_total,${m.transfer.dv_total_ms},m/s
+`;
+  csv+=`tof,${m.transfer.tof_s},s
+`;
+  document.getElementById('expInfo').textContent=csv;
+  downloadFile(csv,'orbital_result.csv','text/csv');
+}
+
+function exportTXT(){
+  const m=buildManifest(); if(!m){ alert('Run calculation first.'); return; }
+  const r=lastResult;
+  const txt=
+`ORBITAL MECHANICS RESULT MANIFEST
+Generated: ${m.timestamp}
+Source:    ${m.source} v${m.version}
+Body:      ${m.body}
+
+KEPLERIAN ELEMENTS
+  a    = ${(m.keplerian.a_m/1e3).toFixed(3)} km
+  e    = ${m.keplerian.e.toFixed(6)}
+  i    = ${m.keplerian.i_deg.toFixed(4)} deg
+  RAAN = ${m.keplerian.raan_deg.toFixed(4)} deg
+  argp = ${m.keplerian.argp_deg.toFixed(4)} deg
+  ta   = ${m.keplerian.ta_deg.toFixed(4)} deg
+
+CARTESIAN STATE (ECI)
+  r = [${(m.cartesian_eci.rx/1e3).toFixed(3)}, ${(m.cartesian_eci.ry/1e3).toFixed(3)}, ${(m.cartesian_eci.rz/1e3).toFixed(3)}] km
+  v = [${m.cartesian_eci.vx.toFixed(4)}, ${m.cartesian_eci.vy.toFixed(4)}, ${m.cartesian_eci.vz.toFixed(4)}] m/s
+
+DERIVED PARAMETERS
+  Period     = ${(m.derived.period_s/60).toFixed(3)} min
+  h_periapsis= ${(m.derived.periapsis_alt_m/1e3).toFixed(2)} km
+  h_apoapsis = ${(m.derived.apoapsis_alt_m/1e3).toFixed(2)} km
+  v_peri     = ${m.derived.vp_ms.toFixed(3)} m/s
+  v_apo      = ${m.derived.va_ms.toFixed(3)} m/s
+  Spec energy= ${m.derived.specific_energy_Jkg.toExponential(4)} J/kg
+  RAAN drift = ${m.derived.raan_drift_degday.toFixed(4)} deg/day
+
+TRANSFER ANALYSIS (${m.transfer.type})
+  Target a   = ${(m.transfer.target_a_m/1e3).toFixed(1)} km
+  dV total   = ${m.transfer.dv_total_ms.toFixed(2)} m/s
+  TOF        = ${(m.transfer.tof_s/3600).toFixed(2)} hrs`;
+  document.getElementById('expInfo').textContent=txt;
+  downloadFile(txt,'orbital_manifest.txt','text/plain');
+}
+
+function exportYAML(){
+  const m=buildManifest(); if(!m){ alert('Run calculation first.'); return; }
+  const yaml=
+`source: ${m.source}
+version: "${m.version}"
+timestamp: "${m.timestamp}"
+body: ${m.body}
+keplerian:
+  a_m: ${m.keplerian.a_m}
+  e: ${m.keplerian.e}
+  i_deg: ${m.keplerian.i_deg}
+  raan_deg: ${m.keplerian.raan_deg}
+  argp_deg: ${m.keplerian.argp_deg}
+  ta_deg: ${m.keplerian.ta_deg}
+derived:
+  period_s: ${m.derived.period_s.toFixed(2)}
+  hp_m: ${m.derived.periapsis_alt_m.toFixed(0)}
+  ha_m: ${m.derived.apoapsis_alt_m.toFixed(0)}
+  dv_total_ms: ${m.transfer.dv_total_ms.toFixed(2)}
+  tof_s: ${m.transfer.tof_s.toFixed(0)}`;
+  document.getElementById('expInfo').textContent=yaml;
+  downloadFile(yaml,'orbital_manifest.yaml','text/plain');
+}
+
+function exportGMAT(){
+  const m=buildManifest(); if(!m){ alert('Run calculation first.'); return; }
+  const r=lastResult;
+  const gmat=
+`% GMAT Script — auto-generated by Orbital Mechanics Calculator
+% Source: /calc/orbital | Timestamp: ${m.timestamp}
+% For: /data/w5 integration | Romer Industries / EMASSC
+
+Create Spacecraft SC1;
+SC1.DateFormat = TAIModJulian;
+SC1.Epoch = '21545';
+SC1.CoordinateSystem = EarthMJ2000Eq;
+SC1.DisplayStateType = Keplerian;
+SC1.SMA = ${(m.keplerian.a_m/1e3).toFixed(3)};
+SC1.ECC = ${m.keplerian.e.toFixed(6)};
+SC1.INC = ${m.keplerian.i_deg.toFixed(4)};
+SC1.RAAN = ${m.keplerian.raan_deg.toFixed(4)};
+SC1.AOP = ${m.keplerian.argp_deg.toFixed(4)};
+SC1.TA = ${m.keplerian.ta_deg.toFixed(4)};
+
+Create ForceModel FM1;
+FM1.CentralBody = ${m.body};
+FM1.PointMasses = {${m.body}};
+FM1.GravityField.Earth.Degree = 4;
+FM1.GravityField.Earth.Order = 4;
+
+Create Propagator Prop1;
+Prop1.FM = FM1;
+Prop1.Type = RungeKutta89;
+Prop1.InitialStepSize = 60;
+
+BeginMissionSequence;
+Propagate Prop1(SC1) {SC1.ElapsedSecs = ${r.tArr[r.tArr.length-1].toFixed(0)}};
+`;
+  document.getElementById('expInfo').textContent=gmat;
+  downloadFile(gmat,'orbit_sc1.script','text/plain');
+}
+
+function exportPNG(){
+  const el=document.getElementById('pOrbit');
+  if(!el||!el.querySelector('.svg-container')){ alert('Run calculation first to generate plot.'); return; }
+  Plotly.toImage(el,{format:'png',width:1200,height:800}).then(url=>{
+    const a=document.createElement('a');
+    a.href=url; a.download='orbital_plot.png'; a.click();
+  });
+}
+
+// ── DATASPACE ROUTING (localStorage — Achilles-compatible, no duplicate layers) ──
+function sendToDS(ws, data){
+  const payload=data||(buildManifest());
+  if(!payload){ alert('Run calculation first.'); return; }
+  const key='achilles_calc_orbital_'+ws.toLowerCase();
+  const record={ws, source:'calc/orbital', timestamp:new Date().toISOString(), data:payload};
+  try{
+    localStorage.setItem(key, JSON.stringify(record));
+    // Also push to Achilles Linker bus if available
+    if(window.Linker && window.Linker.bus){
+      window.Linker.bus.send('calc_result',{workspace:ws, calc:'orbital', record});
+    }
+    const conf=document.getElementById('dsConf');
+    if(conf) conf.textContent='&#10003; Sent to '+ws+' dataspace at '+new Date().toUTCString().replace('GMT','UTC');
+    document.getElementById('dsConf').style.color='var(--te)';
+  } catch(e){
+    const conf=document.getElementById('dsConf');
+    if(conf) conf.textContent='Storage error: '+e.message;
+  }
+}
+
+function downloadFile(content,filename,type){
+  const blob=new Blob([content],{type});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url; a.download=filename; a.click();
+  setTimeout(()=>URL.revokeObjectURL(url),500);
+}
+
+// ── INIT ──
+document.addEventListener('DOMContentLoaded', function(){
+  // UTC clock
+  setInterval(function(){
+    const e=document.getElementById('utc');
+    if(e) e.textContent=new Date().toUTCString().replace('GMT','UTC');
+  },1000);
+  // Beacon
+  (function beacon(){
+    try{ fetch('/w5/data',{method:'HEAD',mode:'no-cors',cache:'no-cache'}).catch(()=>{}); } catch(e){}
+    try{ fetch('/w4/data',{method:'HEAD',mode:'no-cors',cache:'no-cache'}).catch(()=>{}); } catch(e){}
+    const bs=document.getElementById('bcSt');
+    if(bs){ bs.style.color='var(--te)'; bs.textContent='\u25CF Dataspace beacons active'; }
+  })();
+  // Default sweep ranges
+  updateSweepRange();
+  // Load default preset
+  loadPreset('LEO');
+  setStatus('Ready', false);
+});
+</script></body></html> 
