@@ -1,0 +1,1026 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Re-Entry Atmospheric Entry Simulator | Römer Industries</title>
+<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0B0D10;--surface:#12151A;--surface2:#1A1E25;--surface3:#222831;--copper:#B87333;--gold:#C9A24A;--teal:#4EC5C1;--cyan:#00E5FF;--ivory:#F2F1EC;--muted:#8A8F9A;--border:#2A2F3A;--font-ui:'Inter',system-ui,sans-serif;--font-data:'JetBrains Mono',monospace;}
+html,body{background:var(--bg);color:var(--ivory);font-family:var(--font-ui);font-size:13px;height:100%;overflow-x:hidden}
+.ops-tracker{display:flex;align-items:center;justify-content:space-between;padding:7px 14px;background:#0A0C0F;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:6px;position:sticky;top:0;z-index:100}
+.ops-beacon{display:flex;align-items:center;gap:8px}
+.beacon-dot{width:8px;height:8px;border-radius:50%;background:var(--teal);box-shadow:0 0 6px var(--teal);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.ops-title{font-family:var(--font-data);font-size:11px;font-weight:700;color:var(--copper);letter-spacing:1.5px;text-transform:uppercase}
+.ops-desc{font-family:var(--font-data);font-size:9px;color:var(--muted);letter-spacing:0.5px}
+.ops-nav{display:flex;gap:4px;flex-wrap:wrap;align-items:center}
+.nav-pill{font-family:var(--font-data);font-size:9px;font-weight:700;padding:3px 7px;border-radius:3px;border:1px solid var(--border);color:var(--muted);cursor:pointer;text-decoration:none;letter-spacing:0.8px;transition:all 0.2s;background:transparent}
+.nav-pill:hover{border-color:var(--copper);color:var(--copper)}
+.nav-pill.active{background:var(--copper);color:#0B0D10;border-color:var(--copper)}
+.nav-pill.w-pill{border-color:#2A3040;color:#4A5060}
+.nav-pill.w-pill:hover{border-color:var(--teal);color:var(--teal)}
+.beacon-bar{background:#090B0E;border-bottom:1px solid var(--border);padding:4px 14px;display:flex;align-items:center;gap:10px}
+.beacon-live{font-family:var(--font-data);font-size:9px;color:var(--teal);font-weight:700}
+.beacon-path,.beacon-brand{font-family:var(--font-data);font-size:9px;color:var(--muted)}
+.beacon-brand{color:var(--copper)}
+.beacon-sep{color:var(--border)}
+.sim-header{padding:14px 18px 10px;border-bottom:1px solid var(--border);background:var(--surface)}
+.sim-title{font-family:var(--font-ui);font-size:20px;font-weight:700;color:var(--copper);letter-spacing:0.5px;margin-bottom:3px}
+.sim-desc{font-size:11px;color:var(--muted);margin-bottom:8px}
+.sim-badges{display:flex;gap:6px;flex-wrap:wrap}
+.badge{font-family:var(--font-data);font-size:9px;padding:2px 8px;border-radius:2px;border:1px solid var(--border);color:var(--muted)}
+.badge.teal{border-color:var(--teal);color:var(--teal)}.badge.copper{border-color:var(--copper);color:var(--copper)}.badge.gold{border-color:var(--gold);color:var(--gold)}
+.telem-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border-bottom:1px solid var(--border)}
+.telem-cell{background:var(--surface2);padding:8px 10px}
+.telem-label{font-family:var(--font-data);font-size:8px;color:var(--muted);letter-spacing:0.8px;text-transform:uppercase;margin-bottom:2px}
+.telem-val{font-family:var(--font-data);font-size:18px;font-weight:700;color:var(--teal);line-height:1}
+.telem-unit{font-family:var(--font-data);font-size:9px;color:var(--muted)}
+.telem-cell.warning .telem-val{color:var(--gold)}
+.telem-cell.critical .telem-val{color:#FF6644}
+.sim-body{display:grid;grid-template-columns:260px 1fr;height:calc(100vh - 118px);min-height:560px}
+.sim-controls{background:var(--surface);border-right:1px solid var(--border);overflow-y:auto}
+.sim-main{display:flex;flex-direction:column;overflow:hidden;background:var(--bg)}
+.ctrl-section{border-bottom:1px solid var(--border);padding:12px 14px}
+.ctrl-label{font-family:var(--font-data);font-size:9px;font-weight:700;color:var(--copper);letter-spacing:1.2px;text-transform:uppercase;margin-bottom:8px}
+.ctrl-row{margin-bottom:8px}
+.ctrl-row label{display:block;font-size:10px;color:var(--muted);margin-bottom:3px;font-family:var(--font-data)}
+.ctrl-row input[type=number],.ctrl-row select{width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--ivory);padding:5px 8px;border-radius:3px;font-family:var(--font-data);font-size:11px}
+.ctrl-row input[type=number]:focus,.ctrl-row select:focus{outline:none;border-color:var(--copper)}
+.ctrl-row select option{background:var(--surface2)}
+.range-wrap{display:flex;align-items:center;gap:8px}
+.ctrl-row input[type=range]{flex:1;accent-color:var(--copper);height:3px}
+.range-val{font-family:var(--font-data);font-size:10px;color:var(--gold);min-width:50px;text-align:right}
+.tab-bar{display:flex;background:var(--surface);border-bottom:1px solid var(--border);padding:0 14px}
+.tab-btn{font-family:var(--font-data);font-size:10px;font-weight:600;padding:9px 14px;cursor:pointer;border:none;background:transparent;color:var(--muted);letter-spacing:0.8px;border-bottom:2px solid transparent;transition:all 0.2s}
+.tab-btn:hover{color:var(--ivory)}
+.tab-btn.active{color:var(--copper);border-bottom-color:var(--copper)}
+.tab-pane{display:none;height:100%;overflow:auto;flex-direction:column}
+.tab-pane.active{display:flex}
+.plot-container{flex:1;min-height:350px}
+.btn{font-family:var(--font-data);font-size:10px;font-weight:700;padding:6px 14px;border-radius:3px;border:none;cursor:pointer;letter-spacing:0.8px;transition:all 0.2s}
+.btn-primary{background:var(--copper);color:#0B0D10}.btn-primary:hover{background:var(--gold)}
+.btn-secondary{background:transparent;border:1px solid var(--border);color:var(--muted)}.btn-secondary:hover{border-color:var(--teal);color:var(--teal)}
+.btn-teal{background:var(--teal);color:#0B0D10}
+.btn-sm{padding:4px 10px;font-size:9px}
+.btn-row{display:flex;gap:6px;flex-wrap:wrap;padding:8px 14px}
+.playback-bar{display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--surface2);border-bottom:1px solid var(--border)}
+.time-display{font-family:var(--font-data);font-size:12px;color:var(--teal);min-width:80px}
+.progress-track{flex:1;height:4px;background:var(--border);border-radius:2px;cursor:pointer}
+.progress-fill{height:100%;background:var(--copper);border-radius:2px;transition:width 0.1s}
+.sweep-grid{display:grid;grid-template-columns:240px 1fr;gap:0;height:100%}
+.sweep-config{padding:14px;border-right:1px solid var(--border);overflow-y:auto}
+.export-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:14px}
+.export-card{background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:12px}
+.export-card h4{font-family:var(--font-data);font-size:10px;color:var(--copper);letter-spacing:1px;margin-bottom:6px}
+.export-card p{font-size:10px;color:var(--muted);margin-bottom:10px;line-height:1.5}
+.ds-panel{padding:12px 14px;border-top:1px solid var(--border);background:var(--surface)}
+.ds-title{font-family:var(--font-data);font-size:9px;color:var(--teal);letter-spacing:1px;margin-bottom:8px;font-weight:700}
+.ds-btns{display:flex;gap:4px;flex-wrap:wrap}
+.ds-btn{font-family:var(--font-data);font-size:9px;font-weight:700;padding:4px 10px;border-radius:3px;background:var(--surface3);border:1px solid var(--border);color:var(--muted);cursor:pointer;transition:all 0.2s}
+.ds-btn:hover{border-color:var(--teal);color:var(--teal)}
+.ds-btn.all{border-color:var(--copper);color:var(--copper)}.ds-btn.all:hover{background:var(--copper);color:#0B0D10}
+.ds-status{font-family:var(--font-data);font-size:9px;color:var(--gold);margin-top:6px;min-height:14px}
+.data-table{width:100%;border-collapse:collapse;font-family:var(--font-data);font-size:10px}
+.data-table th{background:var(--surface3);color:var(--copper);padding:6px 10px;text-align:left;font-size:9px;letter-spacing:0.8px;border-bottom:1px solid var(--border)}
+.data-table td{padding:5px 10px;border-bottom:1px solid var(--border);color:var(--ivory)}
+.data-table tr:hover td{background:var(--surface2)}
+.table-wrap{overflow-x:auto;max-height:220px;overflow-y:auto}
+.results-summary{padding:8px 14px;background:var(--surface2);border-bottom:1px solid var(--border);display:flex;gap:14px;flex-wrap:wrap}
+.rs-item{display:flex;flex-direction:column;gap:2px}
+.rs-label{font-family:var(--font-data);font-size:8px;color:var(--muted);letter-spacing:0.8px}
+.rs-val{font-family:var(--font-data);font-size:13px;color:var(--teal);font-weight:700}
+</style></head><body>
+<div id="ops-tracker">
+  <div class="ops-beacon"><span class="beacon-dot"></span>LIVE</div>
+  <div class="ops-title">ACHILLES PROTOCOL — RE-ENTRY ATMOSPHERIC ENTRY SIMULATOR</div>
+  <div class="ops-nav">
+    <a class="nav-pill calc" href="/calc/orbital">ORB</a>
+    <a class="nav-pill calc" href="/calc/launch">LW</a>
+    <a class="nav-pill calc" href="/calc/magnetostatics">MAG</a>
+    <a class="nav-pill calc" href="/calc/energy">PWR</a>
+    <a class="nav-pill calc" href="/calc/fluids">FLD</a>
+    <a class="nav-pill sim" href="/sims/rfs-extraction">RFS</a>
+    <a class="nav-pill sim" href="/sim/node">EMFF</a>
+    <a class="nav-pill sim" href="/sim/fields">EMF</a>
+    <a class="nav-pill sim active" href="/sim/re-entry">ENTRY</a>
+    <a class="nav-pill w1" href="/w1/data">W1</a>
+    <a class="nav-pill w2" href="/w2/data">W2</a>
+    <a class="nav-pill w3" href="/w3/data">W3</a>
+    <a class="nav-pill w4" href="/w4/data">W4</a>
+    <a class="nav-pill w5" href="/w5/data">W5</a>
+    <a class="nav-pill w6" href="/w6/data">W6</a>
+    <a class="nav-pill util" href="/data/achilles">ACH</a>
+    <a class="nav-pill util" href="/library">LIB</a>
+    <a class="nav-pill util" href="/gmat">GMAT</a>
+    <a class="nav-pill util" href="/dash">DASH</a>
+  </div>
+</div>
+<div class="beacon-bar">
+  <span class="b-live">● LIVE</span>
+  <span class="b-sep">|</span>
+  <span class="b-path">/sim/re-entry</span>
+  <span class="b-sep">|</span>
+  <span class="b-uni">Universal — callable by all workspaces &amp; dataspaces</span>
+  <span class="b-sep">|</span>
+  <span class="b-brand">Römer Industries / EMASSC</span>
+  <span class="b-sep">|</span>
+  <span class="b-ts" id="beaconTs">--</span>
+</div>
+<div class="main-wrap">
+  <div class="sim-header">
+    <div class="sim-title">Re-Entry <span class="title-accent">Atmospheric Entry Simulator</span></div>
+    <div class="sim-desc">3-DOF atmospheric entry dynamics · Aeroheating · Plasma blackout · Landing zone prediction · NRLMSISE-00 atmosphere</div>
+    <div class="badge-row">
+      <span class="badge"></span>
+      <span class="badge">SI Units</span>
+      <span class="badge">Universal Tool</span>
+      <span class="badge">Plotly 3D</span>
+      <span class="badge">Animated Playback</span>
+      <span class="badge">JetBrains Mono · Inter</span>
+      <span class="badge">GMAT Export</span>
+      <span class="badge">Fay-Riddell Heating</span>
+    </div>
+  </div>
+  <div class="telem-grid">
+    <div class="telem-cell"><div class="telem-label">ALTITUDE</div><div class="telem-val" id="tAlt">--</div><div class="telem-unit">km</div></div>
+    <div class="telem-cell"><div class="telem-label">VELOCITY</div><div class="telem-val" id="tVel">--</div><div class="telem-unit">m/s</div></div>
+    <div class="telem-cell"><div class="telem-label">MACH</div><div class="telem-val" id="tMach">--</div><div class="telem-unit">—</div></div>
+    <div class="telem-cell"><div class="telem-label">FLIGHT PATH ANGLE</div><div class="telem-val" id="tFpa">--</div><div class="telem-unit">deg</div></div>
+    <div class="telem-cell"><div class="telem-label">HEAT FLUX</div><div class="telem-val" id="tHeat">--</div><div class="telem-unit">W/cm²</div></div>
+    <div class="telem-cell"><div class="telem-label">PEAK TEMP</div><div class="telem-val" id="tTemp">--</div><div class="telem-unit">K</div></div>
+    <div class="telem-cell"><div class="telem-label">G-LOAD</div><div class="telem-val" id="tGload">--</div><div class="telem-unit">g</div></div>
+    <div class="telem-cell"><div class="telem-label">SIM TIME</div><div class="telem-val" id="tSimTime">--</div><div class="telem-unit">s</div></div>
+  </div>
+  <div class="sim-body">
+    <div class="ctrl-panel">
+      <div class="ctrl-section-title">VEHICLE</div>
+      <div class="ctrl-row"><label>Vehicle Type</label>
+        <select id="cVehicle" class="ctrl-sel">
+          <option value="capsule">Capsule (Apollo)</option>
+          <option value="lifting">Lifting Body (Shuttle)</option>
+          <option value="probe">Ballistic Probe</option>
+          <option value="custom">Custom</option>
+        </select>
+      </div>
+      <div class="ctrl-row"><label>Mass (kg)</label><input type="number" id="cMass" value="5000" class="ctrl-inp"></div>
+      <div class="ctrl-row"><label>Nose Radius (m)</label><input type="number" id="cNose" value="4.69" step="0.01" class="ctrl-inp"></div>
+      <div class="ctrl-row"><label>Ref. Area (m²)</label><input type="number" id="cArea" value="12.0" step="0.1" class="ctrl-inp"></div>
+      <div class="ctrl-row"><label>Cd (drag)</label><input type="number" id="cCd" value="1.28" step="0.01" class="ctrl-inp"></div>
+      <div class="ctrl-row"><label>CL (lift)</label><input type="number" id="cCl" value="0.0" step="0.01" class="ctrl-inp"></div>
+      <div class="ctrl-section-title">ENTRY CONDITIONS</div>
+      <div class="ctrl-row"><label>Entry Altitude (km)</label><input type="number" id="cEntryAlt" value="120" class="ctrl-inp"></div>
+      <div class="ctrl-row"><label>Entry Velocity (m/s)</label><input type="number" id="cEntryVel" value="7800" class="ctrl-inp"></div>
+      <div class="ctrl-row"><label>Flight Path Angle (°)</label><input type="number" id="cFpa" value="-3.0" step="0.1" class="ctrl-inp"></div>
+      <div class="ctrl-row"><label>Heading Angle (°)</label><input type="number" id="cHead" value="0.0" step="1" class="ctrl-inp"></div>
+      <div class="ctrl-row"><label>Latitude (°)</label><input type="number" id="cLat" value="28.5" step="0.1" class="ctrl-inp"></div>
+      <div class="ctrl-row"><label>Longitude (°)</label><input type="number" id="cLon" value="-80.0" step="0.1" class="ctrl-inp"></div>
+      <div class="ctrl-section-title">ATMOSPHERE</div>
+      <div class="ctrl-row"><label>Atm. Model</label>
+        <select id="cAtm" class="ctrl-sel">
+          <option value="nrlmsise">NRLMSISE-00 (layered)</option>
+          <option value="exp">Exponential (simple)</option>
+          <option value="us76">US Standard 1976</option>
+        </select>
+      </div>
+      <div class="ctrl-row"><label>Solar Activity (F10.7)</label><input type="number" id="cF107" value="150" class="ctrl-inp"></div>
+      <div class="ctrl-section-title">PLAYBACK</div>
+      <div class="ctrl-row"><label>Speed</label>
+        <select id="cSpeed" class="ctrl-sel">
+          <option value="10">10×</option>
+          <option value="100" selected>100×</option>
+          <option value="500">500×</option>
+          <option value="1000">1000×</option>
+        </select>
+      </div>
+      <div class="ctrl-row"><label>Time Step (s)</label><input type="number" id="cDt" value="0.5" step="0.1" class="ctrl-inp"></div>
+      <button class="btn-compute" id="btnCompute">COMPUTE</button>
+      <button class="btn-run" id="btnRun">▶ RUN SIM</button>
+      <button class="btn-reset" id="btnReset">⏮ RESET</button>
+      <div class="ctrl-section-title" style="margin-top:16px">DATASPACE ROUTING</div>
+      <div class="ds-grid">
+        <button class="ds-btn" data-ws="1">W1</button>
+        <button class="ds-btn" data-ws="2">W2</button>
+        <button class="ds-btn" data-ws="3">W3</button>
+        <button class="ds-btn" data-ws="4">W4</button>
+        <button class="ds-btn" data-ws="5">W5</button>
+        <button class="ds-btn" data-ws="6">W6</button>
+      </div>
+      <button class="ds-btn-all" id="btnDsAll">ROUTE TO ALL</button>
+      <div class="ds-status" id="dsStatus">No routing active</div>
+    </div>
+    <div class="main-panel">
+      <div class="tab-bar">
+        <button class="tab-btn active" data-tab="traj3d">3D TRAJECTORY</button>
+        <button class="tab-btn" data-tab="heating">HEATING</button>
+        <button class="tab-btn" data-tab="aero">AERODYNAMICS</button>
+        <button class="tab-btn" data-tab="telemetry">TELEMETRY</button>
+        <button class="tab-btn" data-tab="sweep">SWEEP</button>
+        <button class="tab-btn" data-tab="export">EXPORT</button>
+      </div>
+      <div class="tab-content active" id="tab-traj3d">
+        <div class="plot-notice" id="trajNotice">Press COMPUTE to generate trajectory, then ▶ RUN SIM to animate</div>
+        <div id="plot3d" style="width:100%;height:520px"></div>
+        <div class="blackout-bar" id="blackoutBar" style="display:none">
+          <span class="blackout-icon">⚡</span> PLASMA BLACKOUT — RF COMMS LOSS — Re-entry blackout corridor active
+        </div>
+        <div class="chute-bar" id="chuteBar" style="display:none">
+          <span>🪂</span> PARACHUTE DEPLOYMENT — Mach &lt; 1.5 detected
+        </div>
+        <div class="landing-info" id="landingInfo" style="display:none"></div>
+      </div>
+      <div class="tab-content" id="tab-heating">
+        <div id="plotHeat" style="width:100%;height:520px"></div>
+      </div>
+      <div class="tab-content" id="tab-aero">
+        <div id="plotAero" style="width:100%;height:520px"></div>
+      </div>
+      <div class="tab-content" id="tab-telemetry">
+        <div id="plotTelem" style="width:100%;height:520px"></div>
+      </div>
+      <div class="tab-content" id="tab-sweep">
+        <div class="sweep-controls">
+          <div class="ctrl-row"><label>Sweep Variable</label>
+            <select id="swVar" class="ctrl-sel">
+              <option value="fpa">Flight Path Angle (°)</option>
+              <option value="vel">Entry Velocity (m/s)</option>
+              <option value="cd">Drag Coefficient Cd</option>
+              <option value="mass">Vehicle Mass (kg)</option>
+              <option value="nose">Nose Radius (m)</option>
+            </select>
+          </div>
+          <div class="ctrl-row"><label>From</label><input type="number" id="swFrom" value="-8" class="ctrl-inp" style="width:80px"></div>
+          <div class="ctrl-row"><label>To</label><input type="number" id="swTo" value="-1" class="ctrl-inp" style="width:80px"></div>
+          <div class="ctrl-row"><label>Steps</label><input type="number" id="swSteps" value="15" class="ctrl-inp" style="width:80px"></div>
+          <div class="ctrl-row"><label>Output</label>
+            <select id="swOut" class="ctrl-sel">
+              <option value="peakHeat">Peak Heat Flux (W/cm²)</option>
+              <option value="peakTemp">Peak Stag. Temp (K)</option>
+              <option value="peakG">Peak G-Load (g)</option>
+              <option value="landRange">Down-range (km)</option>
+              <option value="totalHeat">Total Heat Load (MJ/m²)</option>
+            </select>
+          </div>
+          <button class="btn-compute" id="btnSweep" style="margin-top:8px">RUN SWEEP</button>
+        </div>
+        <div id="plotSweep" style="width:100%;height:420px"></div>
+      </div>
+      <div class="tab-content" id="tab-export">
+        <div class="export-grid">
+          <div class="export-card"><div class="export-icon">{ }</div><div class="export-title">JSON</div><div class="export-desc">Full simulation state, trajectory array, telemetry vectors</div><button class="export-btn" id="expJson">EXPORT JSON</button></div>
+          <div class="export-card"><div class="export-icon">⊞</div><div class="export-title">CSV</div><div class="export-desc">Time-series: t, alt, vel, mach, fpa, heat, temp, g-load</div><button class="export-btn" id="expCsv">EXPORT CSV</button></div>
+          <div class="export-card"><div class="export-icon">⚙</div><div class="export-title">GMAT Script</div><div class="export-desc">Entry trajectory script for GMAT astrodynamics toolkit</div><button class="export-btn" id="expGmat">EXPORT GMAT</button></div>
+          <div class="export-card"><div class="export-icon">≡</div><div class="export-title">TXT Manifest</div><div class="export-desc">Human-readable summary: inputs, peak values, landing zone</div><button class="export-btn" id="expTxt">EXPORT TXT</button></div>
+          <div class="export-card"><div class="export-icon">⬛</div><div class="export-title">PNG Snapshot</div><div class="export-desc">Static image of current 3D trajectory view</div><button class="export-btn" id="expPng">EXPORT PNG</button></div>
+          <div class="export-card"><div class="export-icon">⚙</div><div class="export-title">YAML Config</div><div class="export-desc">Reproducible parameter configuration file</div><button class="export-btn" id="expYaml">EXPORT YAML</button></div>
+        </div>
+      </div>
+      <div class="playback-bar">
+        <button class="pb-btn" id="pbPlay">▶ PLAY</button>
+        <button class="pb-btn" id="pbPause">⏸ PAUSE</button>
+        <button class="pb-btn" id="pbStep">⏭ STEP</button>
+        <button class="pb-btn" id="pbRewind">⏮ RESET</button>
+        <div class="pb-prog-wrap"><div class="pb-prog" id="pbProg" style="width:0%"></div></div>
+        <div class="pb-time" id="pbTime">T+0.0s</div>
+        <div class="pb-status" id="pbStatus">PAUSED — Press COMPUTE then PLAY</div>
+      </div>
+    </div>
+  </div>
+</div><script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+<script>
+
+const RE = 6371000;
+const GM = 3.986004418e14;
+const g0 = 9.80665;
+
+function atmNRLMSISE(hKm, F107) {
+  const layers = [
+    {hMin:0,   hMax:11,  rho0:1.225,     H:8500},
+    {hMin:11,  hMax:25,  rho0:0.3639,    H:6600},
+    {hMin:25,  hMax:47,  rho0:0.08803,   H:7000},
+    {hMin:47,  hMax:53,  rho0:0.01322,   H:7000},
+    {hMin:53,  hMax:79,  rho0:0.001427,  H:6000},
+    {hMin:79,  hMax:90,  rho0:3.996e-4,  H:5500},
+    {hMin:90,  hMax:105, rho0:1.846e-5,  H:5500},
+    {hMin:105, hMax:500, rho0:5.0e-7,    H:7200}
+  ];
+  if(hKm < 0) hKm = 0;
+  let layer = layers[layers.length-1];
+  for(const l of layers) {
+    if(hKm >= l.hMin && hKm < l.hMax) { layer = l; break; }
+  }
+  const corr = 1.0 + 0.002 * (F107 - 150) * Math.max(0, (hKm - 200)/200);
+  const rho = layer.rho0 * Math.exp(-(hKm - layer.hMin) * 1000 / layer.H) * corr;
+  return Math.max(rho, 1e-15);
+}
+
+function atmUS76(hKm) {
+  const h = hKm * 1000;
+  if(h < 11000)  return 1.225 * Math.pow((288.15 - 0.0065*h)/288.15, 5.2561);
+  if(h < 20000)  return 0.3639 * Math.exp(-(h-11000)/6341.6);
+  if(h < 32000)  return 0.0880 * Math.pow((216.65+0.001*(h-20000))/216.65, -34.163);
+  return 0.0132 * Math.exp(-(h-32000)/6000);
+}
+
+function getAtmDensity(hKm, model, F107) {
+  if(model==='us76') return atmUS76(hKm);
+  if(model==='exp')  return 1.225 * Math.exp(-hKm/8.5);
+  return atmNRLMSISE(hKm, F107);
+}
+
+function soundSpeed(hKm) {
+  if(hKm<11) return 340.29 * Math.sqrt(1 - 0.0065*hKm*1000/288.15);
+  return 295.07;
+}
+
+function gravAccel(hM) {
+  return GM / Math.pow(RE + hM, 2);
+}
+
+function fayRiddellHeat(rho, V, noseR) {
+  const K = 1.83e-4;
+  const qW = K * Math.sqrt(rho / noseR) * Math.pow(V, 3);
+  return qW * 1e-4;
+}
+
+function stagTemp(qWcm2) {
+  return 300 + 900 * Math.pow(Math.max(0, qWcm2) / 500, 0.5);
+}
+
+function runTrajectory(params) {
+  const {
+    h0, v0, fpa0Deg, headDeg, lat0Deg, lon0Deg,
+    mass, area, Cd, CL, noseR, atm, F107, dt
+  } = params;
+
+  let h = h0 * 1000;
+  let v = v0;
+  let gamma = fpa0Deg * Math.PI / 180;
+  let lat = lat0Deg * Math.PI / 180;
+  let lon = lon0Deg * Math.PI / 180;
+  let head = headDeg * Math.PI / 180;
+  let t = 0;
+  let downRange = 0;
+  let crossRange = 0;
+  let totalHeat = 0;
+
+  const traj = [];
+  const maxSteps = 20000;
+  let step = 0;
+  let peakHeat = 0, peakTemp = 300, peakG = 0;
+  let blackoutStart = null, blackoutEnd = null;
+  let chuteDeployed = false;
+  let chuteAlt = 0;
+
+  while(h > -100 && step < maxSteps) {
+    const hKm = h / 1000;
+    const rho = getAtmDensity(hKm < 0 ? 0 : hKm, atm, F107);
+    const grav = gravAccel(h);
+    const vs = soundSpeed(hKm);
+    const mach = v / vs;
+    const q = 0.5 * rho * v * v;
+    const drag = q * Cd * area;
+    const lift = q * CL * area;
+    const dragAccel = drag / mass;
+    const liftAccel = lift / mass;
+    const gLoad = dragAccel / g0;
+
+    const qHeat = h > 0 ? fayRiddellHeat(rho, v, noseR) : 0;
+    const tStag = stagTemp(qHeat);
+    totalHeat += qHeat * dt;
+
+    if(h > 0) {
+      const latDeg = lat * 180 / Math.PI;
+      const lonDeg = lon * 180 / Math.PI;
+      traj.push({t, h: hKm, v, mach, gamma: gamma*180/Math.PI, qHeat, tStag, gLoad, lat: latDeg, lon: lonDeg, downRange, crossRange, rho});
+    }
+
+    if(qHeat > peakHeat) peakHeat = qHeat;
+    if(tStag > peakTemp) peakTemp = tStag;
+    if(gLoad > peakG) peakG = gLoad;
+
+    if(h < 80000 && h > 50000 && blackoutStart === null) blackoutStart = t;
+    if(h < 50000 && blackoutStart !== null && blackoutEnd === null) blackoutEnd = t;
+
+    if(mach < 1.5 && !chuteDeployed && h < 15000) {
+      chuteDeployed = true;
+      chuteAlt = hKm;
+    }
+
+    const dvdt = -dragAccel - grav * Math.sin(gamma);
+    const dgammadt = (liftAccel / v) + (v/(RE+h) - grav/v) * Math.cos(gamma);
+    const dhdt = v * Math.sin(gamma);
+    const dxdt = v * Math.cos(gamma) * Math.cos(head);
+    const dydt = v * Math.cos(gamma) * Math.sin(head);
+
+    v += dvdt * dt;
+    gamma += dgammadt * dt;
+    h += dhdt * dt;
+    downRange += dxdt * dt;
+    crossRange += dydt * dt;
+    t += dt;
+    step++;
+
+    if(v < 1) { v = 1; }
+    if(h <= 0) break;
+  }
+
+  const finalLat = lat0Deg + (downRange / 111320);
+  const finalLon = lon0Deg + (crossRange / (111320 * Math.cos(lat0Deg*Math.PI/180)));
+
+  return {traj, peakHeat, peakTemp, peakG, totalHeat, blackoutStart, blackoutEnd, chuteDeployed, chuteAlt, landLat: finalLat, landLon: finalLon, duration: t};
+}
+
+
+let simData = null;
+let animFrame = null;
+let animIdx = 0;
+let isPlaying = false;
+
+function latLonToXYZ(latDeg, lonDeg, rNorm) {
+  const lat = latDeg * Math.PI / 180;
+  const lon = lonDeg * Math.PI / 180;
+  const r = rNorm;
+  return {
+    x: r * Math.cos(lat) * Math.cos(lon),
+    y: r * Math.cos(lat) * Math.sin(lon),
+    z: r * Math.sin(lat)
+  };
+}
+
+function makeEarthSurface() {
+  const N = 36;
+  const lats = [], lons = [], xs = [], ys = [], zs = [];
+  for(let i=0; i<=N; i++) {
+    const lat = -90 + i*(180/N);
+    const xRow=[], yRow=[], zRow=[];
+    for(let j=0; j<=N; j++) {
+      const lon = -180 + j*(360/N);
+      const p = latLonToXYZ(lat, lon, 1.0);
+      xRow.push(p.x); yRow.push(p.y); zRow.push(p.z);
+    }
+    xs.push(xRow); ys.push(yRow); zs.push(zRow);
+  }
+  return {
+    type:'surface', x:xs, y:ys, z:zs,
+    colorscale:[[0,'#0B2235'],[0.4,'#1B5E20'],[0.6,'#2E7D32'],[0.8,'#1565C0'],[1,'#0D47A1']],
+    showscale:false, opacity:0.85, name:'Earth',
+    hoverinfo:'skip', lighting:{ambient:0.6, diffuse:0.8},
+    contours:{x:{show:false}, y:{show:false}, z:{show:false}}
+  };
+}
+
+function trajToXYZ(traj, earthRadiusNorm) {
+  const altScale = 1.0 / 6371.0;
+  return traj.map(pt => {
+    const r = 1.0 + pt.h * altScale;
+    const p = latLonToXYZ(pt.lat, pt.lon, r);
+    return p;
+  });
+}
+
+function renderTrajectory3D(res) {
+  const {traj} = res;
+  if(!traj || traj.length < 2) return;
+
+  const pts = trajToXYZ(traj, 1.0);
+  const xs = pts.map(p=>p.x);
+  const ys = pts.map(p=>p.y);
+  const zs = pts.map(p=>p.z);
+  const heats = traj.map(pt=>pt.qHeat);
+  const maxH = Math.max(...heats);
+
+  const earthTrace = makeEarthSurface();
+  const trajTrace = {
+    type:'scatter3d', mode:'lines',
+    x:xs, y:ys, z:zs,
+    line:{width:4, color:heats, colorscale:[[0,'#4EC5C1'],[0.3,'#C9A24A'],[0.6,'#B87333'],[1,'#FF3300']], cmin:0, cmax:Math.max(maxH,1), colorbar:{title:{text:'Heat<br>W/cm²',font:{color:'#F2F1EC',size:10}}, thickness:10, len:0.5, tickfont:{color:'#F2F1EC',size:8}}},
+    name:'Trajectory', hovertemplate:'Alt: %{text}km<extra></extra>',
+    text:traj.map(pt=>pt.h.toFixed(1))
+  };
+
+  const startPt = pts[0];
+  const endPt = pts[pts.length-1];
+  const markerTrace = {
+    type:'scatter3d', mode:'markers+text',
+    x:[startPt.x, endPt.x], y:[startPt.y, endPt.y], z:[startPt.z, endPt.z],
+    marker:{size:[8,10], color:['#4EC5C1','#C9A24A'], symbol:['circle','diamond']},
+    text:['ENTRY','LANDING'], textfont:{color:'#F2F1EC', size:9},
+    textposition:'top center', name:'Key Points', hoverinfo:'text'
+  };
+
+  const animMarker = {
+    type:'scatter3d', mode:'markers',
+    x:[startPt.x], y:[startPt.y], z:[startPt.z],
+    marker:{size:12, color:'#00E5FF', symbol:'circle', opacity:0.9},
+    name:'Vehicle', hoverinfo:'skip'
+  };
+
+  const layout = {
+    paper_bgcolor:'#0B0D10', plot_bgcolor:'#0B0D10',
+    scene:{
+      bgcolor:'#0B0D10',
+      xaxis:{showgrid:false, zeroline:false, showticklabels:false},
+      yaxis:{showgrid:false, zeroline:false, showticklabels:false},
+      zaxis:{showgrid:false, zeroline:false, showticklabels:false},
+      camera:{eye:{x:1.5, y:1.5, z:0.8}},
+      aspectmode:'cube'
+    },
+    margin:{l:0,r:0,t:0,b:0},
+    showlegend:false,
+    font:{color:'#F2F1EC', family:'Inter'}
+  };
+
+  Plotly.newPlot('plot3d', [earthTrace, trajTrace, markerTrace, animMarker], layout, {responsive:true, displayModeBar:false});
+  document.getElementById('trajNotice').style.display='none';
+}
+
+function renderHeatPlot(traj) {
+  const t = traj.map(p=>p.t);
+  const q = traj.map(p=>p.qHeat);
+  const temp = traj.map(p=>p.tStag);
+
+  Plotly.newPlot('plotHeat', [
+    {x:t, y:q, type:'scatter', mode:'lines', name:'Heat Flux (W/cm²)', line:{color:'#FF3300', width:2}, yaxis:'y'},
+    {x:t, y:temp, type:'scatter', mode:'lines', name:'Stag. Temp (K)', line:{color:'#C9A24A', width:2}, yaxis:'y2'}
+  ], {
+    paper_bgcolor:'#0B0D10', plot_bgcolor:'#141820',
+    font:{color:'#F2F1EC', family:'Inter'},
+    xaxis:{title:'Time (s)', gridcolor:'#1C2030', zerolinecolor:'#1C2030'},
+    yaxis:{title:'Heat Flux (W/cm²)', gridcolor:'#1C2030', titlefont:{color:'#FF3300'}, tickfont:{color:'#FF3300'}},
+    yaxis2:{title:'Stag. Temp (K)', overlaying:'y', side:'right', titlefont:{color:'#C9A24A'}, tickfont:{color:'#C9A24A'}},
+    legend:{bgcolor:'#0B0D10', bordercolor:'#1C2030'},
+    margin:{l:60,r:60,t:20,b:50}
+  }, {responsive:true, displayModeBar:false});
+}
+
+function renderAeroPlot(traj) {
+  const t = traj.map(p=>p.t);
+  Plotly.newPlot('plotAero', [
+    {x:t, y:traj.map(p=>p.mach), type:'scatter', mode:'lines', name:'Mach', line:{color:'#4EC5C1', width:2}},
+    {x:t, y:traj.map(p=>p.gLoad), type:'scatter', mode:'lines', name:'G-Load', line:{color:'#B87333', width:2}, yaxis:'y2'},
+    {x:t, y:traj.map(p=>-p.gamma), type:'scatter', mode:'lines', name:'|FPA| (°)', line:{color:'#C9A24A', width:2}, yaxis:'y3'}
+  ], {
+    paper_bgcolor:'#0B0D10', plot_bgcolor:'#141820',
+    font:{color:'#F2F1EC', family:'Inter'},
+    xaxis:{title:'Time (s)', domain:[0,0.75], gridcolor:'#1C2030'},
+    yaxis:{title:'Mach', gridcolor:'#1C2030', titlefont:{color:'#4EC5C1'}, tickfont:{color:'#4EC5C1'}},
+    yaxis2:{title:'G-Load (g)', overlaying:'y', side:'right', titlefont:{color:'#B87333'}, tickfont:{color:'#B87333'}},
+    yaxis3:{title:'|FPA| °', overlaying:'y', side:'right', position:0.85, titlefont:{color:'#C9A24A'}, tickfont:{color:'#C9A24A'}},
+    legend:{bgcolor:'#0B0D10'}, margin:{l:60,r:100,t:20,b:50}
+  }, {responsive:true, displayModeBar:false});
+}
+
+function renderTelemPlot(traj) {
+  const t = traj.map(p=>p.t);
+  Plotly.newPlot('plotTelem', [
+    {x:t, y:traj.map(p=>p.h), type:'scatter', mode:'lines', name:'Altitude (km)', line:{color:'#4EC5C1', width:2}},
+    {x:t, y:traj.map(p=>p.v/1000), type:'scatter', mode:'lines', name:'Velocity (km/s)', line:{color:'#C9A24A', width:2}, yaxis:'y2'},
+    {x:t, y:traj.map(p=>Math.log10(Math.max(p.rho, 1e-15))), type:'scatter', mode:'lines', name:'log₁₀ ρ (kg/m³)', line:{color:'#B87333', width:2, dash:'dot'}, yaxis:'y3'}
+  ], {
+    paper_bgcolor:'#0B0D10', plot_bgcolor:'#141820',
+    font:{color:'#F2F1EC', family:'Inter'},
+    xaxis:{title:'Time (s)', domain:[0,0.72], gridcolor:'#1C2030'},
+    yaxis:{title:'Altitude (km)', gridcolor:'#1C2030', titlefont:{color:'#4EC5C1'}, tickfont:{color:'#4EC5C1'}},
+    yaxis2:{title:'Velocity (km/s)', overlaying:'y', side:'right', titlefont:{color:'#C9A24A'}, tickfont:{color:'#C9A24A'}},
+    yaxis3:{title:'log₁₀ ρ', overlaying:'y', side:'right', position:0.85, titlefont:{color:'#B87333'}, tickfont:{color:'#B87333'}},
+    legend:{bgcolor:'#0B0D10'}, margin:{l:60,r:110,t:20,b:50}
+  }, {responsive:true, displayModeBar:false});
+}
+
+
+function getParams() {
+  return {
+    h0:    parseFloat(document.getElementById('cEntryAlt').value)||120,
+    v0:    parseFloat(document.getElementById('cEntryVel').value)||7800,
+    fpa0Deg: parseFloat(document.getElementById('cFpa').value)||-3.0,
+    headDeg: parseFloat(document.getElementById('cHead').value)||0,
+    lat0Deg: parseFloat(document.getElementById('cLat').value)||28.5,
+    lon0Deg: parseFloat(document.getElementById('cLon').value)||-80.0,
+    mass:  parseFloat(document.getElementById('cMass').value)||5000,
+    area:  parseFloat(document.getElementById('cArea').value)||12.0,
+    Cd:    parseFloat(document.getElementById('cCd').value)||1.28,
+    CL:    parseFloat(document.getElementById('cCl').value)||0.0,
+    noseR: parseFloat(document.getElementById('cNose').value)||4.69,
+    atm:   document.getElementById('cAtm').value,
+    F107:  parseFloat(document.getElementById('cF107').value)||150,
+    dt:    parseFloat(document.getElementById('cDt').value)||0.5
+  };
+}
+
+function applyVehiclePreset(type) {
+  const presets = {
+    capsule:  {mass:5000, area:12.0, Cd:1.28, CL:0.0,  noseR:4.69},
+    lifting:  {mass:82000, area:249.9, Cd:0.79, CL:0.42, noseR:10.0},
+    probe:    {mass:300,  area:0.19, Cd:0.47, CL:0.0,  noseR:0.25},
+    custom:   {}
+  };
+  const p = presets[type]||{};
+  if(p.mass)  document.getElementById('cMass').value = p.mass;
+  if(p.area)  document.getElementById('cArea').value = p.area;
+  if(p.Cd)    document.getElementById('cCd').value   = p.Cd;
+  if(p.CL)    document.getElementById('cCl').value   = p.CL;
+  if(p.noseR) document.getElementById('cNose').value = p.noseR;
+}
+
+function updateTelemUI(pt) {
+  if(!pt) return;
+  document.getElementById('tAlt').textContent    = pt.h.toFixed(1);
+  document.getElementById('tVel').textContent    = pt.v.toFixed(0);
+  document.getElementById('tMach').textContent   = pt.mach.toFixed(2);
+  document.getElementById('tFpa').textContent    = pt.gamma.toFixed(2);
+  document.getElementById('tHeat').textContent   = pt.qHeat.toFixed(1);
+  document.getElementById('tTemp').textContent   = pt.tStag.toFixed(0);
+  document.getElementById('tGload').textContent  = pt.gLoad.toFixed(2);
+  document.getElementById('tSimTime').textContent = pt.t.toFixed(1);
+}
+
+function animStep() {
+  if(!simData || !isPlaying) return;
+  const traj = simData.traj;
+  const speed = parseFloat(document.getElementById('cSpeed').value)||100;
+  const stepsPerFrame = Math.max(1, Math.round(speed / 10));
+  animIdx = Math.min(animIdx + stepsPerFrame, traj.length - 1);
+
+  const pt = traj[animIdx];
+  updateTelemUI(pt);
+  const pts = trajToXYZ(traj.slice(0, animIdx+1), 1.0);
+  if(pts.length > 0) {
+    const lp = pts[pts.length-1];
+    Plotly.restyle('plot3d', {x:[[lp.x]], y:[[lp.y]], z:[[lp.z]]}, [3]);
+  }
+  const pct = animIdx / (traj.length-1) * 100;
+  document.getElementById('pbProg').style.width = pct + '%';
+  document.getElementById('pbTime').textContent = 'T+' + pt.t.toFixed(1) + 's';
+
+  const isBlackout = pt.h > 50 && pt.h < 80;
+  document.getElementById('blackoutBar').style.display = isBlackout ? 'flex' : 'none';
+  const isMachLow = simData.chuteDeployed && pt.h <= simData.chuteAlt;
+  document.getElementById('chuteBar').style.display = isMachLow ? 'flex' : 'none';
+
+  if(animIdx >= traj.length - 1) {
+    isPlaying = false;
+    document.getElementById('pbStatus').textContent = 'SIMULATION COMPLETE';
+    const li = document.getElementById('landingInfo');
+    li.style.display = 'block';
+    li.innerHTML = '<strong>Landing Zone:</strong> ' + simData.landLat.toFixed(4) + '°N, ' + simData.landLon.toFixed(4) + '°E &nbsp;|&nbsp; Peak Heat: ' + simData.peakHeat.toFixed(1) + ' W/cm² &nbsp;|&nbsp; Peak Temp: ' + simData.peakTemp.toFixed(0) + ' K &nbsp;|&nbsp; Peak G: ' + simData.peakG.toFixed(1) + 'g';
+    return;
+  }
+  animFrame = requestAnimationFrame(animStep);
+}
+
+function doCompute() {
+  const p = getParams();
+  document.getElementById('pbStatus').textContent = 'COMPUTING...';
+  setTimeout(function() {
+    try {
+      const res = runTrajectory(p);
+      simData = res;
+      animIdx = 0;
+      renderTrajectory3D(res);
+      renderHeatPlot(res.traj);
+      renderAeroPlot(res.traj);
+      renderTelemPlot(res.traj);
+      if(res.traj.length > 0) updateTelemUI(res.traj[0]);
+      document.getElementById('pbStatus').textContent = 'READY — ' + res.traj.length + ' steps | Duration: ' + res.duration.toFixed(0) + 's';
+    } catch(err) {
+      document.getElementById('pbStatus').textContent = 'ERROR: ' + err.message;
+    }
+  }, 50);
+}
+
+function doReset() {
+  if(animFrame) cancelAnimationFrame(animFrame);
+  animFrame = null; isPlaying = false; animIdx = 0;
+  document.getElementById('pbProg').style.width = '0%';
+  document.getElementById('pbTime').textContent = 'T+0.0s';
+  document.getElementById('pbStatus').textContent = 'RESET — Press PLAY to animate';
+  document.getElementById('blackoutBar').style.display = 'none';
+  document.getElementById('chuteBar').style.display = 'none';
+  document.getElementById('landingInfo').style.display = 'none';
+  if(simData && simData.traj.length > 0) {
+    updateTelemUI(simData.traj[0]);
+    const pts = trajToXYZ(simData.traj, 1.0);
+    if(pts.length > 0) {
+      Plotly.restyle('plot3d', {x:[[pts[0].x]], y:[[pts[0].y]], z:[[pts[0].z]]}, [3]);
+    }
+  }
+}
+
+function runSweep() {
+  const swVar  = document.getElementById('swVar').value;
+  const swFrom = parseFloat(document.getElementById('swFrom').value);
+  const swTo   = parseFloat(document.getElementById('swTo').value);
+  const swN    = parseInt(document.getElementById('swSteps').value)||10;
+  const swOut  = document.getElementById('swOut').value;
+  const baseP  = getParams();
+  const xs = [], ys = [];
+  document.getElementById('pbStatus').textContent = 'RUNNING SWEEP...';
+  setTimeout(function() {
+    for(let i=0; i<swN; i++) {
+      const val = swFrom + i*(swTo-swFrom)/(swN-1);
+      const p = Object.assign({}, baseP);
+      if(swVar==='fpa')  p.fpa0Deg = val;
+      if(swVar==='vel')  p.v0 = val;
+      if(swVar==='cd')   p.Cd = val;
+      if(swVar==='mass') p.mass = val;
+      if(swVar==='nose') p.noseR = val;
+      try {
+        const r = runTrajectory(p);
+        xs.push(val);
+        if(swOut==='peakHeat')  ys.push(r.peakHeat);
+        else if(swOut==='peakTemp')  ys.push(r.peakTemp);
+        else if(swOut==='peakG')     ys.push(r.peakG);
+        else if(swOut==='landRange') ys.push(Math.sqrt(r.traj[r.traj.length-1].downRange**2 + r.traj[r.traj.length-1].crossRange**2)/1000);
+        else if(swOut==='totalHeat') ys.push(r.totalHeat/1e6);
+      } catch(e) {}
+    }
+    const labels = {fpa:'FPA (°)', vel:'Entry Velocity (m/s)', cd:'Cd', mass:'Mass (kg)', nose:'Nose Radius (m)'};
+    const ylabels = {peakHeat:'Peak Heat Flux (W/cm²)', peakTemp:'Peak Stag. Temp (K)', peakG:'Peak G-Load (g)', landRange:'Down-range (km)', totalHeat:'Total Heat Load (MJ/m²)'};
+    Plotly.newPlot('plotSweep', [{x:xs, y:ys, type:'scatter', mode:'lines+markers', line:{color:'#B87333', width:2}, marker:{color:'#C9A24A', size:6}}], {
+      paper_bgcolor:'#0B0D10', plot_bgcolor:'#141820', font:{color:'#F2F1EC', family:'Inter'},
+      xaxis:{title:labels[swVar]||swVar, gridcolor:'#1C2030'},
+      yaxis:{title:ylabels[swOut]||swOut, gridcolor:'#1C2030'},
+      margin:{l:60,r:20,t:20,b:50}
+    }, {responsive:true, displayModeBar:false});
+    document.getElementById('pbStatus').textContent = 'SWEEP COMPLETE — ' + xs.length + ' points';
+  }, 50);
+}
+
+function routeToDataspace(ws) {
+  if(!simData) { document.getElementById('dsStatus').textContent='No sim data — run COMPUTE first'; return; }
+  const p = getParams();
+  const payload = {
+    ts: Date.now(), simulator:'re-entry', workspace:'W'+ws,
+    params: p, results: {
+      peakHeat:simData.peakHeat, peakTemp:simData.peakTemp, peakG:simData.peakG,
+      totalHeat:simData.totalHeat, landLat:simData.landLat, landLon:simData.landLon,
+      duration:simData.duration, steps:simData.traj.length,
+      blackoutStart:simData.blackoutStart, blackoutEnd:simData.blackoutEnd,
+      chuteDeployed:simData.chuteDeployed, chuteAlt:simData.chuteAlt
+    }
+  };
+  const key = 'achilles_sim_reentry_w' + ws;
+  try {
+    localStorage.setItem(key, JSON.stringify(payload));
+    if(ws==5) localStorage.setItem('achilles_calc_orbital_w5_reentry_flag', JSON.stringify({ts:Date.now(), source:'re-entry-sim', note:'entry-trajectory-routed'}));
+    if(ws==1) localStorage.setItem('achilles_calc_fd_w1_reentry_flag', JSON.stringify({ts:Date.now(), source:'re-entry-sim', note:'drag-params-routed'}));
+    document.getElementById('dsStatus').textContent = 'Routed to W'+ws+' → '+key;
+  } catch(e) {
+    document.getElementById('dsStatus').textContent = 'Route error: '+e.message;
+  }
+}
+
+function routeToAll() {
+  for(let w=1;w<=6;w++) routeToDataspace(w);
+  document.getElementById('dsStatus').textContent = 'Routed to all W1–W6';
+}
+
+function dl(content, mime, fname) {
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([content], {type:mime}));
+  a.download = fname; document.body.appendChild(a); a.click(); document.body.removeChild(a);
+}
+
+function doExportJson() {
+  if(!simData) return;
+  dl(JSON.stringify({params:getParams(), results:simData}, null, 2), 'application/json', 'reentry_sim.json');
+}
+
+function doExportCsv() {
+  if(!simData) return;
+  let csv = 't,alt_km,vel_ms,mach,fpa_deg,heat_wcm2,temp_K,gload_g,lat,lon\n';
+  simData.traj.forEach(function(p) {
+    csv += [p.t.toFixed(2), p.h.toFixed(3), p.v.toFixed(1), p.mach.toFixed(3), p.gamma.toFixed(3), p.qHeat.toFixed(2), p.tStag.toFixed(1), p.gLoad.toFixed(4), p.lat.toFixed(6), p.lon.toFixed(6)].join(',') + '\n';
+  });
+  dl(csv, 'text/csv', 'reentry_trajectory.csv');
+}
+
+function doExportGmat() {
+  if(!simData) return;
+  const p = getParams();
+  const t0 = simData.traj[0]; const tf = simData.traj[simData.traj.length-1];
+  const gmat = [
+    '% ACHILLES PROTOCOL — Re-Entry Simulator GMAT Script',
+    '% Generated: ' + new Date().toISOString(),
+    '% Römer Industries / EMASSC',
+    '',
+    'Create Spacecraft ReEntryVehicle;',
+    'GMAT ReEntryVehicle.DateFormat = UTCGregorian;',
+    'GMAT ReEntryVehicle.Epoch = ' + new Date().toISOString().replace('T',' ').slice(0,19) + ';',
+    'GMAT ReEntryVehicle.CoordinateSystem = EarthFixed;',
+    'GMAT ReEntryVehicle.DisplayStateType = Keplerian;',
+    '',
+    'Create ForceModel EntryForces;',
+    'GMAT EntryForces.CentralBody = Earth;',
+    'GMAT EntryForces.PrimaryBodies = {Earth};',
+    'GMAT EntryForces.Drag = ' + (p.atm==='nrlmsise' ? 'NRLMSISE-00' : 'Exponential') + ';',
+    'GMAT EntryForces.Drag.F107 = ' + p.F107 + ';',
+    '',
+    'Create Propagator EntryProp;',
+    'GMAT EntryProp.FM = EntryForces;',
+    'GMAT EntryProp.Type = RungeKutta89;',
+    '',
+    '% Entry Vehicle Parameters',
+    '% Mass: ' + p.mass + ' kg',
+    '% Ref Area: ' + p.area + ' m^2',
+    '% Cd: ' + p.Cd,
+    '% CL: ' + p.CL,
+    '% Nose Radius: ' + p.noseR + ' m',
+    '',
+    '% Entry Conditions',
+    '% Altitude: ' + p.h0 + ' km',
+    '% Velocity: ' + p.v0 + ' m/s',
+    '% FPA: ' + p.fpa0Deg + ' deg',
+    '% Heading: ' + p.headDeg + ' deg',
+    '% Lat: ' + p.lat0Deg + ' deg',
+    '% Lon: ' + p.lon0Deg + ' deg',
+    '',
+    '% Simulation Results',
+    '% Peak Heat Flux: ' + simData.peakHeat.toFixed(2) + ' W/cm^2',
+    '% Peak Stag Temp: ' + simData.peakTemp.toFixed(0) + ' K',
+    '% Peak G-Load: ' + simData.peakG.toFixed(2) + ' g',
+    '% Duration: ' + simData.duration.toFixed(1) + ' s',
+    '% Landing Lat: ' + simData.landLat.toFixed(4) + ' deg',
+    '% Landing Lon: ' + simData.landLon.toFixed(4) + ' deg',
+    '',
+    'BeginMissionSequence;',
+    'Propagate EntryProp(ReEntryVehicle) {ReEntryVehicle.Earth.Altitude = 0.0};'
+  ].join('\n');
+  dl(gmat, 'text/plain', 'reentry_gmat.script');
+}
+
+function doExportTxt() {
+  if(!simData) return;
+  const p = getParams();
+  const txt = [
+    'ACHILLES PROTOCOL — Re-Entry Simulator v2.0.0',
+    'Römer Industries / EMASSC',
+    'Generated: ' + new Date().toISOString(),
+    '',
+    '=== INPUT PARAMETERS ===',
+    'Vehicle Type: ' + p.mass + ' kg | Area: ' + p.area + ' m² | Cd: ' + p.Cd + ' | CL: ' + p.CL,
+    'Entry: h=' + p.h0 + 'km | v=' + p.v0 + 'm/s | FPA=' + p.fpa0Deg + '° | Hdg=' + p.headDeg + '°',
+    'Location: ' + p.lat0Deg + '°N, ' + p.lon0Deg + '°E',
+    'Atmosphere: ' + p.atm + ' | F10.7=' + p.F107,
+    '',
+    '=== SIMULATION RESULTS ===',
+    'Duration: ' + simData.duration.toFixed(1) + ' s | Steps: ' + simData.traj.length,
+    'Peak Heat Flux: ' + simData.peakHeat.toFixed(2) + ' W/cm²',
+    'Peak Stag. Temp: ' + simData.peakTemp.toFixed(0) + ' K',
+    'Peak G-Load: ' + simData.peakG.toFixed(2) + ' g',
+    'Total Heat Load: ' + (simData.totalHeat/1e6).toFixed(3) + ' MJ/m²',
+    'Blackout: ' + (simData.blackoutStart ? simData.blackoutStart.toFixed(1)+'s – '+simData.blackoutEnd.toFixed(1)+'s' : 'None'),
+    'Parachute: ' + (simData.chuteDeployed ? 'Deployed at '+simData.chuteAlt.toFixed(1)+'km' : 'Not deployed'),
+    '',
+    '=== LANDING ZONE ===',
+    'Latitude: ' + simData.landLat.toFixed(4) + '°N',
+    'Longitude: ' + simData.landLon.toFixed(4) + '°E',
+    '',
+    '=== DATASPACE KEYS ===',
+    'achilles_sim_reentry_w1 through w6',
+    'achilles_calc_orbital_w5_reentry_flag',
+    'achilles_calc_fd_w1_reentry_flag'
+  ].join('\n');
+  dl(txt, 'text/plain', 'reentry_manifest.txt');
+}
+
+function doExportYaml() {
+  if(!simData) return;
+  const p = getParams();
+  const yaml = [
+    '# ACHILLES PROTOCOL Re-Entry Simulator Config',
+    '# Generated: ' + new Date().toISOString(),
+    'simulator: re-entry',
+    'version: 2.0.0',
+    'vehicle:',
+    '  mass_kg: ' + p.mass,
+    '  ref_area_m2: ' + p.area,
+    '  cd: ' + p.Cd,
+    '  cl: ' + p.CL,
+    '  nose_radius_m: ' + p.noseR,
+    'entry:',
+    '  altitude_km: ' + p.h0,
+    '  velocity_ms: ' + p.v0,
+    '  fpa_deg: ' + p.fpa0Deg,
+    '  heading_deg: ' + p.headDeg,
+    '  latitude_deg: ' + p.lat0Deg,
+    '  longitude_deg: ' + p.lon0Deg,
+    'atmosphere:',
+    '  model: ' + p.atm,
+    '  f107: ' + p.F107,
+    'integration:',
+    '  dt_s: ' + p.dt
+  ].join('\n');
+  dl(yaml, 'text/yaml', 'reentry_config.yaml');
+}
+
+function doExportPng() {
+  Plotly.downloadImage('plot3d', {format:'png', filename:'reentry_3d', width:1200, height:800});
+}
+
+
+// ── INITIALISATION ──
+document.getElementById('beaconTs').textContent = new Date().toLocaleTimeString();
+setInterval(function(){ document.getElementById('beaconTs').textContent = new Date().toLocaleTimeString(); }, 1000);
+
+// Beacon init ping
+try {
+  localStorage.setItem('achilles_beacon_reentry', JSON.stringify({
+    ts: Date.now(),
+    simulator: 're-entry',
+    version: '2.0.0',
+    status: 'LIVE',
+    path: '/sim/re-entry',
+    universal: true,
+    workspaces: ['W1','W2','W3','W4','W5','W6'],
+    dataspaceKeys: ['achilles_sim_reentry_w1','achilles_sim_reentry_w2','achilles_sim_reentry_w3','achilles_sim_reentry_w4','achilles_sim_reentry_w5','achilles_sim_reentry_w6'],
+    calcLinks: ['achilles_calc_orbital_w5','achilles_calc_fd_w1'],
+    note: 'Universal simulator - callable by all workspaces'
+  }));
+} catch(e) {}
+
+// Vehicle preset
+document.getElementById('cVehicle').addEventListener('change', function() {
+  applyVehiclePreset(this.value);
+});
+
+// Compute
+document.getElementById('btnCompute').addEventListener('click', doCompute);
+
+// Run sim = compute then play
+document.getElementById('btnRun').addEventListener('click', function() {
+  doCompute();
+  setTimeout(function() {
+    if(simData) {
+      isPlaying = true;
+      document.getElementById('pbStatus').textContent = 'PLAYING...';
+      animStep();
+    }
+  }, 300);
+});
+
+// Reset
+document.getElementById('btnReset').addEventListener('click', doReset);
+
+// Playback controls
+document.getElementById('pbPlay').addEventListener('click', function() {
+  if(!simData) { alert('Run COMPUTE first'); return; }
+  if(animIdx >= simData.traj.length-1) animIdx = 0;
+  isPlaying = true;
+  document.getElementById('pbStatus').textContent = 'PLAYING...';
+  animStep();
+});
+
+document.getElementById('pbPause').addEventListener('click', function() {
+  isPlaying = false;
+  if(animFrame) { cancelAnimationFrame(animFrame); animFrame = null; }
+  document.getElementById('pbStatus').textContent = 'PAUSED at T+' + (simData && simData.traj[animIdx] ? simData.traj[animIdx].t.toFixed(1) : '0') + 's';
+});
+
+document.getElementById('pbStep').addEventListener('click', function() {
+  if(!simData) return;
+  isPlaying = false;
+  if(animFrame) { cancelAnimationFrame(animFrame); animFrame = null; }
+  animIdx = Math.min(animIdx + 1, simData.traj.length - 1);
+  const pt = simData.traj[animIdx];
+  updateTelemUI(pt);
+  const pct = animIdx / (simData.traj.length-1) * 100;
+  document.getElementById('pbProg').style.width = pct + '%';
+  document.getElementById('pbTime').textContent = 'T+' + pt.t.toFixed(1) + 's';
+});
+
+document.getElementById('pbRewind').addEventListener('click', doReset);
+
+// Tab switching
+document.querySelectorAll('.tab-btn').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
+    document.querySelectorAll('.tab-content').forEach(function(c){ c.classList.remove('active'); });
+    btn.classList.add('active');
+    document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+    if(btn.dataset.tab==='traj3d' && simData) {
+      setTimeout(function(){ Plotly.relayout('plot3d',{}); }, 50);
+    }
+  });
+});
+
+// Dataspace routing
+document.querySelectorAll('.ds-btn').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    routeToDataspace(this.dataset.ws);
+  });
+});
+document.getElementById('btnDsAll').addEventListener('click', routeToAll);
+
+// Sweep
+document.getElementById('btnSweep').addEventListener('click', runSweep);
+
+// Export buttons
+document.getElementById('expJson').addEventListener('click', doExportJson);
+document.getElementById('expCsv').addEventListener('click',  doExportCsv);
+document.getElementById('expGmat').addEventListener('click', doExportGmat);
+document.getElementById('expTxt').addEventListener('click',  doExportTxt);
+document.getElementById('expPng').addEventListener('click',  doExportPng);
+document.getElementById('expYaml').addEventListener('click', doExportYaml);
+
+</script>
+</body>
+</html>
