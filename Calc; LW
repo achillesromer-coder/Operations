@@ -1,0 +1,1353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Launch Windows Calculator | Romer Industries</title>
+<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0B0D10;--surface:#12151A;--panel:#161B22;--border:#1E2530;
+  --copper:#B87333;--gold:#C9A24A;--teal:#4EC5C1;--cyan:#00E5FF;
+  --ivory:#F2F1EC;--muted:#8A9BB0;--dim:#4A5568;
+  --w1:#E53E3E;--w2:#DD6B20;--w3:#D69E2E;--w4:#38A169;--w5:#3182CE;--w6:#805AD5;
+  --font-ui:'Inter',sans-serif;--font-mono:'JetBrains Mono',monospace;
+}
+html,body{width:100%;min-height:100vh;background:var(--bg);color:var(--ivory);font-family:var(--font-ui);font-size:14px;overflow-x:hidden}
+
+/* ── OPS TRACKER ── */
+.ops-tracker{display:flex;align-items:center;justify-content:space-between;background:var(--surface);border-bottom:1px solid var(--border);padding:0 16px;height:40px;flex-shrink:0}
+.ops-id{display:flex;align-items:center;gap:10px}
+.ops-beacon{width:8px;height:8px;border-radius:50%;background:var(--copper);box-shadow:0 0 6px var(--copper);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.ops-title{font-family:var(--font-mono);font-size:11px;color:var(--teal);font-weight:600;letter-spacing:.05em}
+.ops-sub{font-size:10px;color:var(--muted);font-family:var(--font-mono)}
+.ops-nav{display:flex;gap:4px;align-items:center}
+.ops-pill{font-family:var(--font-mono);font-size:9px;font-weight:700;padding:2px 7px;border-radius:3px;cursor:pointer;letter-spacing:.06em;text-decoration:none;border:1px solid transparent;transition:all .15s}
+.ops-pill.calc{color:var(--gold);border-color:var(--gold);background:rgba(201,162,74,.08)}
+.ops-pill.calc:hover{background:rgba(201,162,74,.18)}
+.ops-pill.calc.active{background:rgba(201,162,74,.22);box-shadow:0 0 8px rgba(201,162,74,.3)}
+.ops-pill.w1{color:var(--w1);border-color:var(--w1);background:rgba(229,62,62,.06)}
+.ops-pill.w1:hover{background:rgba(229,62,62,.14)}
+.ops-pill.w2{color:var(--w2);border-color:var(--w2);background:rgba(221,107,32,.06)}
+.ops-pill.w2:hover{background:rgba(221,107,32,.14)}
+.ops-pill.w3{color:var(--w3);border-color:var(--w3);background:rgba(214,158,46,.06)}
+.ops-pill.w3:hover{background:rgba(214,158,46,.14)}
+.ops-pill.w4{color:var(--w4);border-color:var(--w4);background:rgba(56,161,105,.06)}
+.ops-pill.w4:hover{background:rgba(56,161,105,.14)}
+.ops-pill.w5{color:var(--w5);border-color:var(--w5);background:rgba(49,130,206,.06)}
+.ops-pill.w5:hover{background:rgba(49,130,206,.14)}
+.ops-pill.w6{color:var(--w6);border-color:var(--w6);background:rgba(128,90,213,.06)}
+.ops-pill.w6:hover{background:rgba(128,90,213,.14)}
+.ops-pill.util{color:var(--muted);border-color:var(--dim);background:transparent}
+.ops-pill.util:hover{color:var(--ivory);border-color:var(--muted)}
+
+/* ── BEACON BAR ── */
+.beacon-bar{background:var(--panel);border-bottom:1px solid var(--border);padding:5px 16px;display:flex;align-items:center;gap:10px}
+.beacon-dot{width:6px;height:6px;border-radius:50%;background:#22c55e;box-shadow:0 0 5px #22c55e;flex-shrink:0}
+.beacon-text{font-family:var(--font-mono);font-size:9px;color:var(--muted)}
+.beacon-text span{color:var(--teal)}
+
+/* ── HEADER ── */
+.calc-header{padding:20px 24px 16px;border-bottom:1px solid var(--border)}
+.calc-title{font-size:22px;font-weight:700;color:var(--copper);letter-spacing:-.01em;margin-bottom:4px}
+.calc-desc{font-size:11px;color:var(--muted);line-height:1.5}
+.calc-badges{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.badge{font-family:var(--font-mono);font-size:9px;font-weight:600;padding:3px 8px;border-radius:3px;letter-spacing:.04em}
+.badge-ver{background:rgba(78,197,193,.1);color:var(--teal);border:1px solid rgba(78,197,193,.25)}
+.badge-tag{background:rgba(184,115,51,.1);color:var(--copper);border:1px solid rgba(184,115,51,.25)}
+.badge-util{background:rgba(138,155,176,.08);color:var(--muted);border:1px solid var(--dim)}
+
+/* ── LAYOUT ── */
+.calc-body{display:grid;grid-template-columns:280px 1fr;gap:0;min-height:calc(100vh - 120px)}
+.config-panel{background:var(--surface);border-right:1px solid var(--border);padding:0;overflow-y:auto}
+.results-panel{background:var(--bg);overflow:hidden;display:flex;flex-direction:column}
+
+/* ── CONFIG SECTIONS ── */
+.cfg-section{border-bottom:1px solid var(--border);padding:14px 16px}
+.cfg-label{font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:.1em;color:var(--copper);text-transform:uppercase;margin-bottom:10px}
+.cfg-field{margin-bottom:10px}
+.cfg-field label{display:block;font-size:10px;color:var(--muted);margin-bottom:4px;font-family:var(--font-mono)}
+.cfg-field input,.cfg-field select,.cfg-field textarea{width:100%;background:var(--panel);border:1px solid var(--border);color:var(--ivory);font-family:var(--font-mono);font-size:11px;padding:6px 8px;border-radius:4px;outline:none;transition:border-color .2s}
+.cfg-field input:focus,.cfg-field select:focus{border-color:var(--copper)}
+.cfg-field input[type=range]{padding:0;cursor:pointer;accent-color:var(--copper)}
+.cfg-field select option{background:var(--panel)}
+.cfg-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.cfg-checkbox{display:flex;align-items:center;gap:8px;cursor:pointer;font-size:10px;color:var(--muted);font-family:var(--font-mono)}
+.cfg-checkbox input{accent-color:var(--copper);width:13px;height:13px}
+
+/* ── ACTION BUTTONS ── */
+.btn{font-family:var(--font-mono);font-size:10px;font-weight:700;letter-spacing:.06em;padding:8px 14px;border-radius:4px;border:none;cursor:pointer;transition:all .15s;text-transform:uppercase}
+.btn-primary{background:linear-gradient(135deg,var(--copper),var(--gold));color:#0B0D10}
+.btn-primary:hover{opacity:.88;transform:translateY(-1px)}
+.btn-secondary{background:transparent;color:var(--teal);border:1px solid var(--teal)}
+.btn-secondary:hover{background:rgba(78,197,193,.08)}
+.btn-danger{background:transparent;color:#e53e3e;border:1px solid #e53e3e}
+.btn-danger:hover{background:rgba(229,62,62,.08)}
+.btn-sm{padding:5px 10px;font-size:9px}
+.btn-row{display:flex;flex-wrap:wrap;gap:8px;padding:14px 16px}
+.btn-full{width:100%}
+.btn-group{display:flex;gap:6px;width:100%}
+.btn-group .btn{flex:1}
+
+/* ── TABS ── */
+.tab-bar{display:flex;background:var(--surface);border-bottom:1px solid var(--border);overflow-x:auto;flex-shrink:0}
+.tab{font-family:var(--font-mono);font-size:10px;font-weight:600;letter-spacing:.06em;padding:10px 16px;cursor:pointer;border-bottom:2px solid transparent;color:var(--muted);white-space:nowrap;transition:all .15s;text-transform:uppercase}
+.tab.active{color:var(--copper);border-bottom-color:var(--copper)}
+.tab:hover:not(.active){color:var(--ivory)}
+.tab-content{flex:1;overflow:hidden;display:none;padding:16px;flex-direction:column;gap:12px}
+.tab-content.active{display:flex}
+
+/* ── MAP DISPLAY ── */
+.map-container{position:relative;width:100%;flex:1;min-height:500px;background:var(--panel);border-radius:6px;border:1px solid var(--border);overflow:hidden}
+#lw-map{width:100%;height:100%;min-height:500px}
+
+/* ── TIMELINE ── */
+.timeline-container{background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:12px;flex-shrink:0}
+.timeline-label{font-family:var(--font-mono);font-size:9px;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.08em}
+#lw-timeline{width:100%;height:180px}
+
+/* ── LAUNCH LIST ── */
+.launch-list{display:flex;flex-direction:column;gap:8px;max-height:400px;overflow-y:auto}
+.launch-card{background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:12px;cursor:pointer;transition:border-color .15s}
+.launch-card:hover{border-color:var(--copper)}
+.launch-card.selected{border-color:var(--copper);box-shadow:0 0 10px rgba(184,115,51,.15)}
+.lc-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.lc-name{font-family:var(--font-mono);font-size:11px;font-weight:700;color:var(--ivory)}
+.lc-score{font-family:var(--font-mono);font-size:10px;font-weight:700;padding:2px 7px;border-radius:3px}
+.lc-score.high{color:#22c55e;background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.3)}
+.lc-score.med{color:var(--gold);background:rgba(201,162,74,.12);border:1px solid rgba(201,162,74,.3)}
+.lc-score.low{color:#e53e3e;background:rgba(229,62,62,.12);border:1px solid rgba(229,62,62,.3)}
+.lc-meta{font-size:10px;color:var(--muted);font-family:var(--font-mono);line-height:1.6}
+.lc-meta span{color:var(--ivory)}
+.lc-bar{height:3px;background:var(--border);border-radius:2px;margin-top:8px;overflow:hidden}
+.lc-bar-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--copper),var(--gold));transition:width .4s ease}
+
+/* ── WIND CHART ── */
+.wind-container{background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:12px}
+#lw-wind{width:100%;height:280px}
+
+/* ── SWEEP TABLE ── */
+.sweep-table-wrap{overflow-x:auto;max-height:360px;overflow-y:auto}
+.sweep-table{width:100%;border-collapse:collapse;font-family:var(--font-mono);font-size:10px}
+.sweep-table th{background:var(--surface);color:var(--muted);padding:6px 10px;text-align:left;border-bottom:1px solid var(--border);font-weight:700;letter-spacing:.06em;text-transform:uppercase;position:sticky;top:0}
+.sweep-table td{padding:6px 10px;border-bottom:1px solid rgba(30,37,48,.6);color:var(--ivory)}
+.sweep-table tr:hover td{background:rgba(184,115,51,.04)}
+.sweep-table .val-good{color:#22c55e}
+.sweep-table .val-warn{color:var(--gold)}
+.sweep-table .val-bad{color:#e53e3e}
+
+/* ── EXPORT PANEL ── */
+.export-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.export-card{background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:14px;text-align:center;cursor:pointer;transition:all .15s}
+.export-card:hover{border-color:var(--copper);background:rgba(184,115,51,.04)}
+.export-card .ec-icon{font-size:22px;margin-bottom:6px}
+.export-card .ec-label{font-family:var(--font-mono);font-size:10px;font-weight:700;color:var(--ivory);margin-bottom:3px}
+.export-card .ec-desc{font-size:9px;color:var(--muted)}
+
+/* ── STATUS / INFO ── */
+.info-box{background:var(--panel);border:1px solid var(--border);border-left:3px solid var(--teal);border-radius:4px;padding:10px 14px;font-family:var(--font-mono);font-size:10px;color:var(--teal);line-height:1.6}
+.info-box.warn{border-left-color:var(--gold);color:var(--gold)}
+.info-box.err{border-left-color:#e53e3e;color:#e53e3e}
+.stat-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(30,37,48,.5)}
+.stat-row:last-child{border-bottom:none}
+.stat-label{font-size:10px;color:var(--muted);font-family:var(--font-mono)}
+.stat-val{font-family:var(--font-mono);font-size:11px;font-weight:700;color:var(--ivory)}
+.stat-val.good{color:#22c55e}
+.stat-val.warn{color:var(--gold)}
+.stat-val.bad{color:#e53e3e}
+.section-title{font-family:var(--font-mono);font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+
+/* ── RANGE SLIDER ── */
+.range-wrap{display:flex;align-items:center;gap:8px}
+.range-wrap input[type=range]{flex:1}
+.range-val{font-family:var(--font-mono);font-size:10px;color:var(--teal);min-width:42px;text-align:right}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:var(--surface)}
+::-webkit-scrollbar-thumb{background:var(--dim);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--copper)}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  .calc-body{grid-template-columns:1fr}
+  .config-panel{border-right:none;border-bottom:1px solid var(--border)}
+  .export-grid{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+</head>
+<body>
+
+<!-- OPS TRACKER -->
+<div class="ops-tracker">
+  <div class="ops-id">
+    <div class="ops-beacon"></div>
+    <div>
+      <div class="ops-title">LAUNCH WINDOWS CALCULATOR</div>
+      <div class="ops-sub">
+      <a href="/calc/orbital" class="ops-pill calc">ORB</a>
+      <a href="/calc/launch" class="ops-pill calc active">LW</a>
+      <a href="/calc/magnetostatics" class="ops-pill calc">MAG</a>
+      <a href="/calc/energy" class="ops-pill calc">PWR</a>
+      <a href="/calc/fluids" class="ops-pill calc">FLD</a>
+      <a href="/sims/rfs-extraction" class="ops-pill sim">RFS</a>
+      <a href="/sim/node" class="ops-pill sim">EMFF</a>
+      <a href="/sim/fields" class="ops-pill sim">EMF</a>
+      <a href="/sim/re-entry" class="ops-pill sim">ENTRY</a>
+      <a href="/w1/data" class="ops-pill w1">W1</a>
+      <a href="/w2/data" class="ops-pill w2">W2</a>
+      <a href="/w3/data" class="ops-pill w3">W3</a>
+      <a href="/w4/data" class="ops-pill w4">W4</a>
+      <a href="/w5/data" class="ops-pill w5">W5</a>
+      <a href="/w6/data" class="ops-pill w6">W6</a>
+      <a href="/data/achilles" class="ops-pill util">ACH</a>
+      <a href="/library" class="ops-pill util">LIB</a>
+      <a href="/gmat" class="ops-pill util">GMAT</a>
+      <a href="/dash" class="ops-pill util">DASH</a>
+    </div>
+
+<!-- BEACON BAR -->
+<div class="beacon-bar">
+  <div class="beacon-dot"></div>
+  <span class="beacon-text">
+    <span>LIVE</span> &nbsp;/calc/launch &nbsp;·&nbsp; Universal – callable by all workspaces &amp; dataspaces &nbsp;·&nbsp; Römer Industries / EMASSC
+  </span>
+</div>
+
+<!-- HEADER -->
+<div class="calc-header">
+  <div class="calc-title">Launch Windows Calculator</div>
+  <div class="calc-desc">Launch site scoring · Seasonal atmosphere · Wind profile analysis · Trajectory azimuth constraints · Plotly visualisation · GMAT export</div>
+  <div class="calc-badges">
+    <span class="badge badge-ver"></span>
+    <span class="badge badge-tag">SI Units</span>
+    <span class="badge badge-tag">Universal Tool – W1-W6 callable</span>
+    <span class="badge badge-tag">Plotly Visualisation</span>
+    <span class="badge badge-util">JetBrains Mono · Inter</span>
+  </div>
+</div>
+
+<!-- MAIN BODY -->
+<div class="calc-body">
+
+  <!-- LEFT: CONFIGURATION -->
+  <div class="config-panel">
+
+    <div class="cfg-section">
+      <div class="cfg-label">Launch Site</div>
+      <div class="cfg-field">
+        <label>Site Preset</label>
+        <select id="lw-site-preset">
+          <option value="kennedy">Kennedy Space Center (KSC) — 28.6°N</option>
+          <option value="vandenberg">Vandenberg SFB — 34.7°N</option>
+          <option value="baikonur">Baikonur Cosmodrome — 45.9°N</option>
+          <option value="kourou">Kourou (CSG) — 5.2°N</option>
+          <option value="tanegashima">Tanegashima — 30.4°N</option>
+          <option value="sriharikota">Sriharikota (SHAR) — 13.7°N</option>
+          <option value="wenchang">Wenchang — 19.6°N</option>
+          <option value="plesetsk">Plesetsk — 62.9°N</option>
+          <option value="custom">Custom Site</option>
+        </select>
+      </div>
+      <div class="cfg-row">
+        <div class="cfg-field">
+          <label>Latitude (°)</label>
+          <input type="number" id="lw-lat" value="28.573" step="0.001" min="-90" max="90">
+        </div>
+        <div class="cfg-field">
+          <label>Longitude (°)</label>
+          <input type="number" id="lw-lon" value="-80.649" step="0.001" min="-180" max="180">
+        </div>
+      </div>
+      <div class="cfg-field">
+        <label>Site Altitude (m ASL)</label>
+        <input type="number" id="lw-alt-site" value="5" step="1" min="0">
+      </div>
+    </div>
+
+    <div class="cfg-section">
+      <div class="cfg-label">Mission Parameters</div>
+      <div class="cfg-field">
+        <label>Target Orbit Type</label>
+        <select id="lw-orbit-type">
+          <option value="leo">LEO (Low Earth Orbit)</option>
+          <option value="sso">SSO (Sun-Synchronous)</option>
+          <option value="geo">GTO / GEO Transfer</option>
+          <option value="meo">MEO</option>
+          <option value="iss">ISS Rendezvous (51.6°)</option>
+          <option value="polar">Polar</option>
+          <option value="custom">Custom Inclination</option>
+        </select>
+      </div>
+      <div class="cfg-field">
+        <label>Target Inclination (°)</label>
+        <input type="number" id="lw-incl" value="28.6" step="0.1" min="0" max="180">
+      </div>
+      <div class="cfg-field">
+        <label>Target Altitude (km)</label>
+        <input type="number" id="lw-target-alt" value="400" step="10" min="200" max="36000">
+      </div>
+      <div class="cfg-field">
+        <label>Launch Azimuth Range (°)</label>
+        <div class="cfg-row">
+          <input type="number" id="lw-az-min" value="35" step="1" min="0" max="360" placeholder="Min Az">
+          <input type="number" id="lw-az-max" value="120" step="1" min="0" max="360" placeholder="Max Az">
+        </div>
+      </div>
+    </div>
+
+    <div class="cfg-section">
+      <div class="cfg-label">Atmospheric / Season</div>
+      <div class="cfg-field">
+        <label>Season</label>
+        <select id="lw-season">
+          <option value="spring">Spring (Mar–May)</option>
+          <option value="summer" selected>Summer (Jun–Aug)</option>
+          <option value="autumn">Autumn (Sep–Nov)</option>
+          <option value="winter">Winter (Dec–Feb)</option>
+        </select>
+      </div>
+      <div class="cfg-field">
+        <label>Surface Wind (m/s)</label>
+        <div class="range-wrap">
+          <input type="range" id="lw-wind-surf" min="0" max="30" value="8" step="0.5" oninput="document.getElementById('lw-wind-surf-val').textContent=this.value">
+          <span class="range-val" id="lw-wind-surf-val">8</span>
+        </div>
+      </div>
+      <div class="cfg-field">
+        <label>Upper-Level Wind @ 10 km (m/s)</label>
+        <div class="range-wrap">
+          <input type="range" id="lw-wind-upper" min="0" max="80" value="25" step="1" oninput="document.getElementById('lw-wind-upper-val').textContent=this.value">
+          <span class="range-val" id="lw-wind-upper-val">25</span>
+        </div>
+      </div>
+      <div class="cfg-field">
+        <label>Wind Direction @ Surface (°)</label>
+        <input type="number" id="lw-wind-dir" value="270" step="5" min="0" max="360">
+      </div>
+      <label class="cfg-checkbox">
+        <input type="checkbox" id="lw-jetstream" checked>
+        Enable Jet Stream Model
+      </label>
+    </div>
+
+    <div class="cfg-section">
+      <div class="cfg-label">Constraints</div>
+      <div class="cfg-field">
+        <label>Max Surface Wind (m/s) — GO/NO-GO</label>
+        <input type="number" id="lw-wind-limit" value="12" step="0.5">
+      </div>
+      <div class="cfg-field">
+        <label>Max Upper Wind (m/s)</label>
+        <input type="number" id="lw-upper-limit" value="50" step="1">
+      </div>
+      <div class="cfg-field">
+        <label>Min Visibility (km)</label>
+        <input type="number" id="lw-vis-min" value="5" step="0.5">
+      </div>
+      <label class="cfg-checkbox">
+        <input type="checkbox" id="lw-range-safety" checked>
+        Range Safety Exclusion Zones
+      </label>
+      <label class="cfg-checkbox" style="margin-top:6px">
+        <input type="checkbox" id="lw-debris-avoidance" checked>
+        Orbital Debris Avoidance
+      </label>
+    </div>
+
+    <div class="cfg-section">
+      <div class="cfg-label">Launch Sweep</div>
+      <div class="cfg-field">
+        <label>Sweep Variable</label>
+        <select id="lw-sweep-var">
+          <option value="latitude">Launch Latitude (°)</option>
+          <option value="azimuth">Launch Azimuth (°)</option>
+          <option value="altitude">Target Altitude (km)</option>
+          <option value="inclination">Inclination (°)</option>
+          <option value="wind">Surface Wind (m/s)</option>
+          <option value="season">Seasonal Comparison</option>
+        </select>
+      </div>
+      <div class="cfg-row">
+        <div class="cfg-field">
+          <label>Sweep Min</label>
+          <input type="number" id="lw-sweep-min" value="10" step="1">
+        </div>
+        <div class="cfg-field">
+          <label>Sweep Max</label>
+          <input type="number" id="lw-sweep-max" value="90" step="1">
+        </div>
+      </div>
+      <div class="cfg-field">
+        <label>Steps</label>
+        <input type="number" id="lw-sweep-steps" value="20" step="1" min="5" max="100">
+      </div>
+    </div>
+
+    <div class="btn-row" style="flex-direction:column">
+      <button class="btn btn-primary btn-full" onclick="lwCalculate()">CALCULATE WINDOWS</button>
+      <div class="btn-group">
+        <button class="btn btn-secondary btn-sm" onclick="lwSweep()">RUN SWEEP</button>
+        <button class="btn btn-secondary btn-sm" onclick="lwSeedDemo()">SEED DEMO</button>
+      </div>
+      <button class="btn btn-secondary btn-sm btn-full" onclick="lwAddSite()">+ ADD CUSTOM SITE</button>
+    </div>
+  </div>
+
+  <!-- RIGHT: RESULTS -->
+  <div class="results-panel">
+    <div class="tab-bar">
+      <div class="tab active" onclick="lwTab('map',this)">MAP</div>
+      <div class="tab" onclick="lwTab('windows',this)">WINDOWS</div>
+      <div class="tab" onclick="lwTab('wind',this)">ATMOSPHERE</div>
+      <div class="tab" onclick="lwTab('azimuth',this)">AZIMUTH</div>
+      <div class="tab" onclick="lwTab('sweep',this)">SWEEP</div>
+      <div class="tab" onclick="lwTab('export',this)">EXPORT</div>
+    </div>
+
+    <!-- MAP TAB -->
+    <div id="tab-map" class="tab-content active">
+      <div class="info-box" id="lw-status-map">Configure launch site and click CALCULATE WINDOWS.</div>
+      <div class="map-container"><div id="lw-map"></div></div>
+    </div>
+
+    <!-- WINDOWS TAB -->
+    <div id="tab-windows" class="tab-content">
+      <div class="info-box" id="lw-status-win">Run calculation to see launch window analysis.</div>
+      <div id="lw-summary-stats" style="display:none">
+        <div class="section-title">Window Summary</div>
+        <div id="lw-stat-rows"></div>
+      </div>
+      <div id="lw-launch-list" class="launch-list"></div>
+      <div class="timeline-container">
+        <div class="timeline-label">24-Hour Launch Window Timeline</div>
+        <div id="lw-timeline"></div>
+      </div>
+    </div>
+
+    <!-- ATMOSPHERE TAB -->
+    <div id="tab-wind" class="tab-content">
+      <div class="info-box">Wind profile from surface to 80 km — seasonal model with jet stream overlay.</div>
+      <div class="wind-container">
+        <div class="section-title">Wind Speed vs. Altitude Profile</div>
+        <div id="lw-wind"></div>
+      </div>
+      <div class="wind-container">
+        <div class="section-title">Wind Direction Hodograph</div>
+        <div id="lw-hodograph"></div>
+      </div>
+    </div>
+
+    <!-- AZIMUTH TAB -->
+    <div id="tab-azimuth" class="tab-content">
+      <div class="info-box">Azimuth constraints based on site latitude, range safety zones, and target inclination.</div>
+      <div class="wind-container">
+        <div class="section-title">Achievable Inclinations vs Launch Azimuth</div>
+        <div id="lw-azimuth-plot"></div>
+      </div>
+      <div class="wind-container">
+        <div class="section-title">Azimuth Constraint Map (Polar)</div>
+        <div id="lw-polar-plot"></div>
+      </div>
+    </div>
+
+    <!-- SWEEP TAB -->
+    <div id="tab-sweep" class="tab-content">
+      <div class="info-box" id="lw-sweep-status">Select sweep variable and click RUN SWEEP.</div>
+      <div class="wind-container">
+        <div class="section-title">Sweep Results</div>
+        <div id="lw-sweep-plot"></div>
+      </div>
+      <div class="sweep-table-wrap">
+        <table class="sweep-table">
+          <thead><tr id="lw-sweep-thead"></tr></thead>
+          <tbody id="lw-sweep-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- EXPORT TAB -->
+    <div id="tab-export" class="tab-content">
+      <div class="info-box">Export launch window data to workspace dataspaces or download files.</div>
+      <div class="export-grid">
+        <div class="export-card" onclick="lwExport('json')">
+          <div class="ec-icon">📦</div>
+          <div class="ec-label">JSON</div>
+          <div class="ec-desc">Full data object</div>
+        </div>
+        <div class="export-card" onclick="lwExport('csv')">
+          <div class="ec-icon">📊</div>
+          <div class="ec-label">CSV</div>
+          <div class="ec-desc">Window schedule</div>
+        </div>
+        <div class="export-card" onclick="lwExport('txt')">
+          <div class="ec-icon">📄</div>
+          <div class="ec-label">MANIFEST</div>
+          <div class="ec-desc">Mission brief</div>
+        </div>
+        <div class="export-card" onclick="lwExport('yaml')">
+          <div class="ec-icon">🗂️</div>
+          <div class="ec-label">YAML</div>
+          <div class="ec-desc">Config export</div>
+        </div>
+        <div class="export-card" onclick="lwExport('gmat')">
+          <div class="ec-icon">🛰️</div>
+          <div class="ec-label">GMAT</div>
+          <div class="ec-desc">Script template</div>
+        </div>
+        <div class="export-card" onclick="lwExport('png')">
+          <div class="ec-icon">🖼️</div>
+          <div class="ec-label">PNG</div>
+          <div class="ec-desc">Save all charts</div>
+        </div>
+      </div>
+      <div style="margin-top:12px">
+        <div class="section-title">Send to Dataspace</div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px">
+          <button class="btn btn-secondary btn-sm" onclick="lwRoute('w1')">→ W1 Data</button>
+          <button class="btn btn-secondary btn-sm" onclick="lwRoute('w2')">→ W2 Data</button>
+          <button class="btn btn-secondary btn-sm" onclick="lwRoute('w3')">→ W3 Data</button>
+          <button class="btn btn-secondary btn-sm" onclick="lwRoute('w4')">→ W4 Data</button>
+          <button class="btn btn-secondary btn-sm" onclick="lwRoute('w5')">→ W5 Data</button>
+          <button class="btn btn-secondary btn-sm" onclick="lwRoute('w6')">→ W6 Data</button>
+          <button class="btn btn-primary btn-sm" onclick="lwRouteAll()">→ ALL WORKSPACES</button>
+        </div>
+        <div id="lw-route-status" style="margin-top:10px;display:none"></div>
+      </div>
+    </div>
+
+  </div><!-- /results-panel -->
+</div><!-- /calc-body -->
+
+<script>
+// ═══════════════════════════════════════════════════
+// LAUNCH WINDOWS CALCULATOR 
+// Physics & Math Core
+// Römer Industries / EMASSC
+// ═══════════════════════════════════════════════════
+
+const LW_CONST = {
+  RE: 6371000,       // Earth radius m
+  GM: 3.986004418e14,
+  OMEGA: 7.2921150e-5, // Earth rotation rad/s
+  G0: 9.80665,
+  DEG: Math.PI/180,
+};
+
+// Launch site presets
+const LW_SITES = {
+  kennedy:     { name:'Kennedy Space Center',   lat:28.5729,  lon:-80.6490, alt:5,   az_min:35, az_max:120 },
+  vandenberg:  { name:'Vandenberg SFB',         lat:34.7420,  lon:-120.5724,alt:100, az_min:158,az_max:268 },
+  baikonur:    { name:'Baikonur Cosmodrome',    lat:45.9200,  lon:63.3420,  alt:90,  az_min:60, az_max:100 },
+  kourou:      { name:'Kourou (CSG)',            lat:5.2360,   lon:-52.7686, alt:15,  az_min:3,  az_max:93  },
+  tanegashima: { name:'Tanegashima',            lat:30.3782,  lon:130.9690, alt:10,  az_min:100,az_max:135 },
+  sriharikota: { name:'Sriharikota (SHAR)',     lat:13.7199,  lon:80.2300,  alt:5,   az_min:100,az_max:140 },
+  wenchang:    { name:'Wenchang',               lat:19.6145,  lon:110.9506, alt:5,   az_min:90, az_max:180 },
+  plesetsk:    { name:'Plesetsk',               lat:62.9271,  lon:40.5770,  alt:120, az_min:0,  az_max:360 },
+};
+
+// ── Azimuth → Inclination ──────────────────────────
+function azToIncl(az_deg, lat_deg) {
+  const az = az_deg * LW_CONST.DEG;
+  const lat = lat_deg * LW_CONST.DEG;
+  return Math.acos(Math.cos(az) * Math.cos(lat)) / LW_CONST.DEG;
+}
+
+// ── Inclination → Azimuth range ───────────────────
+function inclToAzRange(incl_deg, lat_deg) {
+  // Returns [az1, az2] in degrees (ascending and descending node azimuths)
+  if (Math.abs(lat_deg) > incl_deg) return null; // unreachable
+  const incl = incl_deg * LW_CONST.DEG;
+  const lat  = lat_deg  * LW_CONST.DEG;
+  const cosAz = Math.cos(incl) / Math.cos(lat);
+  if (Math.abs(cosAz) > 1) return null;
+  const az = Math.acos(cosAz) / LW_CONST.DEG;
+  return [az, 360 - az]; // prograde and retrograde
+}
+
+// ── Circular orbital velocity ──────────────────────
+function circVel(alt_m) {
+  const r = LW_CONST.RE + alt_m;
+  return Math.sqrt(LW_CONST.GM / r);
+}
+
+// ── Surface rotation velocity ──────────────────────
+function surfVel(lat_deg) {
+  return LW_CONST.OMEGA * LW_CONST.RE * Math.cos(lat_deg * LW_CONST.DEG);
+}
+
+// ── ΔV launch bonus (eastward component) ──────────
+function launchBonus(az_deg, lat_deg, alt_m) {
+  const sv = surfVel(lat_deg);
+  const az = az_deg * LW_CONST.DEG;
+  return sv * Math.cos(az);
+}
+
+// ── Wind load estimate (simplified) ───────────────
+function maxQ_estimate(v_mps, rho0 = 1.225) {
+  // Max dynamic pressure (simplified linear density falloff)
+  // Returns kPa
+  const rho_at_maxQ = rho0 * 0.35; // ~11-13 km
+  return 0.5 * rho_at_maxQ * v_mps * v_mps / 1000;
+}
+
+// ── Seasonal wind profile (parametric) ────────────
+function windProfile(alt_km, season, lat_deg, addJetStream) {
+  // Returns {speed_ms, dir_deg} at given altitude
+  const alts = [0,1,2,3,5,7,10,12,15,20,25,30,40,50,60,70,80];
+  const profiles = {
+    summer:  [8, 9,10,12,14,16,22,30,20,14,10, 8, 6, 5, 5, 4, 3],
+    winter:  [6, 8,10,14,18,24,35,45,30,18,12, 9, 7, 5, 5, 4, 3],
+    spring:  [7, 8, 9,11,13,15,25,35,22,15,10, 8, 6, 5, 5, 4, 3],
+    autumn:  [7, 9,10,12,14,17,28,32,21,14,10, 8, 6, 5, 5, 4, 3],
+  };
+  const dirs = {
+    summer:  [270,265,260,255,250,245,240,235,240,250,260,265,270,275,275,280,280],
+    winter:  [250,248,245,242,240,238,235,232,240,250,260,265,268,272,275,278,280],
+    spring:  [260,258,255,252,248,245,242,238,242,252,262,266,270,274,276,279,280],
+    autumn:  [265,262,258,254,249,245,240,235,241,251,261,265,269,273,275,279,280],
+  };
+  const sp = profiles[season] || profiles.summer;
+  const dp = dirs[season] || dirs.summer;
+  
+  // Interpolate
+  let i = alts.findIndex(a => a >= alt_km);
+  if (i <= 0) i = 1;
+  if (i >= alts.length) i = alts.length - 1;
+  const t = (alt_km - alts[i-1]) / (alts[i] - alts[i-1]);
+  let speed = sp[i-1] + t*(sp[i]-sp[i-1]);
+  let dir   = dp[i-1] + t*(dp[i]-dp[i-1]);
+  
+  // Jet stream enhancement
+  if (addJetStream && alt_km > 8 && alt_km < 14) {
+    const jsBoost = 25 * Math.exp(-Math.pow((alt_km - 11), 2) / 2);
+    speed += jsBoost;
+  }
+  
+  // Latitude scaling (polar vortex enhancement at high latitudes)
+  if (Math.abs(lat_deg) > 50) speed *= (1 + (Math.abs(lat_deg)-50)*0.015);
+  
+  return { speed, dir };
+}
+
+// ── Window score (0–100) ──────────────────────────
+function scoreWindow(site, windSurf, windUpper, windLimit, upperLimit, vis, inclReachable) {
+  let score = 100;
+  // Wind penalties
+  if (windSurf > windLimit) score -= 40;
+  else score -= (windSurf / windLimit) * 15;
+  if (windUpper > upperLimit) score -= 30;
+  else score -= (windUpper / upperLimit) * 10;
+  // Visibility
+  if (vis < 5) score -= 20;
+  // Inclination reachability
+  if (!inclReachable) score -= 50;
+  return Math.max(0, Math.round(score));
+}
+
+// ── Generate 24h window timeline ─────────────────
+function genWindowTimeline(score, windSurf, windLimit) {
+  const windows = [];
+  const baseGo = score >= 60;
+  for (let h = 0; h < 24; h++) {
+    // Diurnal wind variation (lower in morning)
+    const diurnalFactor = 0.7 + 0.3 * Math.sin((h - 6) * Math.PI / 12);
+    const ws = windSurf * diurnalFactor;
+    const go = baseGo && ws <= windLimit;
+    const wScore = go ? Math.round(score * (1 - Math.abs(h-12)/30)) : 0;
+    windows.push({ hour: h, go, score: wScore, wind: ws.toFixed(1) });
+  }
+  return windows;
+}
+
+// ── Sweep calculations ────────────────────────────
+function sweepWindows(varName, min, max, steps, params) {
+  const results = [];
+  for (let i = 0; i < steps; i++) {
+    const val = min + (max - min) * i / (steps - 1);
+    let p = { ...params };
+    
+    if (varName === 'latitude') p.lat = val;
+    else if (varName === 'azimuth') p.azimuth = val;
+    else if (varName === 'altitude') p.targetAlt = val * 1000;
+    else if (varName === 'inclination') p.incl = val;
+    else if (varName === 'wind') p.windSurf = val;
+    
+    const azRange = inclToAzRange(p.incl, p.lat);
+    const reachable = azRange !== null;
+    const bonus = launchBonus(azRange ? azRange[0] : 90, p.lat, p.targetAlt);
+    const vc = circVel(p.targetAlt);
+    const ws = p.windSurf;
+    const score = scoreWindow(null, ws, p.windUpper, p.windLimit, p.upperLimit, p.vis, reachable);
+    
+    results.push({
+      var: val,
+      score,
+      reachable,
+      launchBonus: bonus.toFixed(1),
+      circVel: (vc/1000).toFixed(3),
+      azMin: azRange ? azRange[0].toFixed(1) : 'N/A',
+      azMax: azRange ? azRange[1].toFixed(1) : 'N/A',
+      maxQ: maxQ_estimate(vc).toFixed(2),
+    });
+  }
+  return results;
+}
+</script>
+<script>
+// ── Plotly Römer Theme ─────────────────────────────
+const LW_PLOTLY = {
+  layout: {
+    paper_bgcolor: '#12151A',
+    plot_bgcolor:  '#0B0D10',
+    font: { family:"'JetBrains Mono', monospace", color:'#F2F1EC', size:10 },
+    margin: { t:30, r:20, b:40, l:50 },
+    xaxis: { gridcolor:'#1E2530', zerolinecolor:'#1E2530', linecolor:'#1E2530', tickfont:{size:9} },
+    yaxis: { gridcolor:'#1E2530', zerolinecolor:'#1E2530', linecolor:'#1E2530', tickfont:{size:9} },
+    colorway: ['#B87333','#4EC5C1','#C9A24A','#00E5FF','#8A9BB0','#E53E3E','#38A169','#805AD5'],
+    legend: { bgcolor:'rgba(18,21,26,0.9)', bordercolor:'#1E2530', borderwidth:1, font:{size:9} },
+    hoverlabel: { bgcolor:'#161B22', bordercolor:'#B87333', font:{family:"'JetBrains Mono',monospace",size:10,color:'#F2F1EC'} },
+    modebar: { bgcolor:'transparent', color:'#4A5568', activecolor:'#B87333' },
+  },
+  config: { responsive:true, displayModeBar:true, displaylogo:false,
+    modeBarButtonsToRemove:['select2d','lasso2d'], toImageButtonOptions:{format:'png',filename:'romer-lw',scale:2} }
+};
+
+// ── Tab Switcher ──────────────────────────────────
+function lwTab(name, el) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  const tc = document.getElementById('tab-' + name);
+  if (tc) tc.classList.add('active');
+  // Trigger resize for Plotly on visible
+  setTimeout(() => { try { Plotly.Plots.resize(document.getElementById('lw-map')); } catch(e){} }, 50);
+}
+
+// ── Status updates ────────────────────────────────
+function lwStatus(id, msg, type='') {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.className = 'info-box' + (type ? ' ' + type : '');
+  el.textContent = msg;
+  el.style.display = '';
+}
+
+// ── Render stat rows ──────────────────────────────
+function renderStats(data) {
+  const el = document.getElementById('lw-stat-rows');
+  if (!el) return;
+  const rows = [
+    ['Launch Site', data.siteName],
+    ['Target Inclination', data.incl.toFixed(1) + '°'],
+    ['Target Altitude', (data.targetAlt/1000).toFixed(0) + ' km'],
+    ['Achievable?', data.azRange ? 'YES — Inclination reachable' : 'NO — Inclination unreachable from this latitude'],
+    ['Launch Azimuth (prograde)', data.azRange ? data.azRange[0].toFixed(1) + '°' : 'N/A'],
+    ['Launch Azimuth (retrograde)', data.azRange ? data.azRange[1].toFixed(1) + '°' : 'N/A'],
+    ['Surface Rotation Bonus', data.bonus.toFixed(1) + ' m/s (eastward component)'],
+    ['Circular Velocity', (data.vc/1000).toFixed(3) + ' km/s'],
+    ['Window Score', data.score + ' / 100'],
+    ['GO/NO-GO', data.score >= 60 ? 'GO' : 'NO-GO'],
+    ['Max Dynamic Pressure (est.)', data.maxQ.toFixed(2) + ' kPa'],
+  ];
+  el.innerHTML = rows.map(([l,v]) => {
+    const cls = l.includes('GO/NO') ? (v==='GO' ? 'good' : 'bad') :
+                l.includes('Score') ? (data.score >= 70 ? 'good' : data.score >= 40 ? 'warn' : 'bad') : '';
+    return `<div class="stat-row"><span class="stat-label">${l}</span><span class="stat-val ${cls}">${v}</span></div>`;
+  }).join('');
+  document.getElementById('lw-summary-stats').style.display = '';
+}
+
+// ── Score badge class ─────────────────────────────
+function scoreClass(s) { return s >= 70 ? 'high' : s >= 40 ? 'med' : 'low'; }
+
+// ── Render launch cards ───────────────────────────
+function renderLaunchCards(windows) {
+  const el = document.getElementById('lw-launch-list');
+  if (!el) return;
+  el.innerHTML = windows.map((w, i) => `
+    <div class="launch-card ${i===0?'selected':''}" onclick="this.parentElement.querySelectorAll('.launch-card').forEach(c=>c.classList.remove('selected'));this.classList.add('selected')">
+      <div class="lc-header">
+        <span class="lc-name">Window T+${String(w.hour).padStart(2,'0')}:00 UTC</span>
+        <span class="lc-score ${scoreClass(w.score)}">${w.go ? 'GO' : 'NO-GO'} · ${w.score}</span>
+      </div>
+      <div class="lc-meta">
+        Wind: <span>${w.wind} m/s</span> &nbsp;|&nbsp; Score: <span>${w.score}/100</span>
+      </div>
+      <div class="lc-bar"><div class="lc-bar-fill" style="width:${w.score}%"></div></div>
+    </div>
+  `).join('');
+  document.getElementById('lw-status-win').style.display = 'none';
+}
+</script>
+<script>
+// ── Render World Map with launch site ──────────────
+function renderMap(lat, lon, siteName, azRange, incl) {
+  // Ground track line from launch site
+  const track = [];
+  const az = azRange ? azRange[0] * LW_CONST.DEG : 90 * LW_CONST.DEG;
+  for (let d = 0; d <= 10000; d += 100) {
+    const dRad = d / 6371;
+    const latR = lat * LW_CONST.DEG;
+    const newLat = Math.asin(Math.sin(latR)*Math.cos(dRad) + Math.cos(latR)*Math.sin(dRad)*Math.cos(az));
+    const newLon = (lon*LW_CONST.DEG) + Math.atan2(Math.sin(az)*Math.sin(dRad)*Math.cos(latR), Math.cos(dRad)-Math.sin(latR)*Math.sin(newLat));
+    track.push({ lat: newLat/LW_CONST.DEG, lon: newLon/LW_CONST.DEG });
+  }
+
+  // Restricted azimuths arc
+  const arcLats = [], arcLons = [];
+  for (let a = 0; a <= 360; a += 2) {
+    const aR = a * LW_CONST.DEG;
+    const d = 500/6371;
+    const latR = lat * LW_CONST.DEG;
+    const newLat = Math.asin(Math.sin(latR)*Math.cos(d) + Math.cos(latR)*Math.sin(d)*Math.cos(aR));
+    const newLon = (lon*LW_CONST.DEG) + Math.atan2(Math.sin(aR)*Math.sin(d)*Math.cos(latR), Math.cos(d)-Math.sin(latR)*Math.sin(newLat));
+    arcLats.push(newLat/LW_CONST.DEG);
+    arcLons.push(newLon/LW_CONST.DEG);
+  }
+
+  const data = [
+    // World coastlines (simplified via geo)
+    {
+      type: 'scattergeo', mode: 'lines',
+      lat: track.map(p=>p.lat), lon: track.map(p=>p.lon),
+      line: { color:'#B87333', width:2 },
+      name: 'Ground Track',
+    },
+    {
+      type: 'scattergeo', mode: 'markers',
+      lat: [lat], lon: [lon],
+      marker: { size:14, color:'#C9A24A', symbol:'star', line:{color:'#F2F1EC',width:1.5} },
+      name: siteName,
+      text: [siteName],
+      hovertemplate: '<b>%{text}</b><br>Lat: ' + lat.toFixed(3) + '°<br>Lon: ' + lon.toFixed(3) + '°<extra></extra>',
+    },
+    {
+      type: 'scattergeo', mode: 'lines',
+      lat: arcLats, lon: arcLons,
+      line: { color:'rgba(78,197,193,0.3)', width:1, dash:'dot' },
+      name: 'Range Circle (500 km)',
+    },
+  ];
+
+  const layout = {
+    ...LW_PLOTLY.layout,
+    geo: {
+      projection: { type:'natural earth' },
+      showland: true, landcolor:'#161B22',
+      showocean: true, oceancolor:'#0B0D10',
+      showcoastlines: true, coastlinecolor:'#1E2530',
+      showframe: false,
+      bgcolor:'#0B0D10',
+      lataxis: { range:[-90,90] },
+      lonaxis: { range:[-180,180] },
+    },
+    margin: { t:10, r:10, b:10, l:10 },
+    height: 480,
+    title: { text:'Launch Site: ' + siteName + ' · Target Incl: ' + incl.toFixed(1) + '°', font:{size:11,color:'#8A9BB0'}, x:0.01 },
+  };
+  Plotly.react('lw-map', data, layout, LW_PLOTLY.config);
+}
+
+// ── Render 24h Timeline ────────────────────────────
+function renderTimeline(windows) {
+  const hours = windows.map(w => w.hour);
+  const scores = windows.map(w => w.score);
+  const colors = windows.map(w => w.go ? '#B87333' : '#4A5568');
+  const traces = [{
+    type: 'bar', x: hours, y: scores,
+    marker: { color: colors, line:{color:'#1E2530',width:1} },
+    hovertemplate: 'T+%{x}:00 UTC<br>Score: %{y}/100<extra></extra>',
+    name: 'Window Score',
+  }];
+  const layout = {
+    ...LW_PLOTLY.layout,
+    height: 170,
+    margin: { t:20, r:15, b:35, l:45 },
+    xaxis: { ...LW_PLOTLY.layout.xaxis, title:{text:'Hour (UTC)',font:{size:9}}, dtick:2 },
+    yaxis: { ...LW_PLOTLY.layout.yaxis, title:{text:'Score',font:{size:9}}, range:[0,105] },
+    shapes: [{ type:'line', x0:0, x1:23, y0:60, y1:60, line:{color:'#22c55e',width:1,dash:'dash'} }],
+    annotations: [{ x:22, y:63, text:'GO threshold', showarrow:false, font:{size:8,color:'#22c55e'} }],
+  };
+  Plotly.react('lw-timeline', traces, layout, LW_PLOTLY.config);
+}
+
+// ── Render Wind Profile ────────────────────────────
+function renderWindProfile(season, lat, addJS) {
+  const altitudes = [0,1,2,3,5,7,10,12,15,20,25,30,40,50,60,70,80];
+  const speeds = altitudes.map(a => windProfile(a, season, lat, addJS).speed);
+  const speedNoJS = altitudes.map(a => windProfile(a, season, lat, false).speed);
+
+  const traces = [
+    { type:'scatter', mode:'lines+markers', x:speeds, y:altitudes,
+      line:{color:'#B87333',width:2}, marker:{size:4,color:'#C9A24A'},
+      name:'Wind Speed', hovertemplate:'%{x:.1f} m/s @ %{y} km<extra></extra>' },
+  ];
+  if (addJS) traces.push(
+    { type:'scatter', mode:'lines', x:speedNoJS, y:altitudes,
+      line:{color:'#4A5568',width:1,dash:'dash'}, name:'Without Jet Stream' }
+  );
+
+  const layout = {
+    ...LW_PLOTLY.layout, height:260,
+    xaxis: { ...LW_PLOTLY.layout.xaxis, title:{text:'Wind Speed (m/s)',font:{size:9}} },
+    yaxis: { ...LW_PLOTLY.layout.yaxis, title:{text:'Altitude (km)',font:{size:9}} },
+    shapes: [
+      { type:'rect', x0:0, x1:200, y0:8, y1:14, fillcolor:'rgba(0,229,255,0.04)', line:{width:0} },
+    ],
+    annotations: [{ x:5, y:11, text:'Jet Stream', showarrow:false, font:{size:8,color:'#00E5FF'} }],
+  };
+  Plotly.react('lw-wind', traces, layout, LW_PLOTLY.config);
+}
+
+// ── Render Wind Hodograph ──────────────────────────
+function renderHodograph(season, lat, addJS) {
+  const altitudes = [0,1,2,3,5,7,10,12,15,20,25,30];
+  const u = [], v = [];
+  altitudes.forEach(a => {
+    const wp = windProfile(a, season, lat, addJS);
+    const rad = wp.dir * LW_CONST.DEG;
+    u.push(wp.speed * Math.sin(rad));
+    v.push(wp.speed * Math.cos(rad));
+  });
+  const traces = [{
+    type:'scatter', mode:'lines+markers',
+    x: u, y: v,
+    line:{color:'#4EC5C1',width:2},
+    marker:{size:5,color:altitudes.map((_,i)=>i),colorscale:[[0,'#B87333'],[0.5,'#C9A24A'],[1,'#4EC5C1']],showscale:true,colorbar:{title:{text:'Alt km',font:{size:8}},tickfont:{size:8}}},
+    hovertemplate:'U: %{x:.1f} m/s<br>V: %{y:.1f} m/s<extra></extra>',
+    name:'Hodograph',
+  }];
+  const layout = {
+    ...LW_PLOTLY.layout, height:260,
+    xaxis: { ...LW_PLOTLY.layout.xaxis, title:{text:'U (m/s)',font:{size:9}}, zeroline:true, zerolinecolor:'#4A5568' },
+    yaxis: { ...LW_PLOTLY.layout.yaxis, title:{text:'V (m/s)',font:{size:9}}, zeroline:true, zerolinecolor:'#4A5568', scaleanchor:'x' },
+  };
+  Plotly.react('lw-hodograph', traces, layout, LW_PLOTLY.config);
+}
+
+// ── Render Azimuth Chart ───────────────────────────
+function renderAzimuthChart(lat, azMin, azMax) {
+  const azimuths = Array.from({length:181}, (_, i) => i);
+  const incls = azimuths.map(az => {
+    try { return azToIncl(az, lat); } catch(e) { return null; }
+  }).filter(v => v !== null);
+
+  const traces = [
+    { type:'scatter', mode:'lines', x:azimuths, y:incls,
+      line:{color:'#B87333',width:2}, name:'Achievable Incl',
+      hovertemplate:'Az: %{x}°<br>Incl: %{y:.2f}°<extra></extra>' },
+  ];
+  const layout = {
+    ...LW_PLOTLY.layout, height:260,
+    xaxis: { ...LW_PLOTLY.layout.xaxis, title:{text:'Launch Azimuth (°)',font:{size:9}}, range:[0,180] },
+    yaxis: { ...LW_PLOTLY.layout.yaxis, title:{text:'Inclination (°)',font:{size:9}} },
+    shapes: [
+      { type:'rect', x0:azMin, x1:azMax, y0:0, y1:180, fillcolor:'rgba(78,197,193,0.06)', line:{color:'#4EC5C1',width:1,dash:'dash'} },
+    ],
+    annotations: [{ x:(azMin+azMax)/2, y:10, text:'Allowed range', showarrow:false, font:{size:8,color:'#4EC5C1'} }],
+  };
+  Plotly.react('lw-azimuth-plot', traces, layout, LW_PLOTLY.config);
+}
+
+// ── Render Polar Azimuth ───────────────────────────
+function renderPolarAzimuth(lat, azMin, azMax, azRange) {
+  const theta = Array.from({length:361}, (_,i) => i);
+  const rAll = theta.map(() => 1);
+  const allowed = theta.map(a => (a >= azMin && a <= azMax) ? 1 : null);
+  const traces = [
+    { type:'scatterpolar', mode:'lines', theta:theta, r:rAll, fill:'toself',
+      fillcolor:'rgba(30,37,48,0.4)', line:{color:'#1E2530'}, name:'All Azimuths', showlegend:false },
+    { type:'scatterpolar', mode:'lines', theta:theta.filter((_,i)=>allowed[i]!==null), r:allowed.filter(v=>v!==null), fill:'toself',
+      fillcolor:'rgba(78,197,193,0.15)', line:{color:'#4EC5C1',width:2}, name:'Allowed Window' },
+  ];
+  if (azRange) {
+    traces.push({ type:'scatterpolar', mode:'markers',
+      theta:[azRange[0],azRange[1]], r:[1,1],
+      marker:{size:10,color:'#C9A24A',symbol:'star'}, name:'Optimal Azimuths' });
+  }
+  const layout = {
+    ...LW_PLOTLY.layout, height:260,
+    polar: { radialaxis:{visible:false}, angularaxis:{direction:'clockwise',rotation:90,tickfont:{size:8}}, bgcolor:'#0B0D10' },
+  };
+  Plotly.react('lw-polar-plot', traces, layout, LW_PLOTLY.config);
+}
+</script>
+<script>
+// ── State ─────────────────────────────────────────
+let LW_STATE = null;
+
+// ── Main Calculate ────────────────────────────────
+function lwCalculate() {
+  // Read inputs
+  const lat    = parseFloat(document.getElementById('lw-lat').value);
+  const lon    = parseFloat(document.getElementById('lw-lon').value);
+  const altSite = parseFloat(document.getElementById('lw-alt-site').value);
+  const incl   = parseFloat(document.getElementById('lw-incl').value);
+  const tgtAlt = parseFloat(document.getElementById('lw-target-alt').value) * 1000; // m
+  const azMin  = parseFloat(document.getElementById('lw-az-min').value);
+  const azMax  = parseFloat(document.getElementById('lw-az-max').value);
+  const season = document.getElementById('lw-season').value;
+  const windSurf = parseFloat(document.getElementById('lw-wind-surf').value);
+  const windUpper = parseFloat(document.getElementById('lw-wind-upper').value);
+  const windLimit = parseFloat(document.getElementById('lw-wind-limit').value);
+  const upperLimit = parseFloat(document.getElementById('lw-upper-limit').value);
+  const vis    = parseFloat(document.getElementById('lw-vis-min').value);
+  const useJS  = document.getElementById('lw-jetstream').checked;
+  const siteKey = document.getElementById('lw-site-preset').value;
+  const siteData = LW_SITES[siteKey] || { name: 'Custom Site' };
+
+  // Compute
+  const azRange = inclToAzRange(incl, lat);
+  const vc = circVel(tgtAlt);
+  const bonus = launchBonus(azRange ? azRange[0] : azMin, lat, tgtAlt);
+  const score = scoreWindow(null, windSurf, windUpper, windLimit, upperLimit, vis, azRange !== null);
+  const maxQ  = maxQ_estimate(vc);
+  const windows = genWindowTimeline(score, windSurf, windLimit);
+
+  LW_STATE = {
+    siteName: siteData.name, lat, lon, altSite, incl, targetAlt: tgtAlt,
+    azMin, azMax, azRange, season, windSurf, windUpper, windLimit, upperLimit,
+    vis, useJS, vc, bonus, score, maxQ, windows,
+    timestamp: new Date().toISOString(),
+  };
+
+  // Render all tabs
+  renderMap(lat, lon, siteData.name, azRange, incl);
+  renderTimeline(windows);
+  renderWindProfile(season, lat, useJS);
+  renderHodograph(season, lat, useJS);
+  renderAzimuthChart(lat, azMin, azMax);
+  renderPolarAzimuth(lat, azMin, azMax, azRange);
+  renderStats(LW_STATE);
+  renderLaunchCards(windows);
+
+  // Status
+  const goCount = windows.filter(w => w.go).length;
+  lwStatus('lw-status-map',
+    `Site: ${siteData.name} · Incl ${incl}° · Score: ${score}/100 · ${goCount} GO windows in 24h · ${azRange ? 'AZIMUTH OK' : 'AZIMUTH CONSTRAINT'}`,
+    score >= 60 ? '' : 'warn'
+  );
+
+  // Auto-route to localStorage (no new keys, just update existing achilles keys)
+  lwRouteInternal();
+}
+
+// ── Seed Demo ─────────────────────────────────────
+function lwSeedDemo() {
+  // Set ISS rendezvous from KSC demo
+  document.getElementById('lw-site-preset').value = 'kennedy';
+  lwSitePreset();
+  document.getElementById('lw-incl').value = 51.6;
+  document.getElementById('lw-target-alt').value = 420;
+  document.getElementById('lw-orbit-type').value = 'iss';
+  document.getElementById('lw-season').value = 'summer';
+  document.getElementById('lw-wind-surf').value = 6;
+  document.getElementById('lw-wind-surf-val').textContent = '6';
+  document.getElementById('lw-wind-upper').value = 22;
+  document.getElementById('lw-wind-upper-val').textContent = '22';
+  lwCalculate();
+}
+
+// ── Site Preset handler ───────────────────────────
+function lwSitePreset() {
+  const key = document.getElementById('lw-site-preset').value;
+  const site = LW_SITES[key];
+  if (!site) return;
+  document.getElementById('lw-lat').value = site.lat;
+  document.getElementById('lw-lon').value = site.lon;
+  document.getElementById('lw-alt-site').value = site.alt;
+  document.getElementById('lw-az-min').value = site.az_min;
+  document.getElementById('lw-az-max').value = site.az_max;
+}
+
+// ── Orbit type handler ────────────────────────────
+function lwOrbitType() {
+  const map = { leo:28.6, sso:97.8, geo:27.0, meo:45.0, iss:51.6, polar:90.0 };
+  const altMap = { leo:400, sso:550, geo:35786, meo:20200, iss:420, polar:500 };
+  const type = document.getElementById('lw-orbit-type').value;
+  if (type !== 'custom') {
+    document.getElementById('lw-incl').value = map[type] || 28.6;
+    document.getElementById('lw-target-alt').value = altMap[type] || 400;
+  }
+}
+
+// ── Add Custom Site ───────────────────────────────
+function lwAddSite() {
+  const lat = parseFloat(prompt('Latitude (°):', '0'));
+  const lon = parseFloat(prompt('Longitude (°):', '0'));
+  const name = prompt('Site Name:', 'Custom Launch Site') || 'Custom';
+  if (!isNaN(lat) && !isNaN(lon)) {
+    LW_SITES.custom = { name, lat, lon, alt:0, az_min:0, az_max:360 };
+    document.getElementById('lw-lat').value = lat;
+    document.getElementById('lw-lon').value = lon;
+    document.getElementById('lw-site-preset').value = 'custom';
+    alert(`Site "${name}" added at ${lat}°, ${lon}°`);
+  }
+}
+
+// ── Sweep ─────────────────────────────────────────
+function lwSweep() {
+  const varName = document.getElementById('lw-sweep-var').value;
+  const min = parseFloat(document.getElementById('lw-sweep-min').value);
+  const max = parseFloat(document.getElementById('lw-sweep-max').value);
+  const steps = parseInt(document.getElementById('lw-sweep-steps').value);
+
+  const params = {
+    lat: parseFloat(document.getElementById('lw-lat').value),
+    lon: parseFloat(document.getElementById('lw-lon').value),
+    incl: parseFloat(document.getElementById('lw-incl').value),
+    targetAlt: parseFloat(document.getElementById('lw-target-alt').value) * 1000,
+    windSurf: parseFloat(document.getElementById('lw-wind-surf').value),
+    windUpper: parseFloat(document.getElementById('lw-wind-upper').value),
+    windLimit: parseFloat(document.getElementById('lw-wind-limit').value),
+    upperLimit: parseFloat(document.getElementById('lw-upper-limit').value),
+    vis: parseFloat(document.getElementById('lw-vis-min').value),
+    azimuth: parseFloat(document.getElementById('lw-az-min').value),
+  };
+
+  const results = varName === 'season'
+    ? ['spring','summer','autumn','winter'].map(s => ({ var:s, score: scoreWindow(null, params.windSurf * (s==='winter'?1.3:s==='summer'?0.9:1.1), params.windUpper, params.windLimit, params.upperLimit, params.vis, inclToAzRange(params.incl, params.lat) !== null), reachable: inclToAzRange(params.incl, params.lat) !== null, launchBonus: launchBonus(90, params.lat, params.targetAlt).toFixed(1), circVel: (circVel(params.targetAlt)/1000).toFixed(3), azMin:'N/A', azMax:'N/A', maxQ: maxQ_estimate(circVel(params.targetAlt)).toFixed(2) }))
+    : sweepWindows(varName, min, max, steps, params);
+
+  renderSweepPlot(results, varName);
+  renderSweepTable(results, varName);
+  lwStatus('lw-sweep-status', `Sweep complete: ${results.length} points · Variable: ${varName}`);
+
+  // Switch to sweep tab
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  document.querySelector('.tab:nth-child(5)').classList.add('active');
+  document.getElementById('tab-sweep').classList.add('active');
+}
+
+// ── Render Sweep Plot ─────────────────────────────
+function renderSweepPlot(results, varName) {
+  const isSeasonSweep = varName === 'season';
+  const x = results.map(r => r.var);
+  const scores = results.map(r => r.score);
+  const bonus  = results.map(r => parseFloat(r.launchBonus));
+
+  const traces = [
+    { type: isSeasonSweep ? 'bar' : 'scatter', mode: isSeasonSweep ? undefined : 'lines+markers',
+      x, y: scores,
+      ...(isSeasonSweep ? { marker:{color:scores.map(s => s>=70?'#B87333':s>=40?'#C9A24A':'#4A5568')} } : { line:{color:'#B87333',width:2}, marker:{size:4,color:'#C9A24A'} }),
+      name:'Window Score', yaxis:'y', hovertemplate:'%{x}<br>Score: %{y}<extra></extra>' },
+    { type:'scatter', mode:'lines', x, y: bonus,
+      line:{color:'#4EC5C1',width:1.5,dash:'dot'}, name:'Launch Bonus (m/s)', yaxis:'y2' },
+  ];
+  const xLabel = {latitude:'Latitude (°)',azimuth:'Azimuth (°)',altitude:'Target Alt (km)',inclination:'Inclination (°)',wind:'Surface Wind (m/s)',season:'Season'}[varName] || varName;
+  const layout = {
+    ...LW_PLOTLY.layout, height:260,
+    xaxis: { ...LW_PLOTLY.layout.xaxis, title:{text:xLabel,font:{size:9}} },
+    yaxis: { ...LW_PLOTLY.layout.yaxis, title:{text:'Window Score',font:{size:9}}, range:[0,105] },
+    yaxis2: { title:{text:'Launch Bonus (m/s)',font:{size:9},color:'#4EC5C1'}, overlaying:'y', side:'right', gridcolor:'transparent', tickfont:{size:9,color:'#4EC5C1'} },
+    shapes: [{ type:'line', x0:isSeasonSweep?-0.5:results[0].var, x1:isSeasonSweep?3.5:results[results.length-1].var, y0:60, y1:60, line:{color:'#22c55e',width:1,dash:'dash'} }],
+  };
+  Plotly.react('lw-sweep-plot', traces, layout, LW_PLOTLY.config);
+}
+
+// ── Render Sweep Table ────────────────────────────
+function renderSweepTable(results, varName) {
+  const varLabel = {latitude:'Lat (°)',azimuth:'Az (°)',altitude:'Alt (km)',inclination:'Incl (°)',wind:'Wind (m/s)',season:'Season'}[varName] || varName;
+  const head = document.getElementById('lw-sweep-thead');
+  const body = document.getElementById('lw-sweep-tbody');
+  if (!head || !body) return;
+  head.innerHTML = `<tr>${['#',varLabel,'Score','GO?','Az Min','Az Max','Bonus (m/s)','Vc (km/s)','MaxQ (kPa)'].map(h=>`<th>${h}</th>`).join('')}</tr>`;
+  body.innerHTML = results.map((r,i) => {
+    const cls = r.score >= 70 ? 'val-good' : r.score >= 40 ? 'val-warn' : 'val-bad';
+    return `<tr>
+      <td>${i+1}</td>
+      <td>${typeof r.var === 'number' ? r.var.toFixed(1) : r.var}</td>
+      <td class="${cls}">${r.score}</td>
+      <td class="${r.reachable ? 'val-good' : 'val-bad'}">${r.reachable ? 'YES' : 'NO'}</td>
+      <td>${r.azMin}</td><td>${r.azMax}</td>
+      <td>${r.launchBonus}</td><td>${r.circVel}</td><td>${r.maxQ}</td>
+    </tr>`;
+  }).join('');
+}
+</script>
+<script>
+// ── Export ────────────────────────────────────────
+function lwExport(type) {
+  if (!LW_STATE) { alert('Run calculation first.'); return; }
+  const s = LW_STATE;
+  let content = '', filename = '', mime = '';
+
+  if (type === 'json') {
+    content = JSON.stringify(s, null, 2);
+    filename = 'romer-launch-windows.json'; mime = 'application/json';
+  } else if (type === 'csv') {
+    const hdr = 'hour_utc,go,score,wind_ms\n';
+    const rows = s.windows.map(w => `${w.hour},${w.go},${w.score},${w.wind}`).join('\n');
+    content = hdr + rows; filename = 'romer-launch-windows.csv'; mime = 'text/csv';
+  } else if (type === 'txt') {
+    content = [
+      '═══════════════════════════════════════════',
+      '  RÖMER INDUSTRIES / EMASSC',
+      '  LAUNCH WINDOWS MANIFEST ',
+      '═══════════════════════════════════════════',
+      `  Site        : ${s.siteName}`,
+      `  Lat/Lon     : ${s.lat.toFixed(3)}° / ${s.lon.toFixed(3)}°`,
+      `  Target Incl : ${s.incl.toFixed(1)}°`,
+      `  Target Alt  : ${(s.targetAlt/1000).toFixed(0)} km`,
+      `  Season      : ${s.season}`,
+      `  Window Score: ${s.score}/100 (GO threshold: 60)`,
+      `  Az Range    : ${s.azRange ? s.azRange[0].toFixed(1)+'° / '+s.azRange[1].toFixed(1)+'°' : 'UNREACHABLE'}`,
+      `  Launch Bonus: ${s.bonus.toFixed(1)} m/s`,
+      `  Circ Vel    : ${(s.vc/1000).toFixed(3)} km/s`,
+      `  Max Q (est) : ${s.maxQ.toFixed(2)} kPa`,
+      '───────────────────────────────────────────',
+      '  24H WINDOW SCHEDULE (UTC)',
+      '───────────────────────────────────────────',
+      ...s.windows.map(w => `  T+${String(w.hour).padStart(2,'0')}:00  ${w.go ? '[GO]   ' : '[NO-GO]'} Score:${String(w.score).padStart(3)} Wind:${w.wind} m/s`),
+      '═══════════════════════════════════════════',
+      `  Generated: ${s.timestamp}`,
+      '═══════════════════════════════════════════',
+    ].join('\n');
+    filename = 'romer-launch-manifest.txt'; mime = 'text/plain';
+  } else if (type === 'yaml') {
+    content = [
+      'romer_launch_windows:',
+      `  version: 2.0.0`,
+      `  site: "${s.siteName}"`,
+      `  latitude: ${s.lat}`,
+      `  longitude: ${s.lon}`,
+      `  target_inclination_deg: ${s.incl}`,
+      `  target_altitude_km: ${(s.targetAlt/1000).toFixed(0)}`,
+      `  season: ${s.season}`,
+      `  score: ${s.score}`,
+      `  go_nogo: ${s.score >= 60 ? 'GO' : 'NO-GO'}`,
+      `  azimuth_prograde: ${s.azRange ? s.azRange[0].toFixed(1) : 'null'}`,
+      `  azimuth_retrograde: ${s.azRange ? s.azRange[1].toFixed(1) : 'null'}`,
+      `  circular_velocity_kms: ${(s.vc/1000).toFixed(3)}`,
+      `  launch_bonus_ms: ${s.bonus.toFixed(1)}`,
+      `  max_q_kpa: ${s.maxQ.toFixed(2)}`,
+      '  windows:',
+      ...s.windows.map(w => `    - hour: ${w.hour}\n      go: ${w.go}\n      score: ${w.score}\n      wind_ms: ${w.wind}`),
+    ].join('\n');
+    filename = 'romer-launch-windows.yaml'; mime = 'text/yaml';
+  } else if (type === 'gmat') {
+    content = [
+      '% ─────────────────────────────────────────',
+      '% GMAT Script — Launch Windows',
+      '% Römer Industries / EMASSC  ',
+      `% Site: ${s.siteName}`,
+      `% Generated: ${s.timestamp}`,
+      '% ─────────────────────────────────────────',
+      '',
+      'Create Spacecraft SC;',
+      `GMAT SC.SMA = ${((LW_CONST.RE + s.targetAlt)/1000).toFixed(3)};`,
+      `GMAT SC.ECC = 0.001;`,
+      `GMAT SC.INC = ${s.incl.toFixed(3)};`,
+      `GMAT SC.RAAN = 0;`,
+      `GMAT SC.AOP = 0;`,
+      `GMAT SC.TA = 0;`,
+      '',
+      'Create ForceModel FM;',
+      'GMAT FM.GravityField.Earth.Degree = 4;',
+      'GMAT FM.GravityField.Earth.Order = 4;',
+      '',
+      'Create Propagator Prop;',
+      'GMAT Prop.FM = FM;',
+      '',
+      '% Launch Site',
+      `% Latitude: ${s.lat.toFixed(3)}°`,
+      `% Longitude: ${s.lon.toFixed(3)}°`,
+      `% Azimuth (prograde): ${s.azRange ? s.azRange[0].toFixed(1)+'°' : 'N/A'}`,
+      '',
+      'BeginMissionSequence;',
+      'Propagate Prop(SC) {SC.ElapsedDays = 1};',
+    ].join('\n');
+    filename = 'romer-launch-gmat.script'; mime = 'text/plain';
+  } else if (type === 'png') {
+    ['lw-map','lw-timeline','lw-wind','lw-hodograph','lw-azimuth-plot','lw-polar-plot','lw-sweep-plot'].forEach((id,i) => {
+      const el = document.getElementById(id);
+      if (el && el.data) setTimeout(() => Plotly.downloadImage(id, {format:'png',filename:`romer-lw-${id}`,width:800,height:500,scale:2}), i*600);
+    });
+    return;
+  }
+
+  const blob = new Blob([content], {type:mime});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = filename; a.click();
+}
+
+// ── Dataspace Routing ─────────────────────────────
+function lwRouteInternal() {
+  if (!LW_STATE) return;
+  const payload = {
+    calculator: 'launch_windows', version: '2.0.0',
+    timestamp: LW_STATE.timestamp,
+    site: LW_STATE.siteName, lat: LW_STATE.lat, lon: LW_STATE.lon,
+    incl: LW_STATE.incl, targetAlt: LW_STATE.targetAlt,
+    score: LW_STATE.score, goNogo: LW_STATE.score >= 60 ? 'GO' : 'NO-GO',
+    azRange: LW_STATE.azRange, bonus: LW_STATE.bonus,
+    vc: LW_STATE.vc, maxQ: LW_STATE.maxQ,
+    windows: LW_STATE.windows,
+  };
+  // Route to relevant workspace keys (existing Achilles keys, no new layers)
+  // Launch windows primarily relevant to W1 (operations) and W5 (mission planning)
+  try { localStorage.setItem('achilles_calc_launch_w1', JSON.stringify(payload)); } catch(e){}
+  try { localStorage.setItem('achilles_calc_launch_w5', JSON.stringify(payload)); } catch(e){}
+}
+
+function lwRoute(ws) {
+  if (!LW_STATE) { alert('Run calculation first.'); return; }
+  const payload = {
+    calculator: 'launch_windows', version: '2.0.0',
+    timestamp: LW_STATE.timestamp,
+    site: LW_STATE.siteName, score: LW_STATE.score,
+    goNogo: LW_STATE.score >= 60 ? 'GO' : 'NO-GO',
+    incl: LW_STATE.incl, targetAlt: LW_STATE.targetAlt,
+    windows: LW_STATE.windows,
+  };
+  try {
+    localStorage.setItem(`achilles_calc_launch_${ws}`, JSON.stringify(payload));
+    const el = document.getElementById('lw-route-status');
+    if (el) {
+      el.className = 'info-box'; el.style.display = '';
+      el.textContent = `✓ Routed to ${ws.toUpperCase()} dataspace — ${new Date().toISOString()}`;
+    }
+  } catch(e) { alert('Route failed: ' + e.message); }
+}
+
+function lwRouteAll() {
+  if (!LW_STATE) { alert('Run calculation first.'); return; }
+  ['w1','w2','w3','w4','w5','w6'].forEach(ws => lwRoute(ws));
+  const el = document.getElementById('lw-route-status');
+  if (el) { el.className = 'info-box'; el.style.display = '';
+    el.textContent = `✓ Routed to ALL workspaces (W1–W6) — ${new Date().toISOString()}`; }
+}
+
+// ── Init ──────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  // Attach event listeners
+  document.getElementById('lw-site-preset').addEventListener('change', lwSitePreset);
+  document.getElementById('lw-orbit-type').addEventListener('change', lwOrbitType);
+
+  // Init wind and azimuth charts on atmosphere tab
+  renderWindProfile('summer', 28.573, true);
+  renderHodograph('summer', 28.573, true);
+  renderAzimuthChart(28.573, 35, 120);
+  renderPolarAzimuth(28.573, 35, 120, null);
+
+  // Init blank map
+  renderMap(28.573, -80.649, 'Kennedy Space Center', null, 28.6);
+
+  // Beacon pings
+  try {
+    const ping = { calculator:'launch_windows', version:'2.0.0', status:'live', timestamp: new Date().toISOString() };
+    localStorage.setItem('achilles_beacon_lw', JSON.stringify(ping));
+  } catch(e){}
+
+  console.log('%cLaunch Windows Calculator', 'color:#B87333;font-weight:bold;font-size:14px');
+  console.log('%cRömer Industries / EMASSC', 'color:#4EC5C1;font-size:12px');
+  console.log('Universal tool · /calc/launch');
+});
+</script>
+</body>
+</html> 
