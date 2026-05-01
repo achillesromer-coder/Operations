@@ -1,0 +1,55 @@
+<style>.dt-wrap{font-family:Inter,sans-serif;background:#0a0e1a;color:#e8eaf0;border-bottom:3px solid #ffaa00;width:100%}.dt-hdr{background:#1a1f2e;padding:.5rem 1rem;display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;border-bottom:2px solid #ffaa00}.dt-logo{font-size:1.1rem;color:#ffaa00}.dt-ttl{flex:1;min-width:180px}.dt-ttl h2{font-size:.85rem;font-weight:700;color:#ffaa00;letter-spacing:.07em;text-transform:uppercase;margin:0}.dt-ttl p{font-size:.62rem;color:#8b92a8;margin:0}.dt-fuse{display:flex;gap:.25rem;flex-wrap:wrap}.dt-fuse a{padding:.18rem .42rem;border-radius:3px;font-size:.63rem;font-weight:600;text-decoration:none;color:#8b92a8;background:#252b3d;border:1px solid #3a4059}.dt-fuse a.on{color:#ffaa00;border-color:#ffaa00;background:#ffaa001a}.dt-fuse a.lib{color:#ff6b9d;border-color:#ff6b9d}.dt-fuse a.ds{color:#00ff88;border-color:#00ff88;background:rgba(0,255,136,.08)}.dt-meta{background:#252b3d;padding:.2rem 1rem;display:flex;align-items:center;gap:.75rem;font-size:.62rem;color:#8b92a8;flex-wrap:wrap}.dt-pill{padding:.06rem .3rem;border-radius:2px;font-size:.59rem;font-weight:700;background:rgba(0,255,136,.15);color:#00ff88}.dt-body{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;border-top:1px solid #3a4059}@media(max-width:700px){.dt-body{grid-template-columns:1fr}}.dt-col{padding:.6rem .9rem;border-right:1px solid #3a4059}.dt-col:last-child{border-right:none}.dt-col-hd{font-size:.66rem;font-weight:700;color:#ffaa00;letter-spacing:.06em;text-transform:uppercase;margin-bottom:.35rem}.dt-task{background:#1a1f2e;border:1px solid #3a4059;border-radius:4px;padding:.38rem .55rem;margin-bottom:.3rem;display:flex;align-items:flex-start;gap:.45rem}.dt-task-txt{flex:1;font-size:.65rem;color:#e8eaf0;line-height:1.4}.dt-task-sub{font-size:.59rem;color:#8b92a8;margin-top:.08rem}.dt-badge{padding:.04rem .28rem;border-radius:2px;font-size:.57rem;font-weight:700;white-space:nowrap;flex-shrink:0}.dt-badge.prog{background:rgba(0,212,255,.15);color:#00d4ff}.dt-badge.done{background:rgba(0,255,136,.15);color:#00ff88}.dt-badge.block{background:rgba(255,51,102,.15);color:#ff3366}.dt-badge.queue{background:rgba(255,170,0,.12);color:#ffaa00}.dt-metrics{background:#1a1f2e;border:1px solid #3a4059;border-radius:4px;padding:.4rem .6rem;margin-bottom:.3rem}.dt-mr{display:flex;justify-content:space-between;font-size:.63rem;padding:.08rem 0}.dt-ml{color:#8b92a8}.dt-mv{color:#ffaa00;font-weight:600}.dt-log{font-size:.6rem;color:#8b92a8;padding:.15rem 0;border-bottom:1px solid rgba(58,64,89,.4);display:flex;gap:.45rem}.dt-log-ts{color:#3a4059;white-space:nowrap;flex-shrink:0}.dt-footer{background:#1a1f2e;padding:.32rem 1rem;display:flex;align-items:center;gap:.7rem;border-top:1px solid #3a4059;flex-wrap:wrap}.dt-fl{font-size:.6rem;color:#8b92a8}.dt-lb{padding:.2rem .55rem;border-radius:3px;font-size:.63rem;font-weight:700;text-decoration:none;border:1px solid #ffaa00;color:#ffaa00;background:#ffaa0014}.dt-lb.ds{border-color:#00ff88;color:#00ff88;background:rgba(0,255,136,.06)}</style>
+<div class="dt-wrap"><div class="dt-hdr"><div class="dt-logo">&#9889;</div><div class="dt-ttl"><h2>OPS TRACKER: W4 &middot; SUPPLY CHAIN &amp; TRAJECTORY</h2><p>Interplanetary supply chain optimisation &middot; /operations/w4</p></div><div class="dt-fuse"><a href="/operations/w1">W1</a><a href="/operations/w2">W2</a><a href="/operations/w3">W3</a><a href="/operations/w4" class="on">W4</a><a href="/operations/w5">W5</a><a href="/operations/w6">W6</a><a href="/library" class="lib">LIB</a><a href="/w4/data" class="ds">&#9889; W4 DATASPACE</a></div></div><div class="dt-meta"><span class="dt-pill">&#9679; LIVE</span><span>/operations/w4</span><span>Backend: <a href="/w4/data" style="color:#00ff88;text-decoration:none">/w4/data</a></span><span>R&ouml;mer Industries / EMASSC</span><span id="dt-utc-w4" style="margin-left:auto"></span></div><div class="dt-body"><div class="dt-col"><div class="dt-col-hd">&#9654; ACTIVE TASKS</div><div class="dt-task"><div class="dt-task-txt">Hohmann transfer optimisation — Earth to target belt<div class="dt-task-sub">W4 Dataspace &rarr; trajectory map</div></div><div class="dt-badge prog">IN PROGRESS</div></div><div class="dt-task"><div class="dt-task-txt">Supply node placement — 4 nodes L4/L5 + GEO<div class="dt-task-sub">Cross-ref W5 GMAT orbital windows</div></div><div class="dt-badge prog">IN PROGRESS</div></div><div class="dt-task"><div class="dt-task-txt">Mass budget closure — 12t payload / 28.5t fuel<div class="dt-task-sub">Awaiting W6 vehicle manifest</div></div><div class="dt-badge block">BLOCKED</div></div><div class="dt-metrics"><div class="dt-mr"><span class="dt-ml">Transfer dV</span><span class="dt-mv">4.2km/s</span></div><div class="dt-mr"><span class="dt-ml">Transit</span><span class="dt-mv">210 days</span></div><div class="dt-mr"><span class="dt-ml">Payload</span><span class="dt-mv">12.0t</span></div><div class="dt-mr"><span class="dt-ml">Nodes</span><span class="dt-mv">4</span></div></div></div><div class="dt-col"><div class="dt-col-hd">&#10003; COMPLETIONS</div><div class="dt-task"><div class="dt-task-txt">Resupply sequence v1 — 3-leg transit plan<div class="dt-task-sub">Archived to W6</div></div><div class="dt-badge done">COMPLETE</div></div><div class="dt-task"><div class="dt-task-txt">Fuel mass estimation — ion propulsion config<div class="dt-task-sub">From W5 GMAT</div></div><div class="dt-badge done">COMPLETE</div></div><div class="dt-col-hd" style="margin-top:.45rem">&#9654; QUEUED</div><div class="dt-task"><div class="dt-task-txt">Return trajectory — loaded mass return arc<div class="dt-task-sub">Awaiting W1 resource yield</div></div><div class="dt-badge queue">QUEUED</div></div></div><div class="dt-col"><div class="dt-col-hd">&#9632; MISSION LOG</div><div class="dt-log"><span class="dt-log-ts">24 Feb</span><span>W4&rarr;W6 manifest sent</span></div><div class="dt-log"><span class="dt-log-ts">23 Feb</span><span>Supply node config v2</span></div><div class="dt-log"><span class="dt-log-ts">22 Feb</span><span>W5 transfer windows received</span></div><div class="dt-log"><span class="dt-log-ts">18 Feb</span><span>INIT W4 Supply Chain activated</span></div><div class="dt-col-hd" style="margin-top:.45rem">&#9632; CONNECTIONS</div><div style="font-size:.61rem;color:#8b92a8;line-height:1.65">Feeds &rarr; <a href="/w6/data" style="color:#ff6b9d;text-decoration:none">W6</a><br>Consumes &larr; <a href="/w1/data" style="color:#00d4ff;text-decoration:none">W1</a>, <a href="/w5/data" style="color:#00ff88;text-decoration:none">W5</a>, <a href="/w6/data" style="color:#ff6b9d;text-decoration:none">W6</a></div></div></div><div class="dt-footer"><span class="dt-fl">Workspace Backend:</span><a href="/w4/data" class="dt-lb ds">&#9889; OPEN W4 DATASPACE</a><span style="margin-left:auto;font-size:.59rem;color:#00ff88">&#9679; Dataspace beacon active</span></div></div><script>setInterval(function(){var e=document.getElementById("dt-utc-w4");if(e)e.textContent=new Date().toUTCString().replace("GMT","UTC");},1000);(function(){try{fetch("/w4/data",{method:"HEAD",mode:"no-cors",cache:"no-cache"}).catch(function(){});}catch(e){}})();</script>
+
+<!-- FLOW MAP (AI position + pipeline) -->
+<div id="flowmap" style="width:100%;max-width:1100px;margin:10px auto"></div>
+<script>
+(function(){
+  const el = document.getElementById("flowmap");
+  const nodes = [
+    {id:"/w1", label:"W1"}, {id:"/data/w1", label:"/data/w1"},
+    {id:"/w2", label:"W2"}, {id:"/data/w2", label:"/data/w2"},
+    {id:"/w3", label:"W3"}, {id:"/data/w3", label:"/data/w3"},
+    {id:"/w4", label:"W4"}, {id:"/data/w4", label:"/data/w4"},
+    {id:"/w5", label:"W5"}, {id:"/data/w5", label:"/data/w5"},
+    {id:"/data/w6", label:"/data/w6"}
+  ];
+  const edges = [
+    ["/w1","/data/w1"],["/w2","/data/w2"],["/w3","/data/w3"],["/w4","/data/w4"],["/w5","/data/w5"],
+    ["/data/w1","/data/w6"],["/data/w2","/data/w6"],["/data/w3","/data/w6"],["/data/w4","/data/w6"],["/data/w5","/data/w6"]
+  ];
+  function render(){
+    const s = Linker.get();
+    const where = s.achilles?.current || "/dash";
+    const svg = [`<svg viewBox="0 0 1100 280" style="width:100%">`];
+    const xy = {}; // layout grid
+    const cols = [["/w1","/w2","/w3","/w4","/w5"], ["/data/w1","/data/w2","/data/w3","/data/w4","/data/w5"], ["/data/w6"]];
+    const xcol = [150, 450, 850], ystep = 45, y0 = 40;
+    cols.forEach((col,ci)=>col.forEach((id,ri)=>{ xy[id] = {x:xcol[ci], y:y0+ri*ystep}; }));
+    // nodes
+    nodes.forEach(n=>{
+      if(!xy[n.id]) return;
+      const {x,y} = xy[n.id];
+      const active = (n.id===where);
+      svg.push(`<rect x="${x-50}" y="${y-18}" rx="10" ry="10" width="100" height="36" 
+        fill="${active?'#00e5ff':'#1f2733'}" stroke="#3a4557" />
+        <text x="${x}" y="${y+5}" fill="#fff" font-family="Inter" font-size="12" text-anchor="middle">${n.label}</text>`);
+      if(active){
+        svg.push(`<circle cx="${x+60}" cy="${y}" r="6" fill="#00e5ff"><title>Achilles here</title></circle>`);
+      }
+    });
+    // edges
+    edges.forEach(([a,b])=>{
+      if(!xy[a]||!xy[b]) return;
+      const A=xy[a],B=xy[b];
+      svg.push(`<line x1="${A.x+50}" y1="${A.y}" x2="${B.x-50}" y2="${B.y}" stroke="#5c6b80" stroke-width="2" marker-end="url(#arrow)"/>`);
+    });
+    svg.splice(1,0,`<defs><marker id="arrow" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#5c6b80"/></marker></defs>`);
+    svg.push(`</svg>`);
+    el.innerHTML = svg.join("");
+  }
+  window.addEventListener("message", (e)=> (e.data?.source==="linker" && e.data.type==="sync") && render());
+  if(window.Linker) render();
+})();
+</script>
