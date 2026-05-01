@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Energy & Power Calculator | Römer Industries</title>
+<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0B0D10;--surface:#12151A;--panel:#161B22;--border:#1E2530;--copper:#B87333;--gold:#C9A24A;--teal:#4EC5C1;--cyan:#00E5FF;--ivory:#F2F1EC;--muted:#8A9BB0;--dim:#4A5568;--w1:#E53E3E;--w2:#DD6B20;--w3:#D69E2E;--w4:#38A169;--w5:#3182CE;--w6:#805AD5;--font-ui:'Inter',sans-serif;--font-mono:'JetBrains Mono',monospace}
+html,body{width:100%;min-height:100vh;background:var(--bg);color:var(--ivory);font-family:var(--font-ui);font-size:14px;overflow-x:hidden}
+.ops-tracker{display:flex;align-items:center;justify-content:space-between;background:var(--surface);border-bottom:1px solid var(--border);padding:0 16px;height:40px}
+.ops-id{display:flex;align-items:center;gap:10px}
+.ops-beacon{width:8px;height:8px;border-radius:50%;background:var(--copper);box-shadow:0 0 6px var(--copper);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.ops-title{font-family:var(--font-mono);font-size:11px;color:var(--teal);font-weight:600;letter-spacing:.05em}
+.ops-sub{font-size:10px;color:var(--muted);font-family:var(--font-mono)}
+.ops-nav{display:flex;gap:4px;align-items:center}
+.ops-pill{font-family:var(--font-mono);font-size:9px;font-weight:700;padding:2px 7px;border-radius:3px;cursor:pointer;letter-spacing:.06em;text-decoration:none;border:1px solid transparent;transition:all .15s}
+.ops-pill.calc{color:var(--gold);border-color:var(--gold);background:rgba(201,162,74,.08)}.ops-pill.calc:hover{background:rgba(201,162,74,.18)}.ops-pill.calc.active{background:rgba(201,162,74,.22)}
+.ops-pill.w1{color:var(--w1);border-color:var(--w1);background:rgba(229,62,62,.06)}.ops-pill.w2{color:var(--w2);border-color:var(--w2);background:rgba(221,107,32,.06)}.ops-pill.w3{color:var(--w3);border-color:var(--w3);background:rgba(214,158,46,.06)}.ops-pill.w4{color:var(--w4);border-color:var(--w4);background:rgba(56,161,105,.06)}.ops-pill.w5{color:var(--w5);border-color:var(--w5);background:rgba(49,130,206,.06)}.ops-pill.w6{color:var(--w6);border-color:var(--w6);background:rgba(128,90,213,.06)}
+.ops-pill.util{color:var(--muted);border-color:var(--dim);background:transparent}
+.beacon-bar{background:var(--panel);border-bottom:1px solid var(--border);padding:5px 16px;display:flex;align-items:center;gap:10px}
+.beacon-dot{width:6px;height:6px;border-radius:50%;background:#22c55e;box-shadow:0 0 5px #22c55e}
+.beacon-text{font-family:var(--font-mono);font-size:9px;color:var(--muted)}.beacon-text span{color:var(--teal)}
+.calc-header{padding:20px 24px 16px;border-bottom:1px solid var(--border)}
+.calc-title{font-size:22px;font-weight:700;color:var(--copper);letter-spacing:-.01em;margin-bottom:4px}
+.calc-desc{font-size:11px;color:var(--muted);line-height:1.5}
+.calc-badges{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.badge{font-family:var(--font-mono);font-size:9px;font-weight:600;padding:3px 8px;border-radius:3px;letter-spacing:.04em}
+.badge-ver{background:rgba(78,197,193,.1);color:var(--teal);border:1px solid rgba(78,197,193,.25)}
+.badge-tag{background:rgba(184,115,51,.1);color:var(--copper);border:1px solid rgba(184,115,51,.25)}
+.badge-util{background:rgba(138,155,176,.08);color:var(--muted);border:1px solid var(--dim)}
+.calc-body{display:grid;grid-template-columns:280px 1fr;gap:0;min-height:calc(100vh - 120px)}
+.config-panel{background:var(--surface);border-right:1px solid var(--border);overflow-y:auto}
+.results-panel{background:var(--bg);overflow:hidden;display:flex;flex-direction:column}
+.cfg-section{border-bottom:1px solid var(--border);padding:14px 16px}
+.cfg-label{font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:.1em;color:var(--copper);text-transform:uppercase;margin-bottom:10px}
+.cfg-field{margin-bottom:10px}.cfg-field label{display:block;font-size:10px;color:var(--muted);margin-bottom:4px;font-family:var(--font-mono)}
+.cfg-field input,.cfg-field select{width:100%;background:var(--panel);border:1px solid var(--border);color:var(--ivory);font-family:var(--font-mono);font-size:11px;padding:6px 8px;border-radius:4px;outline:none;transition:border-color .2s}
+.cfg-field input:focus,.cfg-field select:focus{border-color:var(--copper)}.cfg-field select option{background:var(--panel)}
+.cfg-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.btn{font-family:var(--font-mono);font-size:10px;font-weight:700;letter-spacing:.06em;padding:8px 14px;border-radius:4px;border:none;cursor:pointer;transition:all .15s;text-transform:uppercase}
+.btn-primary{background:linear-gradient(135deg,var(--copper),var(--gold));color:#0B0D10}.btn-primary:hover{opacity:.88}
+.btn-secondary{background:transparent;color:var(--teal);border:1px solid var(--teal)}.btn-secondary:hover{background:rgba(78,197,193,.08)}
+.btn-sm{padding:5px 10px;font-size:9px}.btn-full{width:100%}.btn-group{display:flex;gap:6px;width:100%}.btn-group .btn{flex:1}
+.btn-row{display:flex;flex-wrap:wrap;gap:8px;padding:14px 16px;flex-direction:column}
+.tab-bar{display:flex;background:var(--surface);border-bottom:1px solid var(--border);overflow-x:auto}
+.tab{font-family:var(--font-mono);font-size:10px;font-weight:600;letter-spacing:.06em;padding:10px 16px;cursor:pointer;border-bottom:2px solid transparent;color:var(--muted);white-space:nowrap;transition:all .15s;text-transform:uppercase}
+.tab.active{color:var(--copper);border-bottom-color:var(--copper)}.tab:hover:not(.active){color:var(--ivory)}
+.tab-content{flex:1;overflow:hidden;display:none;padding:16px;flex-direction:column;gap:12px}.tab-content.active{display:flex}
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.kpi-card{background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:14px;text-align:center}
+.kpi-label{font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;margin-bottom:6px}
+.kpi-val{font-family:var(--font-mono);font-size:22px;font-weight:700;color:var(--copper)}
+.kpi-unit{font-family:var(--font-mono);font-size:9px;color:var(--muted);margin-top:2px}
+.plot-container{background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:12px}
+.plot-title{font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.stat-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(30,37,48,.5)}.stat-row:last-child{border-bottom:none}
+.stat-label{font-size:10px;color:var(--muted);font-family:var(--font-mono)}.stat-val{font-family:var(--font-mono);font-size:11px;font-weight:700;color:var(--ivory)}
+.stat-val.good{color:#22c55e}.stat-val.warn{color:var(--gold)}.stat-val.bad{color:#e53e3e}
+.info-box{background:var(--panel);border:1px solid var(--border);border-left:3px solid var(--teal);border-radius:4px;padding:10px 14px;font-family:var(--font-mono);font-size:10px;color:var(--teal);line-height:1.6}
+.info-box.warn{border-left-color:var(--gold);color:var(--gold)}.info-box.bad{border-left-color:#e53e3e;color:#e53e3e}
+.export-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.export-card{background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:14px;text-align:center;cursor:pointer;transition:all .15s}
+.export-card:hover{border-color:var(--copper)}.export-card .ec-icon{font-size:22px;margin-bottom:6px}
+.export-card .ec-label{font-family:var(--font-mono);font-size:10px;font-weight:700;color:var(--ivory);margin-bottom:3px}.export-card .ec-desc{font-size:9px;color:var(--muted)}
+::-webkit-scrollbar{width:5px;height:5px}::-webkit-scrollbar-track{background:var(--surface)}::-webkit-scrollbar-thumb{background:var(--dim);border-radius:3px}
+@media(max-width:900px){.calc-body{grid-template-columns:1fr}.kpi-grid{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<div class="ops-tracker">
+  <div class="ops-id"><div class="ops-beacon"></div>
+    <div><div class="ops-title">ENERGY & POWER CALCULATOR</div>
+    <div class="ops-sub">Solar arrays · Battery storage · Power budget · Thermal · Orbital eclipse · Universal tool /calc/energy</div></div>
+  </div>
+  <nav class="ops-nav">
+    <a class="ops-pill calc" href="/calc/orbital">ORB</a>
+    <a class="ops-pill calc" href="/calc/launch">LW</a>
+    <a class="ops-pill calc" href="/calc/magnetostatics">MAG</a>
+    <a class="ops-pill calc active" href="/calc/energy">PWR</a>
+    <a class="ops-pill calc" href="/calc/fluids">FLD</a>
+    <a class="ops-pill sim" href="/sims/rfs-extraction">RFS</a>
+    <a class="ops-pill sim" href="/sim/node">EMFF</a>
+    <a class="ops-pill sim" href="/sim/fields">EMF</a>
+    <a class="ops-pill sim" href="/sim/re-entry">ENTRY</a>
+    <a class="ops-pill w1" href="/w1/data">W1</a>
+    <a class="ops-pill w2" href="/w2/data">W2</a>
+    <a class="ops-pill w3" href="/w3/data">W3</a>
+    <a class="ops-pill w4" href="/w4/data">W4</a>
+    <a class="ops-pill w5" href="/w5/data">W5</a>
+    <a class="ops-pill w6" href="/w6/data">W6</a>
+    <a class="ops-pill util" href="/data/achilles">ACH</a>
+    <a class="ops-pill util" href="/library">LIB</a>
+    <a class="ops-pill util" href="/gmat">GMAT</a>
+    <a class="ops-pill util" href="/dash">DASH</a>
+  </nav>
+</div>
+<div class="beacon-bar">
+  <div class="beacon-dot"></div>
+  <span class="beacon-text"><span>LIVE</span> &nbsp;/calc/energy &nbsp;·&nbsp; Universal – callable by all workspaces &amp; dataspaces &nbsp;·&nbsp; Römer Industries / EMASSC</span>
+</div>
+<div class="calc-header">
+  <div class="calc-title">Energy &amp; Power Calculator</div>
+  <div class="calc-desc">Solar array sizing · Battery storage · Power budget · Thermal balance · Orbital eclipse analysis · Parameter sweeps · GMAT export</div>
+  <div class="calc-badges">
+    <span class="badge badge-ver"></span>
+    <span class="badge badge-tag">SI Units</span>
+    <span class="badge badge-tag">Universal Tool – W1-W6 callable</span>
+    <span class="badge badge-tag">Plotly Visualisation</span>
+    <span class="badge badge-util">JetBrains Mono · Inter</span>
+  </div>
+</div>
+<div class="calc-body">
+  <div class="config-panel">
+    <div class="cfg-section">
+      <div class="cfg-label">Solar Array</div>
+      <div class="cfg-field"><label>Array Area (m²)</label><input type="number" id="ep-area" value="10" step="0.1" min="0.01"></div>
+      <div class="cfg-field"><label>Solar Irradiance (W/m²)</label><input type="number" id="ep-irradiance" value="1361" step="1"></div>
+      <div class="cfg-field"><label>Cell Efficiency (%)</label><input type="number" id="ep-efficiency" value="29" step="0.1" min="1" max="100"></div>
+      <div class="cfg-field"><label>Degradation Factor (per year)</label><input type="number" id="ep-degradation" value="0.025" step="0.001" min="0"></div>
+      <div class="cfg-field"><label>Mission Life (years)</label><input type="number" id="ep-life" value="5" step="0.5" min="0"></div>
+      <div class="cfg-field"><label>Incidence Angle (°)</label><input type="number" id="ep-angle" value="0" step="1" min="0" max="90"></div>
+      <div class="cfg-field"><label>Pointing Loss Factor</label><input type="number" id="ep-pointing" value="0.98" step="0.01" min="0" max="1"></div>
+    </div>
+    <div class="cfg-section">
+      <div class="cfg-label">Battery Storage</div>
+      <div class="cfg-field"><label>Capacity (Ah)</label><input type="number" id="ep-cap" value="40" step="1"></div>
+      <div class="cfg-field"><label>Bus Voltage (V)</label><input type="number" id="ep-voltage" value="28" step="0.1"></div>
+      <div class="cfg-field"><label>Depth of Discharge (%)</label><input type="number" id="ep-dod" value="80" step="1" min="1" max="100"></div>
+      <div class="cfg-field"><label>Charge Efficiency (%)</label><input type="number" id="ep-charge-eff" value="95" step="0.1"></div>
+      <div class="cfg-field"><label>Chemistry</label>
+        <select id="ep-chem">
+          <option value="liion">Li-Ion (specific energy ~200 Wh/kg)</option>
+          <option value="lipo">LiPo (~250 Wh/kg)</option>
+          <option value="nimh">NiMH (~80 Wh/kg)</option>
+          <option value="nicd">NiCd (~50 Wh/kg)</option>
+        </select>
+      </div>
+    </div>
+    <div class="cfg-section">
+      <div class="cfg-label">Power Budget</div>
+      <div class="cfg-field"><label>Payload Power (W)</label><input type="number" id="ep-payload" value="150" step="1"></div>
+      <div class="cfg-field"><label>ADCS Power (W)</label><input type="number" id="ep-adcs" value="20" step="1"></div>
+      <div class="cfg-field"><label>Comms Power (W)</label><input type="number" id="ep-comms" value="30" step="1"></div>
+      <div class="cfg-field"><label>C&DH Power (W)</label><input type="number" id="ep-cdh" value="15" step="1"></div>
+      <div class="cfg-field"><label>Thermal Control (W)</label><input type="number" id="ep-thermal" value="10" step="1"></div>
+      <div class="cfg-field"><label>Propulsion (W)</label><input type="number" id="ep-prop" value="5" step="1"></div>
+      <div class="cfg-field"><label>Contingency (%)</label><input type="number" id="ep-contingency" value="20" step="1"></div>
+    </div>
+    <div class="cfg-section">
+      <div class="cfg-label">Orbit (Eclipse)</div>
+      <div class="cfg-field"><label>Orbital Altitude (km)</label><input type="number" id="ep-orbit-alt" value="400" step="10"></div>
+      <div class="cfg-field"><label>Inclination (°)</label><input type="number" id="ep-orbit-incl" value="51.6" step="0.1"></div>
+      <div class="cfg-field"><label>Beta Angle (°)</label><input type="number" id="ep-beta" value="0" step="1" min="-90" max="90"></div>
+    </div>
+    <div class="cfg-section">
+      <div class="cfg-label">Sweep</div>
+      <div class="cfg-field"><label>Variable</label>
+        <select id="ep-sweep-var">
+          <option value="area">Array Area (m²)</option>
+          <option value="efficiency">Cell Efficiency (%)</option>
+          <option value="altitude">Orbit Altitude (km)</option>
+          <option value="payload">Payload Power (W)</option>
+          <option value="life">Mission Life (yr)</option>
+        </select>
+      </div>
+      <div class="cfg-row">
+        <div class="cfg-field"><label>Min</label><input type="number" id="ep-sweep-min" value="1" step="0.1"></div>
+        <div class="cfg-field"><label>Max</label><input type="number" id="ep-sweep-max" value="30" step="0.1"></div>
+      </div>
+      <div class="cfg-field"><label>Steps</label><input type="number" id="ep-sweep-steps" value="20" step="1" min="5"></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary btn-full" onclick="epCalculate()">CALCULATE POWER BUDGET</button>
+      <div class="btn-group">
+        <button class="btn btn-secondary btn-sm" onclick="epSweep()">RUN SWEEP</button>
+        <button class="btn btn-secondary btn-sm" onclick="epDemo()">DEMO</button>
+      </div>
+    </div>
+  </div>
+  <div class="results-panel">
+    <div class="tab-bar">
+      <div class="tab active" onclick="epTab('budget',this)">BUDGET</div>
+      <div class="tab" onclick="epTab('eclipse',this)">ECLIPSE</div>
+      <div class="tab" onclick="epTab('profile',this)">PROFILE</div>
+      <div class="tab" onclick="epTab('sweep',this)">SWEEP</div>
+      <div class="tab" onclick="epTab('thermal',this)">THERMAL</div>
+      <div class="tab" onclick="epTab('export',this)">EXPORT</div>
+    </div>
+    <div id="tab-budget" class="tab-content active">
+      <div class="info-box" id="ep-status">Configure parameters and click CALCULATE POWER BUDGET.</div>
+      <div class="kpi-grid" id="ep-kpi-grid" style="display:none">
+        <div class="kpi-card"><div class="kpi-label">Total Power Gen</div><div class="kpi-val" id="kpi-gen">—</div><div class="kpi-unit">W</div></div>
+        <div class="kpi-card"><div class="kpi-label">Total Load</div><div class="kpi-val" id="kpi-load">—</div><div class="kpi-unit">W</div></div>
+        <div class="kpi-card"><div class="kpi-label">Power Margin</div><div class="kpi-val" id="kpi-margin">—</div><div class="kpi-unit">%</div></div>
+        <div class="kpi-card"><div class="kpi-label">Battery Energy</div><div class="kpi-val" id="kpi-batt">—</div><div class="kpi-unit">Wh</div></div>
+      </div>
+      <div class="plot-container" id="ep-budget-chart-wrap" style="display:none">
+        <div class="plot-title">Power Budget Breakdown</div>
+        <div id="ep-budget-chart" style="height:280px"></div>
+      </div>
+      <div id="ep-stat-rows"></div>
+    </div>
+    <div id="tab-eclipse" class="tab-content">
+      <div class="info-box">Orbital eclipse analysis — sunlight vs shadow fraction across orbit.</div>
+      <div class="plot-container">
+        <div class="plot-title">Eclipse Timeline (one orbit)</div>
+        <div id="ep-eclipse-chart" style="height:220px"></div>
+      </div>
+      <div class="plot-container">
+        <div class="plot-title">State of Charge During Eclipse</div>
+        <div id="ep-soc-chart" style="height:220px"></div>
+      </div>
+    </div>
+    <div id="tab-profile" class="tab-content">
+      <div class="plot-container">
+        <div class="plot-title">Power Generation vs Mission Life (Degradation)</div>
+        <div id="ep-life-chart" style="height:220px"></div>
+      </div>
+      <div class="plot-container">
+        <div class="plot-title">Array Output vs Incidence Angle</div>
+        <div id="ep-angle-chart" style="height:220px"></div>
+      </div>
+    </div>
+    <div id="tab-sweep" class="tab-content">
+      <div class="info-box" id="ep-sweep-status">Run sweep to see results.</div>
+      <div class="plot-container"><div class="plot-title">Sweep Results</div><div id="ep-sweep-chart" style="height:260px"></div></div>
+      <div style="overflow-x:auto;max-height:280px"><table id="ep-sweep-table" style="width:100%;border-collapse:collapse;font-family:var(--font-mono);font-size:10px"></table></div>
+    </div>
+    <div id="tab-thermal" class="tab-content">
+      <div class="info-box">Simplified spacecraft thermal balance — solar absorption vs radiation.</div>
+      <div class="plot-container"><div class="plot-title">Thermal Balance vs Altitude</div><div id="ep-thermal-chart" style="height:260px"></div></div>
+      <div id="ep-thermal-stats"></div>
+    </div>
+    <div id="tab-export" class="tab-content">
+      <div class="info-box">Export power budget data to workspace dataspaces or download files.</div>
+      <div class="export-grid">
+        <div class="export-card" onclick="epExport('json')"><div class="ec-icon">📦</div><div class="ec-label">JSON</div><div class="ec-desc">Full data object</div></div>
+        <div class="export-card" onclick="epExport('csv')"><div class="ec-icon">📊</div><div class="ec-label">CSV</div><div class="ec-desc">Budget table</div></div>
+        <div class="export-card" onclick="epExport('txt')"><div class="ec-icon">📄</div><div class="ec-label">MANIFEST</div><div class="ec-desc">Power report</div></div>
+        <div class="export-card" onclick="epExport('yaml')"><div class="ec-icon">🗂️</div><div class="ec-label">YAML</div><div class="ec-desc">Config</div></div>
+        <div class="export-card" onclick="epExport('png')"><div class="ec-icon">🖼️</div><div class="ec-label">PNG</div><div class="ec-desc">All charts</div></div>
+        <div class="export-card" onclick="epExport('gmat')"><div class="ec-icon">🛰️</div><div class="ec-label">GMAT</div><div class="ec-desc">Power script</div></div>
+      </div>
+      <div style="margin-top:12px">
+        <div style="font-family:var(--font-mono);font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:8px">Send to Dataspace</div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px">
+          <button class="btn btn-secondary btn-sm" onclick="epRoute('w1')">→ W1</button><button class="btn btn-secondary btn-sm" onclick="epRoute('w2')">→ W2</button>
+          <button class="btn btn-secondary btn-sm" onclick="epRoute('w3')">→ W3</button><button class="btn btn-secondary btn-sm" onclick="epRoute('w4')">→ W4</button>
+          <button class="btn btn-secondary btn-sm" onclick="epRoute('w5')">→ W5</button><button class="btn btn-secondary btn-sm" onclick="epRoute('w6')">→ W6</button>
+          <button class="btn btn-primary btn-sm" onclick="epRouteAll()">→ ALL</button>
+        </div>
+        <div id="ep-route-status" style="margin-top:10px;display:none"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+// ═══ ENERGY & POWER CALCULATOR  ════════════
+const EP_CONST = {RE:6371000,GM:3.986004418e14,AU:1.496e11,SUN_W:1361};
+const EP_CHEM = {liion:200,lipo:250,nimh:80,nicd:50};
+let EP_STATE = null;
+
+const EPLT = {
+  base:{paper_bgcolor:'#12151A',plot_bgcolor:'#0B0D10',font:{family:"'JetBrains Mono',monospace",color:'#F2F1EC',size:10},margin:{t:30,r:20,b:40,l:50},xaxis:{gridcolor:'#1E2530',zerolinecolor:'#1E2530',tickfont:{size:9}},yaxis:{gridcolor:'#1E2530',zerolinecolor:'#1E2530',tickfont:{size:9}},hoverlabel:{bgcolor:'#161B22',bordercolor:'#B87333',font:{family:"'JetBrains Mono',monospace",size:10,color:'#F2F1EC'}},modebar:{bgcolor:'transparent',color:'#4A5568',activecolor:'#B87333'}},
+  cfg:{responsive:true,displayModeBar:true,displaylogo:false,modeBarButtonsToRemove:['select2d','lasso2d'],toImageButtonOptions:{format:'png',filename:'romer-ep',scale:2}}
+};
+
+// ── Eclipse geometry ──────────────────────────────
+function calcEclipse(alt_km, incl_deg, beta_deg) {
+  const R = EP_CONST.RE + alt_km*1000;
+  const T = 2*Math.PI*Math.sqrt(R*R*R/EP_CONST.GM);
+  const sinRho = EP_CONST.RE/R;
+  const betaR = beta_deg*Math.PI/180;
+  const cosRho = Math.sqrt(1-sinRho*sinRho);
+  if (Math.abs(Math.cos(betaR)) < sinRho/cosRho) {
+    return {period_s:T, eclipse_s:0, sunlit_s:T, eclipse_frac:0};
+  }
+  const eclipseAngle = 2*Math.asin(Math.sqrt(sinRho*sinRho - Math.sin(betaR)*Math.sin(betaR)) / Math.cos(betaR));
+  const eclipse_s = T * eclipseAngle / (2*Math.PI);
+  return {period_s:T, eclipse_s:Math.max(0,eclipse_s), sunlit_s:T-Math.max(0,eclipse_s), eclipse_frac:Math.max(0,eclipse_s)/T};
+}
+
+// ── Solar array output ────────────────────────────
+function solarArrayOutput(area, irr, eff, angle_deg, pointing, degPerYear, years) {
+  const cos_a = Math.cos(angle_deg*Math.PI/180);
+  const degradation = Math.pow(1-degPerYear, years);
+  return area * irr * (eff/100) * cos_a * pointing * degradation;
+}
+
+// ── Battery energy ────────────────────────────────
+function battEnergy(cap_Ah, voltage, dod) {
+  return cap_Ah * voltage * (dod/100);
+}
+
+// ── Battery mass ──────────────────────────────────
+function battMass(energy_Wh, chem) {
+  const specific = EP_CHEM[chem] || 200;
+  return energy_Wh / specific;
+}
+
+// ── Power budget ──────────────────────────────────
+function powerBudget(payload, adcs, comms, cdh, thermal, prop, contingency) {
+  const base = payload+adcs+comms+cdh+thermal+prop;
+  const total = base * (1 + contingency/100);
+  return {payload,adcs,comms,cdh,thermal,prop,base,contingency:base*contingency/100,total};
+}
+
+// ── Tab ───────────────────────────────────────────
+function epTab(name, el) {
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('tab-'+name).classList.add('active');
+  setTimeout(()=>['ep-budget-chart','ep-eclipse-chart','ep-soc-chart','ep-life-chart','ep-angle-chart','ep-sweep-chart','ep-thermal-chart'].forEach(id=>{try{Plotly.Plots.resize(document.getElementById(id));}catch(e){}}),50);
+}
+
+// ── Main calculate ────────────────────────────────
+function epCalculate() {
+  const area=+document.getElementById('ep-area').value;
+  const irr=+document.getElementById('ep-irradiance').value;
+  const eff=+document.getElementById('ep-efficiency').value;
+  const deg=+document.getElementById('ep-degradation').value;
+  const life=+document.getElementById('ep-life').value;
+  const angle=+document.getElementById('ep-angle').value;
+  const pointing=+document.getElementById('ep-pointing').value;
+  const cap=+document.getElementById('ep-cap').value;
+  const volt=+document.getElementById('ep-voltage').value;
+  const dod=+document.getElementById('ep-dod').value;
+  const chargeEff=+document.getElementById('ep-charge-eff').value;
+  const chem=document.getElementById('ep-chem').value;
+  const alt=+document.getElementById('ep-orbit-alt').value;
+  const incl=+document.getElementById('ep-orbit-incl').value;
+  const beta=+document.getElementById('ep-beta').value;
+  const contingency=+document.getElementById('ep-contingency').value;
+  const payload=+document.getElementById('ep-payload').value;
+  const adcs=+document.getElementById('ep-adcs').value;
+  const comms=+document.getElementById('ep-comms').value;
+  const cdh=+document.getElementById('ep-cdh').value;
+  const thermal=+document.getElementById('ep-thermal').value;
+  const prop=+document.getElementById('ep-prop').value;
+
+  const solar0 = solarArrayOutput(area,irr,eff,angle,pointing,0,0);
+  const solarEOL = solarArrayOutput(area,irr,eff,angle,pointing,deg,life);
+  const eclipseData = calcEclipse(alt, incl, beta);
+  const budget = powerBudget(payload,adcs,comms,cdh,thermal,prop,contingency);
+  const battEnrg = battEnergy(cap, volt, dod);
+  const battMas = battMass(battEnrg, chem);
+  // Effective power gen (accounting for eclipse)
+  const eclFrac = eclipseData.eclipse_frac;
+  const solarEffective = solarEOL * (1 - eclFrac) * (chargeEff/100);
+  const margin = ((solarEffective - budget.total) / budget.total) * 100;
+  const arrayMass = area * 3; // ~3 kg/m² typical
+
+  EP_STATE = {area,irr,eff,deg,life,angle,pointing,cap,volt,dod,chargeEff,chem,alt,incl,beta,contingency,
+    solar0,solarEOL,solarEffective,eclipseData,budget,battEnrg,battMas,arrayMass,margin,timestamp:new Date().toISOString()};
+
+  renderKPIs(solar0,budget.total,margin,battEnrg);
+  renderBudgetChart(budget);
+  renderEclipseChart(eclipseData,budget,battEnrg);
+  renderSOCChart(eclipseData,budget,solarEOL,battEnrg,chargeEff);
+  renderLifeChart(area,irr,eff,angle,pointing,deg,life);
+  renderAngleChart(area,irr,eff,pointing,deg,life);
+  renderThermalChart();
+  renderStats(EP_STATE);
+
+  const s = EP_STATE;
+  const cls = margin >= 20 ? '' : margin >= 0 ? 'warn' : 'bad';
+  document.getElementById('ep-status').className = 'info-box ' + cls;
+  document.getElementById('ep-status').textContent =
+    `Solar BOL: ${solar0.toFixed(1)} W · EOL: ${solarEOL.toFixed(1)} W · Load: ${budget.total.toFixed(1)} W · Margin: ${margin.toFixed(1)}% · Eclipse: ${(eclFrac*100).toFixed(1)}%`;
+
+  try{const pay={calculator:'energy_power',version:'2.0.0',timestamp:s.timestamp,solarBOL:s.solar0,solarEOL:s.solarEOL,load:s.budget.total,margin:s.margin,battEnergy:s.battEnrg};['w1','w4'].forEach(ws=>localStorage.setItem(`achilles_calc_ep_${ws}`,JSON.stringify(pay)));}catch(e){}
+}
+
+function renderKPIs(gen,load,margin,batt) {
+  document.getElementById('kpi-gen').textContent=gen.toFixed(0);
+  document.getElementById('kpi-load').textContent=load.toFixed(0);
+  document.getElementById('kpi-margin').textContent=margin.toFixed(1);
+  document.getElementById('kpi-batt').textContent=batt.toFixed(1);
+  document.getElementById('ep-kpi-grid').style.display='grid';
+  document.getElementById('ep-budget-chart-wrap').style.display='';
+}
+
+function renderBudgetChart(budget) {
+  const labels=['Payload','ADCS','Comms','C&DH','Thermal','Propulsion','Contingency'];
+  const values=[budget.payload,budget.adcs,budget.comms,budget.cdh,budget.thermal,budget.prop,budget.contingency];
+  const colors=['#B87333','#C9A24A','#4EC5C1','#00E5FF','#8A9BB0','#E53E3E','#805AD5'];
+  Plotly.react('ep-budget-chart',[{type:'pie',labels,values,marker:{colors},hole:0.45,textfont:{family:"'JetBrains Mono',monospace",size:9},hovertemplate:'%{label}: %{value:.1f} W (%{percent})<extra></extra>'}],{...EPLT.base,height:270,margin:{t:10,r:20,b:10,l:20},showlegend:true,legend:{font:{size:8}}},EPLT.cfg);
+}
+
+function renderEclipseChart(ecl,budget,battEnrg) {
+  const T=ecl.period_s, sun=ecl.sunlit_s, shad=ecl.eclipse_s;
+  const t=Array.from({length:200},(_,i)=>i*T/199/60);
+  const inSun=t.map(ti=>ti<sun/60);
+  const power=inSun.map(s=>s?budget.total*1.4:-budget.total);
+  Plotly.react('ep-eclipse-chart',[
+    {type:'scatter',mode:'lines',x:t,y:power,fill:'tozeroy',fillcolor:'rgba(184,115,51,0.15)',line:{color:'#B87333',width:2},hovertemplate:'T+%{x:.1f} min<br>%{y:.0f} W<extra></extra>',name:'Net Power'},
+    {type:'scatter',mode:'lines',x:t,y:t.map(()=>0),line:{color:'#4A5568',width:1,dash:'dash'},showlegend:false}
+  ],{...EPLT.base,height:200,xaxis:{...EPLT.base.xaxis,title:{text:'Time (min)',font:{size:9}}},yaxis:{...EPLT.base.yaxis,title:{text:'Power (W)',font:{size:9}}},shapes:[{type:'rect',x0:sun/60,x1:T/60,y0:-budget.total*1.5,y1:budget.total*1.5,fillcolor:'rgba(30,37,48,0.4)',line:{width:0}}],annotations:[{x:(sun/60+(T/60))/2,y:budget.total*0.5,text:'Eclipse',showarrow:false,font:{size:8,color:'#8A9BB0'}}]},EPLT.cfg);
+}
+
+function renderSOCChart(ecl,budget,solar,battEnrg,chargeEff) {
+  const T=ecl.period_s,sun=ecl.sunlit_s;
+  const t=Array.from({length:200},(_,i)=>i*T/199/60);
+  let soc=100,socs=[100];
+  const dt=T/199;
+  for(let i=1;i<200;i++){
+    const inSun=i*dt<sun;
+    const net=inSun?(solar-budget.total)*chargeEff/100:-budget.total;
+    soc=Math.min(100,Math.max(0,soc+net*dt/(battEnrg*36)));
+    socs.push(soc);
+  }
+  const minSOC=100-((document.getElementById('ep-dod')||{}).value||80);
+  Plotly.react('ep-soc-chart',[{type:'scatter',mode:'lines',x:t,y:socs,line:{color:'#4EC5C1',width:2},fill:'tozeroy',fillcolor:'rgba(78,197,193,0.08)',hovertemplate:'T+%{x:.1f} min<br>SoC: %{y:.1f}%<extra></extra>',name:'State of Charge'}],{...EPLT.base,height:200,xaxis:{...EPLT.base.xaxis,title:{text:'Time (min)',font:{size:9}}},yaxis:{...EPLT.base.yaxis,title:{text:'SoC (%)',font:{size:9}},range:[0,105]},shapes:[{type:'line',x0:0,x1:T/60,y0:minSOC,y1:minSOC,line:{color:'#e53e3e',width:1,dash:'dash'}}],annotations:[{x:1,y:minSOC+3,text:'DoD limit',showarrow:false,font:{size:8,color:'#e53e3e'}}]},EPLT.cfg);
+}
+
+function renderLifeChart(area,irr,eff,angle,pointing,deg,maxLife) {
+  const years=Array.from({length:Math.round(maxLife*10)+1},(_,i)=>i*maxLife/Math.round(maxLife*10));
+  const powers=years.map(y=>solarArrayOutput(area,irr,eff,angle,pointing,deg,y));
+  Plotly.react('ep-life-chart',[{type:'scatter',mode:'lines',x:years,y:powers,line:{color:'#C9A24A',width:2},fill:'tozeroy',fillcolor:'rgba(201,162,74,0.08)',hovertemplate:'Year %{x:.1f}<br>%{y:.1f} W<extra></extra>',name:'Array Output'}],{...EPLT.base,height:200,xaxis:{...EPLT.base.xaxis,title:{text:'Mission Year',font:{size:9}}},yaxis:{...EPLT.base.yaxis,title:{text:'Power (W)',font:{size:9}}}},EPLT.cfg);
+}
+
+function renderAngleChart(area,irr,eff,pointing,deg,life) {
+  const angles=Array.from({length:91},(_,i)=>i);
+  const powers=angles.map(a=>solarArrayOutput(area,irr,eff,a,pointing,deg,life));
+  Plotly.react('ep-angle-chart',[{type:'scatter',mode:'lines',x:angles,y:powers,line:{color:'#B87333',width:2},hovertemplate:'θ=%{x}°<br>%{y:.1f} W<extra></extra>',name:'Array Output'}],{...EPLT.base,height:200,xaxis:{...EPLT.base.xaxis,title:{text:'Incidence Angle (°)',font:{size:9}}},yaxis:{...EPLT.base.yaxis,title:{text:'Power (W)',font:{size:9}}}},EPLT.cfg);
+}
+
+function renderThermalChart() {
+  const alts=Array.from({length:50},(_,i)=>200+i*700);
+  const Qabs=alts.map(a=>{const R=EP_CONST.RE+a*1000;return EP_CONST.SUN_W*1*(1-0.3)*(R/(R+500000));});
+  const Qrad=alts.map(()=>EP_CONST.SUN_W*0.8*0.6);
+  Plotly.react('ep-thermal-chart',[
+    {type:'scatter',mode:'lines',x:alts,y:Qabs,line:{color:'#B87333',width:2},name:'Solar Absorbed',hovertemplate:'Alt:%{x} km<br>%{y:.1f} W<extra></extra>'},
+    {type:'scatter',mode:'lines',x:alts,y:Qrad,line:{color:'#4EC5C1',width:2,dash:'dot'},name:'Radiated (est)'},
+  ],{...EPLT.base,height:240,xaxis:{...EPLT.base.xaxis,title:{text:'Altitude (km)',font:{size:9}}},yaxis:{...EPLT.base.yaxis,title:{text:'Power (W)',font:{size:9}}}},EPLT.cfg);
+  document.getElementById('ep-thermal-stats').innerHTML='<div class="info-box" style="margin-top:8px">Thermal model: simplified — use dedicated thermal analysis tool for precise node modelling.</div>';
+}
+
+function renderStats(s) {
+  const rows=[
+    ['Array BOL','→',s.solar0.toFixed(1)+' W'],
+    ['Array EOL (yr '+s.life+')','→',s.solarEOL.toFixed(1)+' W'],
+    ['Array Effective (eclipse adj.)','→',s.solarEffective.toFixed(1)+' W'],
+    ['Total Load (w/ contingency)','→',s.budget.total.toFixed(1)+' W'],
+    ['Power Margin','→',s.margin.toFixed(1)+'%'],
+    ['Eclipse Fraction','→',(s.eclipseData.eclipse_frac*100).toFixed(1)+'%'],
+    ['Orbital Period','→',(s.eclipseData.period_s/60).toFixed(1)+' min'],
+    ['Eclipse Duration','→',(s.eclipseData.eclipse_s/60).toFixed(1)+' min'],
+    ['Battery Energy (usable)','→',s.battEnrg.toFixed(1)+' Wh'],
+    ['Battery Mass (est.)','→',s.battMas.toFixed(2)+' kg'],
+    ['Array Mass (est.)','→',s.arrayMass.toFixed(2)+' kg'],
+  ];
+  document.getElementById('ep-stat-rows').innerHTML=rows.map(([l,_,v])=>{
+    const isMarg = l.includes('Margin');
+    const cls = isMarg ? (s.margin>=20?'good':s.margin>=0?'warn':'bad') : '';
+    return `<div class="stat-row"><span class="stat-label">${l}</span><span class="stat-val ${cls}">${v}</span></div>`;
+  }).join('');
+}
+
+// ── Sweep ─────────────────────────────────────────
+function epSweep() {
+  const varName=document.getElementById('ep-sweep-var').value;
+  const min=+document.getElementById('ep-sweep-min').value;
+  const max=+document.getElementById('ep-sweep-max').value;
+  const steps=+document.getElementById('ep-sweep-steps').value;
+  const base={area:+document.getElementById('ep-area').value,eff:+document.getElementById('ep-efficiency').value,deg:+document.getElementById('ep-degradation').value,life:+document.getElementById('ep-life').value,angle:+document.getElementById('ep-angle').value,pointing:+document.getElementById('ep-pointing').value,alt:+document.getElementById('ep-orbit-alt').value,incl:+document.getElementById('ep-orbit-incl').value,beta:+document.getElementById('ep-beta').value};
+  const budget=powerBudget(+document.getElementById('ep-payload').value,+document.getElementById('ep-adcs').value,+document.getElementById('ep-comms').value,+document.getElementById('ep-cdh').value,+document.getElementById('ep-thermal').value,+document.getElementById('ep-prop').value,+document.getElementById('ep-contingency').value);
+  const results=[];
+  for(let i=0;i<steps;i++){
+    const val=min+(max-min)*i/(steps-1);
+    let p={...base};
+    if(varName==='area')p.area=val; else if(varName==='efficiency')p.eff=val; else if(varName==='altitude')p.alt=val; else if(varName==='payload'){budget.payload=val;budget.total=powerBudget(val,base.adcs||20,+document.getElementById('ep-comms').value,+document.getElementById('ep-cdh').value,+document.getElementById('ep-thermal').value,+document.getElementById('ep-prop').value,+document.getElementById('ep-contingency').value).total;} else if(varName==='life')p.life=val;
+    const solar=solarArrayOutput(p.area,+document.getElementById('ep-irradiance').value,p.eff,p.angle,p.pointing,p.deg,p.life);
+    const ecl=calcEclipse(p.alt,p.incl,p.beta);
+    const solarEff=solar*(1-ecl.eclipse_frac);
+    const margin=((solarEff-budget.total)/budget.total)*100;
+    results.push({var:val,solar:solar.toFixed(1),margin:margin.toFixed(1),eclipse:(ecl.eclipse_frac*100).toFixed(1)});
+  }
+  const xLabel={area:'Area (m²)',efficiency:'Efficiency (%)',altitude:'Altitude (km)',payload:'Payload (W)',life:'Life (yr)'}[varName];
+  Plotly.react('ep-sweep-chart',[
+    {type:'scatter',mode:'lines+markers',x:results.map(r=>r.var),y:results.map(r=>+r.solar),line:{color:'#B87333',width:2},marker:{size:4},name:'Solar Gen (W)'},
+    {type:'scatter',mode:'lines',x:results.map(r=>r.var),y:results.map(r=>+r.margin),line:{color:'#4EC5C1',width:1.5,dash:'dot'},name:'Margin (%)',yaxis:'y2'},
+  ],{...EPLT.base,height:250,xaxis:{...EPLT.base.xaxis,title:{text:xLabel,font:{size:9}}},yaxis:{...EPLT.base.yaxis,title:{text:'Solar Gen (W)',font:{size:9}}},yaxis2:{title:{text:'Margin (%)',font:{size:9},color:'#4EC5C1'},overlaying:'y',side:'right',gridcolor:'transparent',tickfont:{size:9,color:'#4EC5C1'}},shapes:[{type:'line',x0:results[0].var,x1:results[results.length-1].var,y0:0,y1:0,line:{color:'#22c55e',width:1,dash:'dash'},yref:'y2'}]},EPLT.cfg);
+  document.getElementById('ep-sweep-table').innerHTML=`<thead><tr>${['#',xLabel,'Solar (W)','Margin (%)','Eclipse (%)'].map(h=>`<th style="background:#12151A;color:#8A9BB0;padding:5px 8px;border-bottom:1px solid #1E2530;font-size:9px">${h}</th>`).join('')}</tr></thead><tbody>${results.map((r,i)=>`<tr><td style="padding:4px 8px;font-size:10px">${i+1}</td><td style="padding:4px 8px;font-family:var(--font-mono);font-size:10px">${typeof r.var==='number'?r.var.toFixed(1):r.var}</td><td style="padding:4px 8px;font-family:var(--font-mono);font-size:10px;color:#B87333">${r.solar}</td><td style="padding:4px 8px;font-family:var(--font-mono);font-size:10px;color:${+r.margin>=0?'#22c55e':'#e53e3e'}">${r.margin}</td><td style="padding:4px 8px;font-family:var(--font-mono);font-size:10px;color:#8A9BB0">${r.eclipse}</td></tr>`).join('')}</tbody>`;
+  document.getElementById('ep-sweep-status').textContent=`Sweep complete: ${steps} points · ${varName}`;
+  epTab('sweep',document.querySelector('.tab:nth-child(4)'));
+}
+
+function epDemo(){document.getElementById('ep-area').value=8;document.getElementById('ep-efficiency').value=30;document.getElementById('ep-cap').value=50;document.getElementById('ep-voltage').value=28;document.getElementById('ep-payload').value=120;document.getElementById('ep-orbit-alt').value=550;document.getElementById('ep-orbit-incl').value=97.8;document.getElementById('ep-beta').value=30;epCalculate();}
+
+function epExport(type){
+  if(!EP_STATE&&type!=='png'){alert('Run calculation first.');return;}
+  if(type==='png'){['ep-budget-chart','ep-eclipse-chart','ep-soc-chart','ep-life-chart','ep-sweep-chart'].forEach((id,i)=>{const el=document.getElementById(id);if(el&&el.data)setTimeout(()=>Plotly.downloadImage(id,{format:'png',filename:`romer-ep-${id}`,width:800,height:500,scale:2}),i*500);});return;}
+  const s=EP_STATE;let content='',filename='',mime='';
+  if(type==='json'){content=JSON.stringify(s,null,2);filename='romer-ep.json';mime='application/json';}
+  else if(type==='csv'){content='parameter,value\n'+[['solar_bol_W',s.solar0.toFixed(1)],['solar_eol_W',s.solarEOL.toFixed(1)],['total_load_W',s.budget.total.toFixed(1)],['margin_pct',s.margin.toFixed(1)],['batt_energy_Wh',s.battEnrg.toFixed(1)]].map(r=>r.join(',')).join('\n');filename='romer-ep.csv';mime='text/csv';}
+  else if(type==='txt'){content=`RÖMER ENERGY & POWER REPORT \nTimestamp: ${s.timestamp}\nSolar BOL: ${s.solar0.toFixed(1)} W\nSolar EOL: ${s.solarEOL.toFixed(1)} W\nTotal Load: ${s.budget.total.toFixed(1)} W\nPower Margin: ${s.margin.toFixed(1)}%\nBattery: ${s.battEnrg.toFixed(1)} Wh\nEclipse: ${(s.eclipseData.eclipse_frac*100).toFixed(1)}%\n`;filename='romer-ep.txt';mime='text/plain';}
+  else if(type==='yaml'){content=`romer_energy_power:\n  version: 2.0.0\n  timestamp: ${s.timestamp}\n  solar_bol_W: ${s.solar0.toFixed(1)}\n  solar_eol_W: ${s.solarEOL.toFixed(1)}\n  total_load_W: ${s.budget.total.toFixed(1)}\n  margin_pct: ${s.margin.toFixed(1)}\n  batt_energy_Wh: ${s.battEnrg.toFixed(1)}\n  eclipse_frac: ${s.eclipseData.eclipse_frac.toFixed(3)}\n`;filename='romer-ep.yaml';mime='text/yaml';}
+  else if(type==='gmat'){content=`% GMAT Power Reference\n% Römer Industries \n% Solar BOL: ${s.solar0.toFixed(1)} W · EOL: ${s.solarEOL.toFixed(1)} W\n% Load: ${s.budget.total.toFixed(1)} W · Margin: ${s.margin.toFixed(1)}%\nCreate Spacecraft SC;\nGMAT SC.Epoch = '01 Jan 2026 00:00:00.000';\nGMAT SC.SolarPowerModel = 'SolarPowerModel';\n`;filename='romer-ep.script';mime='text/plain';}
+  const blob=new Blob([content],{type:mime});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=filename;a.click();
+}
+
+function epRoute(ws){if(!EP_STATE){alert('Run first.');return;}const pay={calculator:'energy_power',version:'2.0.0',timestamp:EP_STATE.timestamp,solarBOL:EP_STATE.solar0,load:EP_STATE.budget.total,margin:EP_STATE.margin};try{localStorage.setItem(`achilles_calc_ep_${ws}`,JSON.stringify(pay));const el=document.getElementById('ep-route-status');if(el){el.className='info-box';el.style.display='';el.textContent=`✓ Routed to ${ws.toUpperCase()} — ${new Date().toISOString()}`;}}catch(e){}}
+function epRouteAll(){['w1','w2','w3','w4','w5','w6'].forEach(ws=>epRoute(ws));const el=document.getElementById('ep-route-status');if(el){el.className='info-box';el.style.display='';el.textContent=`✓ Routed to ALL workspaces — ${new Date().toISOString()}`;}}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  try{localStorage.setItem('achilles_beacon_ep',JSON.stringify({calculator:'energy_power',version:'2.0.0',status:'live',timestamp:new Date().toISOString()}));}catch(e){}
+  console.log('%cEnergy & Power Calculator ','color:#B87333;font-weight:bold;font-size:14px');
+  console.log('%cRömer Industries / EMASSC','color:#4EC5C1;font-size:12px');
+});
+</script>
+</body></html> 
