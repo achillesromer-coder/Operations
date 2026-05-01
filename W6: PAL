@@ -1,0 +1,249 @@
+<style>
+:root{
+  --w6-bg:#0a0e1a;
+  --w6-panel:#11182a;
+  --w6-line:#1f2940;
+  --w6-pink:#ff6b9d;
+  --w6-cyan:#00d4ff;
+  --w6-blue:#00aaff;
+  --w6-green:#00ff88;
+  --w6-amber:#ffaa00;
+  --w6-text:#d8deea;
+  --w6-muted:#6f7890;
+  --w6-dim:#414a63;
+}
+*{box-sizing:border-box}
+#w6wrap{font-family:Inter,system-ui,Segoe UI,Arial,sans-serif;background:var(--w6-bg);color:var(--w6-text);border:1px solid color-mix(in srgb,var(--w6-pink) 55%, black);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;height:100vh;min-height:760px;position:relative}
+#w6hdr{background:linear-gradient(180deg,#0d1220 0%, #0b1020 100%);border-bottom:1px solid var(--w6-line);padding:10px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-shrink:0}
+.w6brand{display:flex;flex-direction:column;gap:2px}.w6logo{color:var(--w6-pink);font-size:15px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase}.w6sub{color:var(--w6-muted);font-size:11px}.w6hdr-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.w6badge,.w6pill{background:#131a2a;border:1px solid var(--w6-line);color:var(--w6-text);padding:4px 9px;font-size:11px;border-radius:999px}
+.w6pill.pink{border-color:color-mix(in srgb,var(--w6-pink) 55%, var(--w6-line));color:var(--w6-pink)}.w6pill.green{border-color:color-mix(in srgb,var(--w6-green) 55%, var(--w6-line));color:var(--w6-green)}.w6pill.blue{border-color:color-mix(in srgb,var(--w6-blue) 55%, var(--w6-line));color:var(--w6-blue)}
+.w6btn,.w6linkbtn{background:#12192a;border:1px solid var(--w6-line);color:var(--w6-text);padding:7px 10px;font-size:11px;cursor:pointer;border-radius:8px;transition:.18s ease;text-decoration:none;display:inline-flex;align-items:center;gap:6px}.w6btn:hover,.w6linkbtn:hover{border-color:var(--w6-pink);color:var(--w6-pink);transform:translateY(-1px)}.w6btn.live.active{border-color:var(--w6-green);color:var(--w6-green);box-shadow:0 0 0 1px #003c22 inset}
+#w6topbar{background:#0a0f1b;border-bottom:1px solid var(--w6-line);padding:8px 12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;flex-shrink:0}.w6group{display:flex;align-items:center;gap:6px;flex-wrap:wrap}.w6lbl{font-size:11px;color:var(--w6-muted);text-transform:uppercase;letter-spacing:1px}
+.w6mbtn{background:#11182a;border:1px solid var(--w6-line);color:var(--w6-muted);padding:6px 12px;font-size:11px;cursor:pointer;border-radius:8px;text-transform:uppercase;letter-spacing:.8px;transition:.18s ease}.w6mbtn:hover{border-color:var(--w6-pink);color:var(--w6-pink)}.w6mbtn.active{background:var(--w6-pink);border-color:var(--w6-pink);color:#081019;font-weight:700}.w6mbtn.active-blue{background:var(--w6-blue);border-color:var(--w6-blue);color:#081019;font-weight:700}
+.w6search,.w6sel{background:#101725;border:1px solid var(--w6-line);color:var(--w6-text);padding:7px 10px;font-size:12px;border-radius:8px}.w6search{min-width:180px}.w6search:focus,.w6sel:focus{outline:none;border-color:var(--w6-cyan);box-shadow:0 0 0 1px #00354a inset}.w6spacer{flex:1}
+#w6body{display:flex;flex:1;overflow:hidden;min-height:0}
+#w6sidebar{width:240px;min-width:220px;background:linear-gradient(180deg,#0b111d 0%, #0a0f1a 100%);border-right:1px solid var(--w6-line);display:flex;flex-direction:column;overflow-y:auto;flex-shrink:0;padding:12px 10px;gap:10px}
+.w6panel{background:#0f1524;border:1px solid var(--w6-line);border-radius:12px;padding:10px}.w6sec-hdr{color:var(--w6-pink);font-size:11px;font-weight:700;letter-spacing:1.1px;text-transform:uppercase;margin-bottom:8px}.w6chk-row{display:flex;align-items:center;gap:8px;padding:4px 0;cursor:pointer}.w6chk-row input{accent-color:var(--w6-pink);cursor:pointer}.w6chk-row span{font-size:12px;color:var(--w6-text)}
+.w6stat-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid #161f33}.w6stat-row:last-child{border-bottom:none}.w6stat-lbl{color:var(--w6-muted);font-size:11px}.w6stat-val{color:var(--w6-green);font-size:11px;font-weight:700}.w6stat-val.amber{color:var(--w6-amber)}.w6stat-val.blue{color:var(--w6-blue)}.w6stat-val.pink{color:var(--w6-pink)}
+.w6small{font-size:11px;color:var(--w6-muted);line-height:1.4}.w6hint{font-size:11px;color:var(--w6-dim);line-height:1.45}.w6stack{display:flex;flex-direction:column;gap:8px}.w6mini-btn{width:100%;background:#12192a;border:1px solid var(--w6-line);color:var(--w6-text);padding:8px 10px;font-size:11px;border-radius:8px;cursor:pointer;text-align:left;transition:.18s ease}.w6mini-btn:hover{border-color:var(--w6-amber);color:var(--w6-amber)}.w6mini-btn.active{background:var(--w6-amber);border-color:var(--w6-amber);color:#081019;font-weight:700}
+#w6main{flex:1;position:relative;overflow:hidden;min-width:0;background:radial-gradient(circle at 50% 45%, #111a2c 0%, #0a0e1a 48%, #070b14 100%)}#w6canvas{width:100%;height:100%;display:block;cursor:crosshair}
+#w6overlayTop{position:absolute;top:12px;left:12px;display:flex;gap:8px;flex-wrap:wrap;z-index:10;pointer-events:none}.w6overlay-card{pointer-events:auto;background:rgba(10,14,26,.82);border:1px solid var(--w6-line);color:var(--w6-text);border-radius:12px;padding:9px 10px;backdrop-filter:blur(8px);min-width:140px}.w6overlay-title{font-size:10px;color:var(--w6-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}.w6overlay-value{font-size:16px;font-weight:800;color:var(--w6-green)}.w6overlay-sub{font-size:11px;color:var(--w6-muted)}
+#w6inspector{width:300px;min-width:280px;background:linear-gradient(180deg,#0b111d 0%, #0a0f1a 100%);border-left:1px solid var(--w6-line);display:flex;flex-direction:column;overflow-y:auto;flex-shrink:0;padding:12px 10px}.w6ins-card{background:#0f1524;border:1px solid var(--w6-line);border-radius:12px;padding:12px}.w6ins-hdr{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:10px}.w6ins-title{color:var(--w6-pink);font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase}.w6ins-sub{color:var(--w6-muted);font-size:11px}.w6ins-row{display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-bottom:1px solid #161f33}.w6ins-row:last-child{border-bottom:none}.w6ins-k{color:var(--w6-muted);font-size:11px}.w6ins-v{color:var(--w6-text);font-size:11px;font-weight:700;text-align:right}.w6ins-v.green{color:var(--w6-green)}.w6ins-v.amber{color:var(--w6-amber)}.w6ins-v.blue{color:var(--w6-blue)}.w6ins-v.pink{color:var(--w6-pink)}.w6rbar-wrap{margin:10px 0}.w6rbar-lbl{font-size:11px;color:var(--w6-muted);margin-bottom:5px}.w6rbar-bg{background:#090d15;height:8px;border-radius:999px;overflow:hidden;border:1px solid #1a2133}.w6rbar-fg{height:100%;background:linear-gradient(90deg,var(--w6-pink),var(--w6-green));border-radius:999px;transition:width .35s}.w6actions{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:10px}
+#w6bottombar{background:#0a0f1b;border-top:1px solid var(--w6-line);padding:8px 12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;flex-shrink:0}.w6range{accent-color:var(--w6-pink);width:180px}.w6kbd{background:#11182a;border:1px solid var(--w6-line);padding:3px 6px;border-radius:6px;font-size:10px;color:var(--w6-text)}
+#w6toast{position:absolute;bottom:62px;left:50%;transform:translateX(-50%);background:rgba(17,24,42,.94);border:1px solid var(--w6-pink);color:var(--w6-pink);padding:8px 14px;font-size:12px;border-radius:10px;display:none;z-index:999;pointer-events:none}
+@media (max-width:1200px){#w6sidebar{width:220px;min-width:200px}#w6inspector{width:260px;min-width:240px}}
+@media (max-width:980px){#w6body{flex-direction:column}#w6sidebar,#w6inspector{width:auto;min-width:0;border-right:none;border-left:none}#w6sidebar{border-bottom:1px solid var(--w6-line)}#w6inspector{border-top:1px solid var(--w6-line)}}
+</style>
+
+<div id="w6wrap">
+  <div id="w6hdr">
+    <div class="w6brand">
+      <div class="w6logo">W6 — Asset Library Final</div>
+      <div class="w6sub">Potential in-situ assets · front-facing orbital map · zone → cluster → target</div>
+    </div>
+    <div class="w6hdr-right">
+      <span class="w6pill pink" id="w6ver">v2.0.2</span>
+      <span class="w6pill blue">Google Drive source</span>
+      <span class="w6badge" id="w6clock">--:-- UTC</span>
+      <a class="w6linkbtn" href="https://drive.google.com/drive/folders/1ir0GqOYTDkpqLRLA23q0nNjl_Hh_YDlT?usp=drive_link" target="_blank">Open Drive</a>
+      <button class="w6btn" onclick="w6ResetView()">Reset View</button>
+      <button class="w6btn" onclick="w6Refresh()">Refresh</button>
+      <button class="w6btn live active" id="w6livebtn" onclick="w6ToggleLive()">Live</button>
+    </div>
+  </div>
+
+  <div id="w6topbar">
+    <div class="w6group">
+      <span class="w6lbl">Mode</span>
+      <button class="w6mbtn active" id="mb-zones" onclick="w6SetMode('zones')">Zones</button>
+      <button class="w6mbtn" id="mb-clusters" onclick="w6SetMode('clusters')">Clusters</button>
+      <button class="w6mbtn" id="mb-targets" onclick="w6SetMode('targets')">Targets</button>
+    </div>
+    <div class="w6group">
+      <span class="w6lbl">View</span>
+      <button class="w6mbtn active-blue" id="mb-2d" onclick="w6SetView('2d')">2D</button>
+      <button class="w6mbtn" id="mb-3d" onclick="w6SetView('3d')">3D</button>
+      <button class="w6mbtn" id="mb-map" onclick="w6SetView('map')">Map</button>
+    </div>
+    <div class="w6group">
+      <input class="w6search" id="flt-search" placeholder="Search target, designation, taxonomy" oninput="w6ApplyFilters()" />
+      <select class="w6sel" id="flt-zone" onchange="w6ApplyFilters()"></select>
+      <select class="w6sel" id="flt-cluster" onchange="w6ApplyFilters()"></select>
+      <select class="w6sel" id="flt-tax" onchange="w6ApplyFilters()">
+        <option value="">All taxonomy</option>
+        <option value="M">M-type</option>
+        <option value="S">S-type</option>
+        <option value="C">C-type</option>
+        <option value="X">X-type</option>
+        <option value="B">B-type</option>
+        <option value="D">D-type</option>
+        <option value="V">V-type</option>
+      </select>
+      <select class="w6sel" id="flt-status" onchange="w6ApplyFilters()">
+        <option value="">All status</option>
+        <option value="PRIORITY">Priority</option>
+        <option value="ACTIVE">Active</option>
+        <option value="MAPPED">Mapped</option>
+        <option value="CANDIDATE">Candidate</option>
+      </select>
+    </div>
+    <div class="w6spacer"></div>
+    <div class="w6group">
+      <span class="w6pill green" id="w6epoch">Epoch T+000</span>
+      <span class="w6pill" id="w6selectionPill">No selection</span>
+    </div>
+  </div>
+
+  <div id="w6body">
+    <aside id="w6sidebar">
+      <div class="w6panel">
+        <div class="w6sec-hdr">View Controls</div>
+        <label class="w6chk-row"><input type="checkbox" id="chk-orbits" checked onchange="w6Draw()"><span>Orbit paths</span></label>
+        <label class="w6chk-row"><input type="checkbox" id="chk-heat" checked onchange="w6Draw()"><span>Zone heat overlay</span></label>
+        <label class="w6chk-row"><input type="checkbox" id="chk-labels" onchange="w6Draw()"><span>Labels</span></label>
+        <label class="w6chk-row"><input type="checkbox" id="chk-earth" checked onchange="w6Draw()"><span>Earth marker</span></label>
+        <label class="w6chk-row"><input type="checkbox" id="chk-planets" onchange="w6Draw()"><span>Planet references</span></label>
+        <label class="w6chk-row"><input type="checkbox" id="chk-track" checked onchange="w6Draw()"><span>Future track</span></label>
+      </div>
+      <div class="w6panel">
+        <div class="w6sec-hdr">Selection Summary</div>
+        <div class="w6stat-row"><span class="w6stat-lbl">Visible objects</span><span class="w6stat-val" id="st-vis">0</span></div>
+        <div class="w6stat-row"><span class="w6stat-lbl">Priority</span><span class="w6stat-val pink" id="st-pri">0</span></div>
+        <div class="w6stat-row"><span class="w6stat-lbl">Clusters visible</span><span class="w6stat-val blue" id="st-clusters">0</span></div>
+        <div class="w6stat-row"><span class="w6stat-lbl">Mean Δv</span><span class="w6stat-val amber" id="st-dv">0.0</span></div>
+      </div>
+      <div class="w6panel">
+        <div class="w6sec-hdr">Quick Analysis</div>
+        <div class="w6stack">
+          <button class="w6mini-btn" id="sw-metal" onclick="w6Sweep('metal')">Metal sweep</button>
+          <button class="w6mini-btn" id="sw-access" onclick="w6Sweep('access')">Low-Δv access sweep</button>
+          <button class="w6mini-btn" id="sw-compound" onclick="w6Sweep('compound')">Compound shortlist</button>
+          <button class="w6mini-btn" onclick="w6Sweep(null)">Clear sweep</button>
+        </div>
+      </div>
+      <div class="w6panel">
+        <div class="w6sec-hdr">Interaction</div>
+        <div class="w6hint">
+          <div><span class="w6kbd">Click</span> select zone, cluster, or target</div>
+          <div><span class="w6kbd">Double-click</span> enter target focus</div>
+          <div><span class="w6kbd">Mouse wheel</span> zoom</div>
+          <div><span class="w6kbd">Shift + drag</span> rotate</div>
+          <div><span class="w6kbd">W A S D</span> pan</div>
+          <div><span class="w6kbd">Space</span> play / pause</div>
+          <div><span class="w6kbd">Esc</span> back out of focus</div>
+        </div>
+      </div>
+    </aside>
+
+    <main id="w6main">
+      <div id="w6overlayTop">
+        <div class="w6overlay-card">
+          <div class="w6overlay-title">Layer</div>
+          <div class="w6overlay-value" id="ov-layer">Zones</div>
+          <div class="w6overlay-sub" id="ov-layer-sub">Default macro map state</div>
+        </div>
+        <div class="w6overlay-card">
+          <div class="w6overlay-title">Focus</div>
+          <div class="w6overlay-value" id="ov-focus">System</div>
+          <div class="w6overlay-sub" id="ov-focus-sub">Solar overview</div>
+        </div>
+      </div>
+      <canvas id="w6canvas"></canvas>
+      <div id="w6toast"></div>
+    </main>
+
+    <aside id="w6inspector">
+      <div class="w6ins-card">
+        <div class="w6ins-hdr">
+          <div>
+            <div class="w6ins-title">Inspector</div>
+            <div class="w6ins-sub" id="w6ins-sel">No selection</div>
+          </div>
+          <span class="w6pill" id="w6ins-kind">Idle</span>
+        </div>
+        <div id="w6ins-body">
+          <div class="w6small">Select a zone, cluster, or target to inspect its summary, readiness, and actions.</div>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <div id="w6bottombar">
+    <span class="w6lbl">Time</span>
+    <button class="w6btn" id="playbtn" onclick="w6TogglePlayback()">Pause</button>
+    <input class="w6range" type="range" min="0" max="365" step="1" value="0" id="timeSlider" oninput="w6SetTime(this.value)">
+    <span class="w6pill" id="timeReadout">T+000 d</span>
+    <select class="w6sel" id="timeHorizon" onchange="w6Draw()">
+      <option value="30">30d horizon</option>
+      <option value="90" selected>90d horizon</option>
+      <option value="180">180d horizon</option>
+      <option value="365">1y horizon</option>
+    </select>
+    <div class="w6spacer"></div>
+    <button class="w6btn" onclick="w6BackOneLevel()">Back</button>
+    <button class="w6btn" onclick="w6ResetView()">Solar Overview</button>
+  </div>
+</div>
+
+<script>
+const W6_ZONES={IEO:{label:'Inner Earth',color:'#ff4444',r:0.08,desc:'q < 0.983 AU'},Aten:{label:'Aten Belt',color:'#ff6b9d',r:0.12,desc:'a < 1 AU'},Apollo:{label:'Apollo Belt',color:'#ffaa00',r:0.16,desc:'a > 1 AU, q < 1.017 AU'},Amor:{label:'Amor Belt',color:'#00aaff',r:0.20,desc:'1.017 < q < 1.3 AU'},MBA:{label:'Main Belt',color:'#00ff88',r:0.30,desc:'2.0 < a < 3.3 AU'},Trojan:{label:'Trojan Belt',color:'#888888',r:0.42,desc:'Near Jupiter L4/L5'}};
+const W6_OBJ=[
+{id:'99942',n:'99942 Apophis',zone:'Apollo',cluster:'AP-1',tax:'Sq',a:0.922,e:0.191,i:3.3,H:19.7,d:0.37,den:3.5,alb:0.30,dv:6.0,status:'PRIORITY',obj:'Apophis.obj',phase:0.40,score:92,notes:'2029 close approach 0.00026 AU'},
+{id:'433',n:'433 Eros',zone:'Amor',cluster:'AM-1',tax:'S',a:1.458,e:0.223,i:10.8,H:11.2,d:16.8,den:2.67,alb:0.25,dv:5.9,status:'PRIORITY',obj:'Eros.obj',phase:0.70,score:88,notes:'NEAR Shoemaker landed 2001'},
+{id:'25143',n:'25143 Itokawa',zone:'Apollo',cluster:'AP-1',tax:'S',a:1.324,e:0.280,i:1.6,H:18.9,d:0.33,den:1.90,alb:0.19,dv:4.7,status:'PRIORITY',obj:'Itokawa.obj',phase:0.20,score:95,notes:'Hayabusa sample return 2010'},
+{id:'162173',n:'162173 Ryugu',zone:'Apollo',cluster:'AP-1',tax:'Cg',a:1.190,e:0.190,i:5.9,H:18.9,d:0.90,den:1.19,alb:0.05,dv:4.7,status:'PRIORITY',obj:'Ryugu.obj',phase:0.60,score:91,notes:'Hayabusa2 sample return 2020'},
+{id:'101955',n:'101955 Bennu',zone:'Apollo',cluster:'AP-1',tax:'B',a:1.126,e:0.204,i:6.0,H:20.8,d:0.49,den:1.26,alb:0.04,dv:5.1,status:'PRIORITY',obj:'Bennu.obj',phase:0.90,score:89,notes:'OSIRIS-REx sample return 2023'},
+{id:'3554',n:'3554 Amun',zone:'Aten',cluster:'AT-1',tax:'M',a:0.974,e:0.282,i:23.4,H:15.8,d:2.5,den:5.5,alb:0.20,dv:5.4,status:'PRIORITY',obj:'Amun.obj',phase:0.50,score:87,notes:'M-type; metal-rich candidate'},
+{id:'6037',n:'6037 1988 EG',zone:'Aten',cluster:'AT-1',tax:'M',a:0.910,e:0.338,i:4.0,H:18.5,d:0.8,den:5.0,alb:0.22,dv:5.0,status:'ACTIVE',obj:'1988EG.obj',phase:0.10,score:82,notes:'M-type Aten; high-metal candidate'},
+{id:'3908',n:'3908 Nyx',zone:'Amor',cluster:'AM-2',tax:'X',a:1.927,e:0.458,i:2.2,H:17.5,d:1.0,den:2.0,alb:0.11,dv:6.3,status:'CANDIDATE',obj:'Nyx.obj',phase:0.20,score:59,notes:'X-type metallic candidate'},
+{id:'2063',n:'2063 Bacchus',zone:'Apollo',cluster:'AP-2',tax:'Sq',a:1.078,e:0.349,i:9.4,H:17.1,d:1.1,den:2.8,alb:0.36,dv:5.2,status:'ACTIVE',obj:'Bacchus.obj',phase:0.50,score:73,notes:'Binary asteroid; radar imaged'},
+{id:'66391',n:'66391 Moshup',zone:'Apollo',cluster:'AP-3',tax:'S',a:0.834,e:0.174,i:38.9,H:16.9,d:1.3,den:1.97,alb:0.15,dv:5.3,status:'MAPPED',obj:'Moshup.obj',phase:0.70,score:66,notes:'Binary; Arecibo imaged'},
+{id:'16',n:'16 Psyche',zone:'MBA',cluster:'MB-1',tax:'M',a:2.922,e:0.134,i:3.1,H:5.9,d:222,den:3.99,alb:0.12,dv:9.1,status:'PRIORITY',obj:'Psyche.obj',phase:0.90,score:78,notes:'NASA Psyche mission target'},
+{id:'216',n:'216 Kleopatra',zone:'MBA',cluster:'MB-1',tax:'M',a:2.796,e:0.251,i:13.1,H:7.3,d:124,den:3.38,alb:0.12,dv:8.8,status:'ACTIVE',obj:'Kleopatra.obj',phase:0.30,score:72,notes:'Dog-bone shape; two moons'},
+{id:'4',n:'4 Vesta',zone:'MBA',cluster:'MB-2',tax:'V',a:2.362,e:0.089,i:7.1,H:3.2,d:525,den:3.45,alb:0.42,dv:8.5,status:'ACTIVE',obj:'Vesta-256V.obj',phase:0.50,score:69,notes:'Dawn mission'},
+{id:'1',n:'1 Ceres',zone:'MBA',cluster:'MB-2',tax:'C',a:2.767,e:0.076,i:10.6,H:3.4,d:939,den:2.16,alb:0.09,dv:9.3,status:'ACTIVE',obj:'Ceres.obj',phase:0.20,score:52,notes:'Dwarf planet; Dawn mission'},
+{id:'624',n:'624 Hektor',zone:'Trojan',cluster:'TR-1',tax:'D',a:5.236,e:0.023,i:18.2,H:7.2,d:225,den:1.0,alb:0.03,dv:12.1,status:'CANDIDATE',obj:'Hektor.obj',phase:0.60,score:32,notes:'Largest Trojan; contact binary'},
+{id:'617',n:'617 Patroclus',zone:'Trojan',cluster:'TR-1',tax:'P',a:5.215,e:0.141,i:22.1,H:8.2,d:141,den:0.88,alb:0.04,dv:11.9,status:'CANDIDATE',obj:'Patroclus.obj',phase:0.80,score:35,notes:'Lucy mission target'}
+];
+const W6_STATE={mode:'zones',view:'2d',live:true,playback:true,timeDays:0,selZone:null,selCluster:null,selObj:null,focusLevel:'system',sweep:null,visibleObjs:[],camera:{zoom:1,offsetX:0,offsetY:0,rot:0},drag:{active:false,lastX:0,lastY:0,rotate:false}};
+function byId(id){return document.getElementById(id)}
+function mean(arr){return arr.length?arr.reduce((a,b)=>a+b,0)/arr.length:0}
+function pad(n){return String(n).padStart(2,'0')}
+function toast(msg,dur=1800){const t=byId('w6toast');if(!t)return;t.textContent=msg;t.style.display='block';clearTimeout(toast._t);toast._t=setTimeout(()=>t.style.display='none',dur)}
+function setClock(){const el=byId('w6clock');if(!el)return;const d=new Date();el.textContent=`${pad(d.getUTCHours())}:${pad(d.getUTCMinutes())} UTC`}
+function taxColor(t){if(t.startsWith('M'))return '#ffaa00';if(t.startsWith('S'))return '#00aaff';if(t.startsWith('C'))return '#8f96aa';if(t.startsWith('X'))return '#b98cff';if(t.startsWith('B'))return '#00ff88';if(t.startsWith('D'))return '#ff8c00';if(t.startsWith('V'))return '#ff5b5b';return '#c6cfde'}
+function sizeR(o){if(o.d>500)return 11;if(o.d>100)return 8;if(o.d>10)return 6;if(o.d>1)return 4.5;return 3.5}
+function getZoneList(){return Object.keys(W6_ZONES)}
+function getClustersForZone(zone){return [...new Set(W6_OBJ.filter(o=>!zone||o.zone===zone).map(o=>o.cluster))].sort()}
+function zoneSummary(zone){const arr=W6_OBJ.filter(o=>o.zone===zone);return{count:arr.length,priority:arr.filter(o=>o.status==='PRIORITY').length,meanDv:mean(arr.map(o=>o.dv)).toFixed(1),meanScore:Math.round(mean(arr.map(o=>o.score)))}}
+function clusterSummary(cluster){const arr=W6_OBJ.filter(o=>o.cluster===cluster);return{count:arr.length,meanA:mean(arr.map(o=>o.a)).toFixed(2),meanDv:mean(arr.map(o=>o.dv)).toFixed(1),meanScore:Math.round(mean(arr.map(o=>o.score)))}}
+function buildSelectors(){const zoneSel=byId('flt-zone');if(!zoneSel)return;zoneSel.innerHTML='<option value="">All zones</option>'+getZoneList().map(z=>`<option value="${z}">${z} — ${W6_ZONES[z].label}</option>`).join('');rebuildClusterSelector()}
+function rebuildClusterSelector(){const zoneField=byId('flt-zone'),clusterSel=byId('flt-cluster');if(!zoneField||!clusterSel)return;const z=zoneField.value||'',clusters=getClustersForZone(z),previous=clusterSel.value;clusterSel.innerHTML='<option value="">All clusters</option>'+clusters.map(c=>`<option value="${c}">${c}</option>`).join('');if(clusters.includes(previous))clusterSel.value=previous}
+function updateStats(){const arr=W6_STATE.visibleObjs;if(byId('st-vis'))byId('st-vis').textContent=arr.length;if(byId('st-pri'))byId('st-pri').textContent=arr.filter(o=>o.status==='PRIORITY').length;if(byId('st-clusters'))byId('st-clusters').textContent=[...new Set(arr.map(o=>o.cluster))].length;if(byId('st-dv'))byId('st-dv').textContent=arr.length?mean(arr.map(o=>o.dv)).toFixed(1):'0.0'}
+function applyFilters(){const search=(byId('flt-search')?.value||'').trim().toLowerCase(),zone=byId('flt-zone')?.value||'',cluster=byId('flt-cluster')?.value||'',tax=byId('flt-tax')?.value||'',status=byId('flt-status')?.value||'';rebuildClusterSelector();W6_STATE.visibleObjs=W6_OBJ.filter(o=>{if(zone&&o.zone!==zone)return false;if(cluster&&o.cluster!==cluster)return false;if(tax&&!o.tax.startsWith(tax))return false;if(status&&o.status!==status)return false;if(search){const hay=`${o.id} ${o.n} ${o.tax} ${o.zone} ${o.cluster}`.toLowerCase();if(!hay.includes(search))return false}if(W6_STATE.sweep==='metal'&&!o.tax.startsWith('M')&&!o.tax.startsWith('X'))return false;if(W6_STATE.sweep==='access'&&o.dv>5.6)return false;if(W6_STATE.sweep==='compound'&&!(o.score>=70&&o.dv<=6.2))return false;return true});updateStats();draw()}
+function setMode(mode){W6_STATE.mode=mode;['zones','clusters','targets'].forEach(k=>byId(`mb-${k}`)?.classList.toggle('active',k===mode));if(byId('ov-layer'))byId('ov-layer').textContent=mode[0].toUpperCase()+mode.slice(1);if(byId('ov-layer-sub'))byId('ov-layer-sub').textContent=mode==='zones'?'Default macro map state':mode==='clusters'?'Intermediate grouping view':'Individual object emphasis';draw()}
+function setView(view){W6_STATE.view=view;['2d','3d','map'].forEach(k=>byId(`mb-${k}`)?.classList.toggle('active-blue',k===view));draw()}
+function setTime(v){W6_STATE.timeDays=Number(v);if(byId('timeReadout'))byId('timeReadout').textContent=`T+${String(v).padStart(3,'0')} d`;if(byId('w6epoch'))byId('w6epoch').textContent=`Epoch T+${String(v).padStart(3,'0')}`;draw()}
+function toggleLive(){W6_STATE.live=!W6_STATE.live;byId('w6livebtn')?.classList.toggle('active',W6_STATE.live);toast(W6_STATE.live?'Live feed active':'Live feed paused')}
+function togglePlayback(){W6_STATE.playback=!W6_STATE.playback;if(byId('playbtn'))byId('playbtn').textContent=W6_STATE.playback?'Pause':'Play'}
+function resetView(){W6_STATE.selZone=null;W6_STATE.selCluster=null;W6_STATE.selObj=null;W6_STATE.focusLevel='system';W6_STATE.camera={zoom:1,offsetX:0,offsetY:0,rot:0};if(byId('flt-zone'))byId('flt-zone').value='';rebuildClusterSelector();if(byId('flt-cluster'))byId('flt-cluster').value='';if(byId('flt-search'))byId('flt-search').value='';applyFilters();showInspector();if(byId('w6selectionPill'))byId('w6selectionPill').textContent='No selection';if(byId('ov-focus'))byId('ov-focus').textContent='System';if(byId('ov-focus-sub'))byId('ov-focus-sub').textContent='Solar overview'}
+function refresh(){toast('Refreshing viewport and filters…');applyFilters()}
+function backOneLevel(){if(W6_STATE.selObj){W6_STATE.selObj=null;W6_STATE.focusLevel=W6_STATE.selCluster?'cluster':W6_STATE.selZone?'zone':'system'}else if(W6_STATE.selCluster){W6_STATE.selCluster=null;W6_STATE.focusLevel=W6_STATE.selZone?'zone':'system'}else if(W6_STATE.selZone){W6_STATE.selZone=null;W6_STATE.focusLevel='system'}showInspector();draw()}
+function sweep(type){W6_STATE.sweep=type;['metal','access','compound'].forEach(k=>byId(`sw-${k}`)?.classList.toggle('active',k===type));applyFilters();toast(type?`${type} sweep active`:'Sweep cleared')}
+function getCanvas(){return byId('w6canvas')}function getCtx(){const c=getCanvas();return c?c.getContext('2d'):null}
+function objPosition(o,cx,cy,scale){const t=W6_STATE.timeDays/365,phase=(o.phase+t*(0.2+1/(o.a+0.15)))%1,ang=phase*Math.PI*2+W6_STATE.camera.rot,base=(o.a*scale*0.52+W6_ZONES[o.zone].r*scale*0.85)*W6_STATE.camera.zoom,x=cx+W6_STATE.camera.offsetX+Math.cos(ang)*base,y=cy+W6_STATE.camera.offsetY+Math.sin(ang)*base*(W6_STATE.view==='3d'?0.72:1);return{x,y,r:sizeR(o)}}
+function draw(){const canvas=getCanvas(),ctx=getCtx();if(!canvas||!ctx)return;const W=canvas.clientWidth||900,H=canvas.clientHeight||600;canvas.width=W;canvas.height=H;const cx=W/2,cy=H/2,scale=Math.min(W,H)*0.44;ctx.clearRect(0,0,W,H);ctx.fillStyle='#0a0e1a';ctx.fillRect(0,0,W,H);const showHeat=!!byId('chk-heat')?.checked,showOrbits=!!byId('chk-orbits')?.checked,showLabels=!!byId('chk-labels')?.checked,showEarth=!!byId('chk-earth')?.checked,showPlanets=!!byId('chk-planets')?.checked,showTrack=!!byId('chk-track')?.checked,arr=W6_STATE.visibleObjs;if(showHeat){for(const [zk,z] of Object.entries(W6_ZONES)){const r=z.r*scale*W6_STATE.camera.zoom,grad=ctx.createRadialGradient(cx,cy,r*0.55,cx,cy,r*1.1);grad.addColorStop(0,`${z.color}10`);grad.addColorStop(1,`${z.color}00`);ctx.beginPath();ctx.arc(cx,cy,r*1.08,0,Math.PI*2);ctx.fillStyle=grad;ctx.fill()}}for(const [zk,z] of Object.entries(W6_ZONES)){const r=z.r*scale*W6_STATE.camera.zoom;ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.strokeStyle=W6_STATE.selZone===zk?z.color:`${z.color}66`;ctx.lineWidth=W6_STATE.selZone===zk?2.2:1.1;ctx.stroke();if(showLabels&&W6_STATE.mode==='zones'){ctx.fillStyle=z.color;ctx.font='12px Inter';ctx.fillText(zk,cx+r+6,cy-4)}}if(showEarth){const r=scale*0.18*W6_STATE.camera.zoom;ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.strokeStyle='#00aaff66';ctx.setLineDash([5,6]);ctx.stroke();ctx.setLineDash([]);ctx.beginPath();ctx.arc(cx,cy,4.5,0,Math.PI*2);ctx.fillStyle='#00aaff';ctx.fill()}if(showPlanets){[{r:.24,c:'#ff6633'},{r:.52,c:'#c8a56e'}].forEach(p=>{ctx.beginPath();ctx.arc(cx,cy,p.r*scale*W6_STATE.camera.zoom,0,Math.PI*2);ctx.strokeStyle=`${p.c}33`;ctx.setLineDash([2,7]);ctx.stroke();ctx.setLineDash([])})}if(showOrbits){arr.forEach(o=>{const z=W6_ZONES[o.zone],base=(o.a*scale*0.52+z.r*scale*0.85)*W6_STATE.camera.zoom;ctx.beginPath();ctx.ellipse(cx+W6_STATE.camera.offsetX,cy+W6_STATE.camera.offsetY,base,base*(W6_STATE.view==='3d'?0.72:1),0,0,Math.PI*2);ctx.strokeStyle=`${taxColor(o.tax)}22`;ctx.lineWidth=.8;ctx.stroke()})}if(W6_STATE.mode!=='zones'){[...new Set(arr.map(o=>o.cluster))].forEach(c=>{const members=arr.filter(o=>o.cluster===c);if(!members.length)return;const pts=members.map(o=>objPosition(o,cx,cy,scale)),mx=mean(pts.map(p=>p.x)),my=mean(pts.map(p=>p.y)),radius=Math.max(22,mean(pts.map(p=>Math.hypot(p.x-mx,p.y-my)))+14),active=W6_STATE.selCluster===c;ctx.beginPath();ctx.arc(mx,my,radius,0,Math.PI*2);ctx.strokeStyle=active?'#ffffffaa':'#9b59b655';ctx.lineWidth=active?2:1;if(W6_STATE.mode==='clusters')ctx.stroke();ctx.beginPath();ctx.arc(mx,my,4,0,Math.PI*2);ctx.fillStyle=active?'#ffffff':'#9b59b6';ctx.fill();if(showLabels&&W6_STATE.mode==='clusters'){ctx.fillStyle='#c8cfff';ctx.font='11px Inter';ctx.fillText(c,mx+8,my-6)}})}if(showTrack&&W6_STATE.selObj){const horizon=Number(byId('timeHorizon')?.value||90),so=W6_STATE.selObj;for(let t=1;t<=12;t++){const clone={...so,phase:(so.phase+(W6_STATE.timeDays+horizon*(t/12))/365*(0.2+1/(so.a+0.15)))%1},p=objPosition(clone,cx,cy,scale);ctx.beginPath();ctx.arc(p.x,p.y,2.2,0,Math.PI*2);ctx.fillStyle=`rgba(0,255,136,${0.48-(t*0.028)})`;ctx.fill()}}arr.forEach(o=>{const p=objPosition(o,cx,cy,scale),col=taxColor(o.tax);if(W6_STATE.selObj&&W6_STATE.selObj.id===o.id){ctx.beginPath();ctx.arc(p.x,p.y,p.r+7,0,Math.PI*2);ctx.strokeStyle='#ff6b9d';ctx.lineWidth=2.5;ctx.stroke()}else if(W6_STATE.selCluster&&W6_STATE.selCluster===o.cluster){ctx.beginPath();ctx.arc(p.x,p.y,p.r+4,0,Math.PI*2);ctx.strokeStyle='#9b59b6';ctx.lineWidth=1.5;ctx.stroke()}else if(W6_STATE.selZone&&W6_STATE.selZone===o.zone&&W6_STATE.mode==='zones'){ctx.beginPath();ctx.arc(p.x,p.y,p.r+3,0,Math.PI*2);ctx.strokeStyle='#ffffff44';ctx.lineWidth=1;ctx.stroke()}if(o.status==='PRIORITY'){ctx.beginPath();ctx.arc(p.x,p.y,p.r+2.5,0,Math.PI*2);ctx.strokeStyle=`${col}66`;ctx.lineWidth=1;ctx.stroke()}ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=col;ctx.fill();if(showLabels&&(W6_STATE.mode==='targets'||o.status==='PRIORITY'||p.r>=8)){ctx.fillStyle='#d5dcef';ctx.font='11px Inter';ctx.fillText(o.n.split(' ').slice(0,2).join(' '),p.x+p.r+4,p.y+3)}})}
+function hitTest(mx,my){const canvas=getCanvas();if(!canvas)return null;const W=canvas.width,H=canvas.height,cx=W/2,cy=H/2,scale=Math.min(W,H)*0.44;let best=null,bestD=1e9;W6_STATE.visibleObjs.forEach(o=>{const p=objPosition(o,cx,cy,scale),d=Math.hypot(mx-p.x,my-p.y);if(d<p.r+8&&d<bestD){best=o;bestD=d}});if(best)return{type:'object',value:best};if(W6_STATE.mode!=='targets'){for(const c of [...new Set(W6_STATE.visibleObjs.map(o=>o.cluster))]){const members=W6_STATE.visibleObjs.filter(o=>o.cluster===c);if(!members.length)continue;const pts=members.map(o=>objPosition(o,cx,cy,scale)),mx2=mean(pts.map(p=>p.x)),my2=mean(pts.map(p=>p.y));if(Math.hypot(mx-mx2,my-my2)<16)return{type:'cluster',value:c}}}for(const zk of Object.keys(W6_ZONES)){const r=W6_ZONES[zk].r*scale*W6_STATE.camera.zoom,d=Math.hypot(mx-cx,my-cy);if(Math.abs(d-r)<12)return{type:'zone',value:zk}}return null}
+function showInspector(){const body=byId('w6ins-body'),selPill=byId('w6selectionPill'),kind=byId('w6ins-kind');if(!body||!selPill||!kind)return;if(W6_STATE.selObj){const o=W6_STATE.selObj,col=taxColor(o.tax);byId('w6ins-sel').textContent=o.n;kind.textContent='Target';selPill.textContent=o.n;byId('ov-focus').textContent='Target';byId('ov-focus-sub').textContent=`${o.cluster} · ${o.zone}`;const dvClass=o.dv<=5.5?'green':o.dv<=7?'amber':'pink';body.innerHTML=`<div style="font-size:18px;font-weight:800;color:${col};margin-bottom:4px">${o.n}</div><div class="w6ins-sub">${o.zone} · ${o.cluster} · ${o.tax} · ${o.status}</div><div class="w6rbar-wrap"><div class="w6rbar-lbl">Readiness ${o.score}%</div><div class="w6rbar-bg"><div class="w6rbar-fg" style="width:${o.score}%"></div></div></div><div class="w6ins-row"><span class="w6ins-k">Semi-major axis</span><span class="w6ins-v">${o.a} AU</span></div><div class="w6ins-row"><span class="w6ins-k">Eccentricity</span><span class="w6ins-v">${o.e}</span></div><div class="w6ins-row"><span class="w6ins-k">Inclination</span><span class="w6ins-v">${o.i}°</span></div><div class="w6ins-row"><span class="w6ins-k">Diameter</span><span class="w6ins-v blue">${o.d} km</span></div><div class="w6ins-row"><span class="w6ins-k">Density</span><span class="w6ins-v amber">${o.den} g/cm³</span></div><div class="w6ins-row"><span class="w6ins-k">Albedo</span><span class="w6ins-v">${o.alb}</span></div><div class="w6ins-row"><span class="w6ins-k">Δv proxy</span><span class="w6ins-v ${dvClass}">${o.dv} km/s</span></div><div class="w6ins-row"><span class="w6ins-k">Mesh</span><span class="w6ins-v pink">${o.obj}</span></div><div class="w6small" style="margin-top:10px">${o.notes||'No note provided.'}</div><div class="w6actions"><button class="w6btn" onclick="toast('Dossier handoff placeholder')">Open Dossier</button><button class="w6btn" onclick="toast('Shape model handoff placeholder')">Open Shape</button><button class="w6btn" onclick="toast('W1 pass-off placeholder')">Pass to W1</button><button class="w6btn" onclick="toast('W4 pass-off placeholder')">Pass to W4</button></div>`;return}if(W6_STATE.selCluster){const c=W6_STATE.selCluster,s=clusterSummary(c);byId('w6ins-sel').textContent=c;kind.textContent='Cluster';selPill.textContent=c;byId('ov-focus').textContent='Cluster';byId('ov-focus-sub').textContent=`${s.count} members`;body.innerHTML=`<div style="font-size:18px;font-weight:800;color:#c9b0ff;margin-bottom:4px">${c}</div><div class="w6ins-sub">Cluster summary</div><div class="w6ins-row"><span class="w6ins-k">Member count</span><span class="w6ins-v blue">${s.count}</span></div><div class="w6ins-row"><span class="w6ins-k">Mean a</span><span class="w6ins-v">${s.meanA} AU</span></div><div class="w6ins-row"><span class="w6ins-k">Mean Δv</span><span class="w6ins-v amber">${s.meanDv} km/s</span></div><div class="w6ins-row"><span class="w6ins-k">Mean readiness</span><span class="w6ins-v pink">${s.meanScore}</span></div><div class="w6small" style="margin-top:10px">Cluster mode is the intermediate operational layer. Use it to move from zonal heat to target selection without rendering the full object cloud.</div><div class="w6actions"><button class="w6btn" onclick="w6SetMode('targets')">Open Targets</button><button class="w6btn" onclick="toast('Strategic filter handoff placeholder')">Send to Filter</button></div>`;return}if(W6_STATE.selZone){const z=W6_STATE.selZone,s=zoneSummary(z);byId('w6ins-sel').textContent=W6_ZONES[z].label;kind.textContent='Zone';selPill.textContent=z;byId('ov-focus').textContent='Zone';byId('ov-focus-sub').textContent=W6_ZONES[z].desc;body.innerHTML=`<div style="font-size:18px;font-weight:800;color:${W6_ZONES[z].color};margin-bottom:4px">${z}</div><div class="w6ins-sub">${W6_ZONES[z].label}</div><div class="w6ins-row"><span class="w6ins-k">Objects</span><span class="w6ins-v blue">${s.count}</span></div><div class="w6ins-row"><span class="w6ins-k">Priority objects</span><span class="w6ins-v pink">${s.priority}</span></div><div class="w6ins-row"><span class="w6ins-k">Mean Δv</span><span class="w6ins-v amber">${s.meanDv} km/s</span></div><div class="w6ins-row"><span class="w6ins-k">Mean readiness</span><span class="w6ins-v green">${s.meanScore}</span></div><div class="w6small" style="margin-top:10px">Zone view is the macro layer. It should remain the default entry state and drive cluster-level drill-down rather than immediate target overload.</div><div class="w6actions"><button class="w6btn" onclick="w6SetMode('clusters')">Focus Clusters</button><button class="w6btn" onclick="toast('Zone export placeholder')">Export Zone</button></div>`;return}byId('w6ins-sel').textContent='No selection';kind.textContent='Idle';selPill.textContent='No selection';byId('ov-focus').textContent='System';byId('ov-focus-sub').textContent='Solar overview';body.innerHTML='<div class="w6small">Select a zone, cluster, or target to inspect its summary, readiness, and actions.</div>'}
+function selectHit(hit,dbl=false){if(!hit){if(dbl){resetView();toast('Returned to solar overview')}return}if(hit.type==='zone'){W6_STATE.selZone=hit.value;W6_STATE.selCluster=null;W6_STATE.selObj=null;W6_STATE.focusLevel='zone';if(byId('flt-zone'))byId('flt-zone').value=hit.value;applyFilters();showInspector();return}if(hit.type==='cluster'){W6_STATE.selCluster=hit.value;W6_STATE.selObj=null;W6_STATE.focusLevel='cluster';if(byId('flt-cluster'))byId('flt-cluster').value=hit.value;applyFilters();w6SetMode('clusters');showInspector();return}if(hit.type==='object'){W6_STATE.selObj=hit.value;W6_STATE.selZone=hit.value.zone;W6_STATE.selCluster=hit.value.cluster;W6_STATE.focusLevel=dbl?'target-focus':'target';if(dbl)w6SetMode('targets');showInspector();draw();toast(dbl?`Target focus: ${hit.value.n}`:`Selected ${hit.value.n}`)}}
+function bindCanvas(){const c=getCanvas();if(!c)return;c.addEventListener('click',e=>{const r=c.getBoundingClientRect(),hit=hitTest(e.clientX-r.left,e.clientY-r.top);selectHit(hit,false)});c.addEventListener('dblclick',e=>{const r=c.getBoundingClientRect(),hit=hitTest(e.clientX-r.left,e.clientY-r.top);selectHit(hit,true)});c.addEventListener('wheel',e=>{e.preventDefault();const factor=e.deltaY<0?1.08:0.93;W6_STATE.camera.zoom=Math.max(.55,Math.min(2.8,W6_STATE.camera.zoom*factor));draw()},{passive:false});c.addEventListener('mousedown',e=>{W6_STATE.drag.active=true;W6_STATE.drag.lastX=e.clientX;W6_STATE.drag.lastY=e.clientY;W6_STATE.drag.rotate=e.shiftKey});window.addEventListener('mouseup',()=>W6_STATE.drag.active=false);window.addEventListener('mousemove',e=>{if(!W6_STATE.drag.active)return;const dx=e.clientX-W6_STATE.drag.lastX,dy=e.clientY-W6_STATE.drag.lastY;W6_STATE.drag.lastX=e.clientX;W6_STATE.drag.lastY=e.clientY;if(W6_STATE.drag.rotate)W6_STATE.camera.rot+=dx*0.004;else{W6_STATE.camera.offsetX+=dx;W6_STATE.camera.offsetY+=dy}draw()})}
+function bindKeys(){window.addEventListener('keydown',e=>{const tag=(document.activeElement?.tagName||'').toLowerCase();if(tag==='input'||tag==='select'||tag==='textarea')return;if(e.code==='Space'){e.preventDefault();w6TogglePlayback()}if(e.key==='Escape')w6BackOneLevel();if(e.key==='r'||e.key==='R')w6ResetView();const step=18;if(e.key==='w'||e.key==='ArrowUp')W6_STATE.camera.offsetY+=step;if(e.key==='s'||e.key==='ArrowDown')W6_STATE.camera.offsetY-=step;if(e.key==='a'||e.key==='ArrowLeft')W6_STATE.camera.offsetX+=step;if(e.key==='d'||e.key==='ArrowRight')W6_STATE.camera.offsetX-=step;draw()})}
+function runSelfTests(){console.assert(typeof draw==='function','draw should exist');console.assert(typeof window.w6Draw==='function','w6Draw alias should exist');console.assert(typeof window.w6SetView==='function','w6SetView alias should exist');console.assert(typeof window.w6SetMode==='function','w6SetMode alias should exist');console.assert(typeof window.w6ApplyFilters==='function','w6ApplyFilters alias should exist');console.assert(getZoneList().length>=1,'zone list should not be empty');console.assert(getClustersForZone('Apollo').includes('AP-1'),'Apollo should include AP-1');console.assert(zoneSummary('Apollo').count>=1,'Apollo summary should have members');console.assert(clusterSummary('AP-1').count>=1,'AP-1 summary should have members');w6SetView('3d');console.assert(W6_STATE.view==='3d','setView should update state');w6SetView('2d');console.assert(W6_STATE.view==='2d','setView should switch back');w6SetMode('clusters');console.assert(W6_STATE.mode==='clusters','setMode should update state');w6SetMode('zones');console.assert(W6_STATE.mode==='zones','setMode should switch back')}
+function animate(){if(W6_STATE.live&&W6_STATE.playback){W6_STATE.timeDays=(W6_STATE.timeDays+0.08)%366;if(byId('timeSlider'))byId('timeSlider').value=Math.round(W6_STATE.timeDays);w6SetTime(Math.round(W6_STATE.timeDays))}requestAnimationFrame(animate)}
+function init(){setClock();setInterval(setClock,30000);buildSelectors();W6_STATE.visibleObjs=W6_OBJ.slice();applyFilters();bindCanvas();bindKeys();showInspector();draw();runSelfTests();animate()}
+window.w6SetMode=function(mode){return setMode(mode)};
+window.w6SetView=function(view){return setView(view)};
+window.w6SetTime=function(v){return setTime(v)};
+window.w6ToggleLive=function(){return toggleLive()};
+window.w6TogglePl
