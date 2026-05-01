@@ -1,0 +1,1199 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>OFS — Orbital Flight Simulator | Römer Industries</title>
+<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0B0D10;--surface:#12151A;--surface2:#1A1E25;--surface3:#222831;
+  --copper:#B87333;--gold:#C9A24A;--teal:#4EC5C1;--cyan:#00E5FF;
+  --ivory:#F2F1EC;--muted:#8A8F9A;--border:#2A2F3A;
+  --font-ui:'Inter',system-ui,sans-serif;--font-data:'JetBrains Mono',monospace;
+}
+html,body{background:var(--bg);color:var(--ivory);font-family:var(--font-ui);font-size:13px;height:100%;overflow-x:hidden}
+
+/* OPS TRACKER */
+.ops-tracker{display:flex;align-items:center;justify-content:space-between;padding:7px 14px;background:#0A0C0F;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:6px;position:sticky;top:0;z-index:100}
+.ops-beacon{display:flex;align-items:center;gap:8px}
+.beacon-dot{width:8px;height:8px;border-radius:50%;background:var(--teal);box-shadow:0 0 6px var(--teal);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.ops-title{font-family:var(--font-data);font-size:11px;font-weight:700;color:var(--copper);letter-spacing:1.5px;text-transform:uppercase}
+.ops-desc{font-family:var(--font-data);font-size:9px;color:var(--muted);letter-spacing:0.5px}
+.ops-nav{display:flex;gap:4px;flex-wrap:wrap;align-items:center}
+.nav-pill{font-family:var(--font-data);font-size:9px;font-weight:700;padding:3px 7px;border-radius:3px;border:1px solid var(--border);color:var(--muted);cursor:pointer;text-decoration:none;letter-spacing:0.8px;transition:all 0.2s;background:transparent}
+.nav-pill:hover{border-color:var(--copper);color:var(--copper)}
+.nav-pill.active{background:var(--copper);color:#0B0D10;border-color:var(--copper);font-weight:700}
+.nav-pill.w-pill{border-color:#2A3040;color:#4A5060}
+.nav-pill.w-pill:hover{border-color:var(--teal);color:var(--teal)}
+
+/* BEACON BAR */
+.beacon-bar{background:#090B0E;border-bottom:1px solid var(--border);padding:4px 14px;display:flex;align-items:center;gap:10px}
+.beacon-live{font-family:var(--font-data);font-size:9px;color:var(--teal);font-weight:700;letter-spacing:1px}
+.beacon-path{font-family:var(--font-data);font-size:9px;color:var(--muted)}
+.beacon-sep{color:var(--border)}
+.beacon-brand{font-family:var(--font-data);font-size:9px;color:var(--copper)}
+
+/* HEADER */
+.sim-header{padding:14px 18px 10px;border-bottom:1px solid var(--border);background:var(--surface)}
+.sim-title{font-family:var(--font-ui);font-size:20px;font-weight:700;color:var(--copper);letter-spacing:0.5px;margin-bottom:3px}
+.sim-desc{font-size:11px;color:var(--muted);margin-bottom:8px}
+.sim-badges{display:flex;gap:6px;flex-wrap:wrap}
+.badge{font-family:var(--font-data);font-size:9px;padding:2px 8px;border-radius:2px;border:1px solid var(--border);color:var(--muted)}
+.badge.teal{border-color:var(--teal);color:var(--teal)}
+.badge.copper{border-color:var(--copper);color:var(--copper)}
+.badge.gold{border-color:var(--gold);color:var(--gold)}
+
+/* MAIN LAYOUT */
+.sim-body{display:grid;grid-template-columns:260px 1fr;height:calc(100vh - 120px);min-height:600px}
+.sim-controls{background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;padding:0}
+.sim-main{display:flex;flex-direction:column;overflow:hidden;background:var(--bg)}
+
+/* CONTROL PANEL */
+.ctrl-section{border-bottom:1px solid var(--border);padding:12px 14px}
+.ctrl-label{font-family:var(--font-data);font-size:9px;font-weight:700;color:var(--copper);letter-spacing:1.2px;text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.ctrl-row{margin-bottom:8px}
+.ctrl-row label{display:block;font-size:10px;color:var(--muted);margin-bottom:3px;font-family:var(--font-data)}
+.ctrl-row input[type=number],.ctrl-row select{width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--ivory);padding:5px 8px;border-radius:3px;font-family:var(--font-data);font-size:11px}
+.ctrl-row input[type=number]:focus,.ctrl-row select:focus{outline:none;border-color:var(--copper)}
+.ctrl-row select option{background:var(--surface2)}
+.range-wrap{display:flex;align-items:center;gap:8px}
+.ctrl-row input[type=range]{flex:1;accent-color:var(--copper);height:3px}
+.range-val{font-family:var(--font-data);font-size:10px;color:var(--gold);min-width:40px;text-align:right}
+.ctrl-2col{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+
+/* TELEMETRY READOUTS */
+.telem-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border-bottom:1px solid var(--border)}
+.telem-cell{background:var(--surface2);padding:8px 10px}
+.telem-label{font-family:var(--font-data);font-size:8px;color:var(--muted);letter-spacing:0.8px;text-transform:uppercase;margin-bottom:2px}
+.telem-val{font-family:var(--font-data);font-size:18px;font-weight:700;color:var(--teal);line-height:1}
+.telem-unit{font-family:var(--font-data);font-size:9px;color:var(--muted)}
+.telem-cell.warning .telem-val{color:var(--gold)}
+.telem-cell.critical .telem-val{color:#FF4444}
+
+/* TABS */
+.tab-bar{display:flex;background:var(--surface);border-bottom:1px solid var(--border);padding:0 14px}
+.tab-btn{font-family:var(--font-data);font-size:10px;font-weight:600;padding:9px 14px;cursor:pointer;border:none;background:transparent;color:var(--muted);letter-spacing:0.8px;border-bottom:2px solid transparent;transition:all 0.2s}
+.tab-btn:hover{color:var(--ivory)}
+.tab-btn.active{color:var(--copper);border-bottom-color:var(--copper)}
+.tab-content{flex:1;overflow:hidden;position:relative}
+.tab-pane{display:none;height:100%;overflow:auto}
+.tab-pane.active{display:flex;flex-direction:column}
+
+/* PLOT AREA */
+.plot-container{flex:1;min-height:400px;position:relative}
+.plot-controls{display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--surface);border-bottom:1px solid var(--border);flex-wrap:wrap}
+.plot-controls span{font-family:var(--font-data);font-size:9px;color:var(--muted);letter-spacing:0.8px}
+.plot-controls select{background:var(--surface2);border:1px solid var(--border);color:var(--ivory);padding:3px 8px;border-radius:3px;font-family:var(--font-data);font-size:10px}
+
+/* BUTTONS */
+.btn{font-family:var(--font-data);font-size:10px;font-weight:700;padding:6px 14px;border-radius:3px;border:none;cursor:pointer;letter-spacing:0.8px;transition:all 0.2s}
+.btn-primary{background:var(--copper);color:#0B0D10}
+.btn-primary:hover{background:var(--gold)}
+.btn-secondary{background:transparent;border:1px solid var(--border);color:var(--muted)}
+.btn-secondary:hover{border-color:var(--teal);color:var(--teal)}
+.btn-teal{background:var(--teal);color:#0B0D10}
+.btn-teal:hover{background:#3DB5B1}
+.btn-danger{background:transparent;border:1px solid #FF4444;color:#FF4444}
+.btn-danger:hover{background:#FF4444;color:#fff}
+.btn-sm{padding:4px 10px;font-size:9px}
+.btn-row{display:flex;gap:6px;flex-wrap:wrap;padding:8px 14px}
+
+/* PLAYBACK BAR */
+.playback-bar{display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--surface2);border-bottom:1px solid var(--border)}
+.playback-bar .btn{min-width:36px}
+.time-display{font-family:var(--font-data);font-size:12px;color:var(--teal);min-width:80px}
+.speed-label{font-family:var(--font-data);font-size:9px;color:var(--muted)}
+.progress-track{flex:1;height:4px;background:var(--border);border-radius:2px;cursor:pointer;position:relative}
+.progress-fill{height:100%;background:var(--copper);border-radius:2px;transition:width 0.1s}
+
+/* SWEEP & EXPORT */
+.sweep-grid{display:grid;grid-template-columns:280px 1fr;gap:0;height:100%}
+.sweep-config{padding:14px;border-right:1px solid var(--border);overflow-y:auto}
+.sweep-results{display:flex;flex-direction:column;overflow:hidden}
+.export-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:14px}
+.export-card{background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:12px}
+.export-card h4{font-family:var(--font-data);font-size:10px;color:var(--copper);letter-spacing:1px;margin-bottom:6px}
+.export-card p{font-size:10px;color:var(--muted);margin-bottom:10px;line-height:1.5}
+
+/* DATASPACE */
+.ds-panel{padding:12px 14px;border-top:1px solid var(--border);background:var(--surface)}
+.ds-title{font-family:var(--font-data);font-size:9px;color:var(--teal);letter-spacing:1px;margin-bottom:8px;font-weight:700}
+.ds-btns{display:flex;gap:4px;flex-wrap:wrap}
+.ds-btn{font-family:var(--font-data);font-size:9px;font-weight:700;padding:4px 10px;border-radius:3px;background:var(--surface3);border:1px solid var(--border);color:var(--muted);cursor:pointer;transition:all 0.2s}
+.ds-btn:hover{border-color:var(--teal);color:var(--teal)}
+.ds-btn.all{border-color:var(--copper);color:var(--copper)}
+.ds-btn.all:hover{background:var(--copper);color:#0B0D10}
+.ds-status{font-family:var(--font-data);font-size:9px;color:var(--gold);margin-top:6px;min-height:14px}
+
+/* RV TABLE */
+.data-table{width:100%;border-collapse:collapse;font-family:var(--font-data);font-size:10px}
+.data-table th{background:var(--surface3);color:var(--copper);padding:6px 10px;text-align:left;font-size:9px;letter-spacing:0.8px;border-bottom:1px solid var(--border)}
+.data-table td{padding:5px 10px;border-bottom:1px solid var(--border);color:var(--ivory)}
+.data-table tr:hover td{background:var(--surface2)}
+.table-wrap{overflow-x:auto;flex:1}
+.results-summary{padding:10px 14px;background:var(--surface2);border-bottom:1px solid var(--border);display:flex;gap:16px;flex-wrap:wrap}
+.rs-item{display:flex;flex-direction:column;gap:2px}
+.rs-label{font-family:var(--font-data);font-size:8px;color:var(--muted);letter-spacing:0.8px}
+.rs-val{font-family:var(--font-data);font-size:13px;color:var(--teal);font-weight:700}
+
+/* MESSAGES */
+.msg-box{margin:10px 14px;padding:8px 12px;border-radius:3px;font-family:var(--font-data);font-size:10px;border-left:3px solid var(--teal);background:rgba(78,197,193,0.07);color:var(--teal)}
+.msg-box.warn{border-color:var(--gold);background:rgba(201,162,74,0.07);color:var(--gold)}
+.msg-box.err{border-color:#FF4444;background:rgba(255,68,68,0.07);color:#FF4444}
+
+/* SECTION LABELS */
+.section-hdr{font-family:var(--font-data);font-size:9px;font-weight:700;color:var(--copper);letter-spacing:1.2px;text-transform:uppercase;padding:10px 14px 4px;border-top:1px solid var(--border);margin-top:4px}
+</style></head><body>
+<!-- OPS TRACKER -->
+<div class="ops-tracker">
+  <div class="ops-beacon">
+    <div class="beacon-dot"></div>
+    <div>
+      <div class="ops-title">RFS EXTRACTION — RENDEZVOUS &amp; FLIGHT SIMULATOR</div>
+      <div class="ops-desc">3D orbital rendezvous · CW proximity ops · Hohmann transfer · Plotly 3D · /sims/rfs-extraction</div>
+    </div>
+  </div>
+  <div class="ops-nav">
+    <a class="nav-pill calc" href="/calc/orbital">ORB</a>
+    <a class="nav-pill calc" href="/calc/launch">LW</a>
+    <a class="nav-pill calc" href="/calc/magnetostatics">MAG</a>
+    <a class="nav-pill calc" href="/calc/energy">PWR</a>
+    <a class="nav-pill calc" href="/calc/fluids">FLD</a>
+    <a class="nav-pill sim active" href="/sims/rfs-extraction">RFS</a>
+    <a class="nav-pill sim" href="/sim/node">EMFF</a>
+    <a class="nav-pill sim" href="/sim/fields">EMF</a>
+    <a class="nav-pill sim" href="/sim/re-entry">ENTRY</a>
+    <a class="nav-pill w1" href="/w1/data">W1</a>
+    <a class="nav-pill w2" href="/w2/data">W2</a>
+    <a class="nav-pill w3" href="/w3/data">W3</a>
+    <a class="nav-pill w4" href="/w4/data">W4</a>
+    <a class="nav-pill w5" href="/w5/data">W5</a>
+    <a class="nav-pill w6" href="/w6/data">W6</a>
+    <a class="nav-pill util" href="/data/achilles">ACH</a>
+    <a class="nav-pill util" href="/library">LIB</a>
+    <a class="nav-pill util" href="/gmat">GMAT</a>
+    <a class="nav-pill util" href="/dash">DASH</a>
+  </div>
+</div>
+
+<!-- BEACON BAR -->
+<div class="beacon-bar">
+  <span class="beacon-live">● LIVE</span>
+  <span class="beacon-path">/sims/rfs-extraction</span>
+  <span class="beacon-sep">·</span>
+  <span class="beacon-path">Universal — callable by all workspaces &amp; dataspaces</span>
+  <span class="beacon-sep">·</span>
+  <span class="beacon-brand">Römer Industries / EMASSC</span>
+  <span class="beacon-sep">·</span>
+  <span class="beacon-path" id="rfs-beacon-ts" style="font-size:9px;color:var(--muted)"></span>
+</div>
+
+<!-- HEADER -->
+<div class="sim-header">
+  <div class="sim-title">RFS Extraction — Rendezvous &amp; Flight Simulator</div>
+  <div class="sim-desc">3D orbital rendezvous simulation · Hill-Clohessy-Wiltshire proximity ops · Hohmann/bi-elliptic transfer · Keplerian propagation with J2 perturbation</div>
+  <div class="sim-badges">
+    <span class="badge teal"></span>
+    <span class="badge">SI Units</span>
+    <span class="badge copper">Universal Tool — W1–W6 Callable</span>
+    <span class="badge teal">Plotly 3D Visualisation</span>
+    <span class="badge gold">Animated Playback</span>
+    <span class="badge">JetBrains Mono · Inter</span>
+  </div>
+</div>
+
+<!-- TELEMETRY BAR -->
+<div class="telem-grid">
+  <div class="telem-cell" id="telem-alt">
+    <div class="telem-label">ALTITUDE</div>
+    <div class="telem-val" id="tv-alt">400</div>
+    <div class="telem-unit">km</div>
+  </div>
+  <div class="telem-cell" id="telem-vel">
+    <div class="telem-label">ORBITAL VELOCITY</div>
+    <div class="telem-val" id="tv-vel">7.67</div>
+    <div class="telem-unit">km/s</div>
+  </div>
+  <div class="telem-cell warning" id="telem-dv">
+    <div class="telem-label">ΔV BUDGET</div>
+    <div class="telem-val" id="tv-dv">0.00</div>
+    <div class="telem-unit">km/s</div>
+  </div>
+  <div class="telem-cell" id="telem-range">
+    <div class="telem-label">RANGE TO TARGET</div>
+    <div class="telem-val" id="tv-range">—</div>
+    <div class="telem-unit">km</div>
+  </div>
+  <div class="telem-cell" id="telem-inc">
+    <div class="telem-label">INCLINATION</div>
+    <div class="telem-val" id="tv-inc">28.5</div>
+    <div class="telem-unit">deg</div>
+  </div>
+  <div class="telem-cell" id="telem-period">
+    <div class="telem-label">ORBITAL PERIOD</div>
+    <div class="telem-val" id="tv-period">92.1</div>
+    <div class="telem-unit">min</div>
+  </div>
+  <div class="telem-cell" id="telem-phase">
+    <div class="telem-label">PHASE ANGLE</div>
+    <div class="telem-val" id="tv-phase">0.0</div>
+    <div class="telem-unit">deg</div>
+  </div>
+  <div class="telem-cell" id="telem-time">
+    <div class="telem-label">SIM TIME</div>
+    <div class="telem-val" id="tv-time">T+00:00</div>
+    <div class="telem-unit">hh:mm</div>
+  </div>
+</div>
+
+<!-- MAIN BODY -->
+<div class="sim-body">
+  <!-- CONTROL PANEL -->
+  <div class="sim-controls">
+    <div class="ctrl-section">
+      <div class="ctrl-label">⚙ ORBIT PARAMETERS</div>
+      <div class="ctrl-row">
+        <label>Target Altitude (km)</label>
+        <input type="number" id="p-alt" value="400" min="200" max="2000" step="10">
+      </div>
+      <div class="ctrl-row">
+        <label>Inclination (°)</label>
+        <input type="number" id="p-inc" value="28.5" min="0" max="98" step="0.1">
+      </div>
+      <div class="ctrl-row">
+        <label>RAAN (°)</label>
+        <input type="number" id="p-raan" value="0" min="0" max="360" step="1">
+      </div>
+      <div class="ctrl-row">
+        <label>Eccentricity</label>
+        <input type="number" id="p-ecc" value="0" min="0" max="0.9" step="0.001">
+      </div>
+    </div>
+    <div class="ctrl-section">
+      <div class="ctrl-label">🚀 CHASER VEHICLE</div>
+      <div class="ctrl-row">
+        <label>Chaser Mass (kg)</label>
+        <input type="number" id="p-mass" value="1000" min="50" max="50000" step="50">
+      </div>
+      <div class="ctrl-row">
+        <label>Thrust (N)</label>
+        <input type="number" id="p-thrust" value="0.5" min="0.001" max="500" step="0.1">
+      </div>
+      <div class="ctrl-row">
+        <label>Isp (s)</label>
+        <input type="number" id="p-isp" value="450" min="100" max="5000" step="10">
+      </div>
+      <div class="ctrl-row">
+        <label>Propellant Mass (kg)</label>
+        <input type="number" id="p-prop" value="100" min="1" max="10000" step="1">
+      </div>
+    </div>
+    <div class="ctrl-section">
+      <div class="ctrl-label">🎯 RENDEZVOUS CONFIG</div>
+      <div class="ctrl-row">
+        <label>Initial Range to Target (km)</label>
+        <input type="number" id="p-range0" value="50" min="1" max="1000" step="1">
+      </div>
+      <div class="ctrl-row">
+        <label>Maneuver Type</label>
+        <select id="p-maneuver">
+          <option value="hohmann">Hohmann Transfer</option>
+          <option value="bielliptic">Bi-Elliptic Transfer</option>
+          <option value="cw">CW Proximity Ops</option>
+          <option value="direct">Direct Intercept</option>
+        </select>
+      </div>
+      <div class="ctrl-row">
+        <label>Phase Drift Mode</label>
+        <select id="p-phase">
+          <option value="passive">Passive Drift</option>
+          <option value="active">Active Phasing</option>
+          <option value="hold">Station Keep</option>
+        </select>
+      </div>
+    </div>
+    <div class="ctrl-section">
+      <div class="ctrl-label">▶ PLAYBACK</div>
+      <div class="ctrl-row">
+        <label>Time Step (s)</label>
+        <div class="range-wrap">
+          <input type="range" id="p-dt" min="1" max="300" value="10" step="1" oninput="document.getElementById('v-dt').textContent=this.value+'s'">
+          <span class="range-val" id="v-dt">10s</span>
+        </div>
+      </div>
+      <div class="ctrl-row">
+        <label>Sim Speed</label>
+        <select id="p-speed">
+          <option value="1">1× Real Time</option>
+          <option value="10">10× Speed</option>
+          <option value="100" selected>100× Speed</option>
+          <option value="500">500× Speed</option>
+          <option value="1000">1000× Speed</option>
+        </select>
+      </div>
+      <div class="ctrl-row">
+        <label>Duration (orbits)</label>
+        <input type="number" id="p-orbits" value="3" min="0.5" max="20" step="0.5">
+      </div>
+    </div>
+    <div class="ctrl-section">
+      <div class="ctrl-label">⚡ J2 PERTURBATIONS</div>
+      <div class="ctrl-row" style="display:flex;align-items:center;justify-content:space-between">
+        <label style="margin:0">Enable J2</label>
+        <input type="checkbox" id="p-j2" checked style="accent-color:var(--copper);width:16px;height:16px">
+      </div>
+      <div class="ctrl-row" style="display:flex;align-items:center;justify-content:space-between;margin-top:6px">
+        <label style="margin:0">Show Field Lines</label>
+        <input type="checkbox" id="p-fieldlines" checked style="accent-color:var(--copper);width:16px;height:16px">
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="window.rfs.compute()">COMPUTE</button>
+      <button class="btn btn-teal" onclick="window.rfs.run()" id="btn-run">▶ RUN SIM</button>
+      <button class="btn btn-secondary btn-sm" onclick="window.rfs.reset()">RESET</button>
+    </div>
+    <!-- DATASPACE -->
+    <div class="ds-panel">
+      <div class="ds-title">⬡ ROUTE TO DATASPACE</div>
+      <div class="ds-btns">
+        <button class="ds-btn" onclick="window.rfs.sendDS('w1')">W1</button>
+        <button class="ds-btn" onclick="window.rfs.sendDS('w2')">W2</button>
+        <button class="ds-btn" onclick="window.rfs.sendDS('w3')">W3</button>
+        <button class="ds-btn" onclick="window.rfs.sendDS('w4')">W4</button>
+        <button class="ds-btn" onclick="window.rfs.sendDS('w5')">W5</button>
+        <button class="ds-btn" onclick="window.rfs.sendDS('w6')">W6</button>
+        <button class="ds-btn all" onclick="window.rfs.sendDS('all')">ALL</button>
+      </div>
+      <div class="ds-status" id="ds-status"></div>
+    </div>
+  </div>
+
+  <!-- MAIN PANEL -->
+  <div class="sim-main">
+    <!-- TAB BAR -->
+    <div class="tab-bar">
+      <button class="tab-btn active" onclick="window.rfs.tab('3d')">3D ORBIT</button>
+      <button class="tab-btn" onclick="window.rfs.tab('traj')">TRAJECTORY</button>
+      <button class="tab-btn" onclick="window.rfs.tab('rv')">RV MANEUVER</button>
+      <button class="tab-btn" onclick="window.rfs.tab('telem')">TELEMETRY</button>
+      <button class="tab-btn" onclick="window.rfs.tab('sweep')">SWEEP</button>
+      <button class="tab-btn" onclick="window.rfs.tab('export')">EXPORT</button>
+    </div>
+
+    <!-- TAB: 3D ORBIT -->
+    <div class="tab-pane active" id="tab-3d">
+      <div class="playback-bar">
+        <button class="btn btn-primary btn-sm" id="pb-play" onclick="window.rfs.playPause()">▶ PLAY</button>
+        <button class="btn btn-secondary btn-sm" onclick="window.rfs.stepForward()">⏭ STEP</button>
+        <button class="btn btn-secondary btn-sm" onclick="window.rfs.resetAnim()">⏮ RESET</button>
+        <div class="progress-track" onclick="window.rfs.seekAnim(event)" id="prog-track">
+          <div class="progress-fill" id="prog-fill" style="width:0%"></div>
+        </div>
+        <span class="time-display" id="anim-time">T+00:00:00</span>
+        <span class="speed-label">SIM SPEED:</span>
+        <select id="anim-speed" style="background:var(--surface2);border:1px solid var(--border);color:var(--ivory);padding:2px 6px;font-family:var(--font-data);font-size:9px;border-radius:2px">
+          <option value="10">10×</option>
+          <option value="100" selected>100×</option>
+          <option value="500">500×</option>
+          <option value="1000">1000×</option>
+        </select>
+      </div>
+      <div class="plot-container" id="plot-3d"></div>
+    </div>
+
+    <!-- TAB: TRAJECTORY -->
+    <div class="tab-pane" id="tab-traj">
+      <div class="results-summary" id="traj-summary">
+        <div class="rs-item"><span class="rs-label">TRANSFER ΔV</span><span class="rs-val" id="rs-dv">—</span></div>
+        <div class="rs-item"><span class="rs-label">TRANSFER TIME</span><span class="rs-val" id="rs-tt">—</span></div>
+        <div class="rs-item"><span class="rs-label">PROPELLANT USED</span><span class="rs-val" id="rs-prop">—</span></div>
+        <div class="rs-item"><span class="rs-label">PHASE ANGLE REQ.</span><span class="rs-val" id="rs-phase">—</span></div>
+        <div class="rs-item"><span class="rs-label">INTERCEPT TIME</span><span class="rs-val" id="rs-intercept">—</span></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;flex:1;gap:1px;background:var(--border)">
+        <div id="plot-alt" style="background:var(--bg)"></div>
+        <div id="plot-dv-bar" style="background:var(--bg)"></div>
+      </div>
+    </div>
+
+    <!-- TAB: RV MANEUVER -->
+    <div class="tab-pane" id="tab-rv">
+      <div style="display:grid;grid-template-columns:1fr 1fr;flex:1;gap:1px;background:var(--border)">
+        <div id="plot-cw" style="background:var(--bg)"></div>
+        <div>
+          <div style="padding:10px 14px;flex:1;overflow-y:auto">
+            <div class="section-hdr" style="padding:0 0 8px;border:none;margin:0 0 8px">CW RELATIVE MOTION</div>
+            <div class="msg-box" id="cw-msg">Compute orbit to generate CW proximity solution.</div>
+            <table class="data-table" id="cw-table" style="margin-top:10px">
+              <thead><tr><th>PARAMETER</th><th>VALUE</th><th>UNIT</th></tr></thead>
+              <tbody id="cw-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: TELEMETRY LOG -->
+    <div class="tab-pane" id="tab-telem">
+      <div class="plot-controls">
+        <span>TELEMETRY PARAMETER:</span>
+        <select id="telem-param" onchange="window.rfs.plotTelem()">
+          <option value="alt">Altitude (km)</option>
+          <option value="vel">Velocity (km/s)</option>
+          <option value="dv">ΔV Used (km/s)</option>
+          <option value="range">Range to Target (km)</option>
+          <option value="phase">Phase Angle (°)</option>
+          <option value="energy">Specific Energy (km²/s²)</option>
+        </select>
+      </div>
+      <div id="plot-telem" style="flex:1;min-height:300px"></div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead><tr><th>TIME (min)</th><th>ALT (km)</th><th>VEL (km/s)</th><th>RANGE (km)</th><th>ΔV (km/s)</th><th>PHASE (°)</th></tr></thead>
+          <tbody id="telem-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB: SWEEP -->
+    <div class="tab-pane" id="tab-sweep">
+      <div class="sweep-grid">
+        <div class="sweep-config">
+          <div class="ctrl-label">⚡ SWEEP CONFIGURATION</div>
+          <div class="ctrl-row" style="margin-top:8px">
+            <label>Sweep Variable</label>
+            <select id="sw-var">
+              <option value="alt">Target Altitude (km)</option>
+              <option value="inc">Inclination (°)</option>
+              <option value="ecc">Eccentricity</option>
+              <option value="range">Initial Range (km)</option>
+              <option value="mass">Chaser Mass (kg)</option>
+              <option value="isp">Isp (s)</option>
+            </select>
+          </div>
+          <div class="ctrl-row">
+            <label>Sweep Start</label>
+            <input type="number" id="sw-start" value="200">
+          </div>
+          <div class="ctrl-row">
+            <label>Sweep End</label>
+            <input type="number" id="sw-end" value="1000">
+          </div>
+          <div class="ctrl-row">
+            <label>Steps</label>
+            <input type="number" id="sw-steps" value="20" min="5" max="100">
+          </div>
+          <div class="ctrl-row">
+            <label>Output Metric</label>
+            <select id="sw-out">
+              <option value="dv">Transfer ΔV (km/s)</option>
+              <option value="period">Orbital Period (min)</option>
+              <option value="vel">Circular Velocity (km/s)</option>
+              <option value="tt">Transfer Time (min)</option>
+              <option value="prop">Propellant Used (kg)</option>
+            </select>
+          </div>
+          <button class="btn btn-primary" style="width:100%;margin-top:10px" onclick="window.rfs.runSweep()">RUN SWEEP</button>
+        </div>
+        <div class="sweep-results">
+          <div id="plot-sweep" style="flex:1;min-height:300px"></div>
+          <div class="table-wrap">
+            <table class="data-table"><thead><tr><th>INPUT</th><th>OUTPUT</th></tr></thead><tbody id="sweep-tbody"></tbody></table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: EXPORT -->
+    <div class="tab-pane" id="tab-export">
+      <div class="export-grid">
+        <div class="export-card">
+          <h4>⬡ JSON STATE</h4>
+          <p>Full mission state — orbital elements, maneuver sequence, telemetry log, CW solution.</p>
+          <button class="btn btn-primary btn-sm" onclick="window.rfs.exportJSON()">EXPORT JSON</button>
+        </div>
+        <div class="export-card">
+          <h4>📊 CSV TRAJECTORY</h4>
+          <p>Time-series trajectory data — altitude, velocity, range, ΔV, phase angle per time step.</p>
+          <button class="btn btn-primary btn-sm" onclick="window.rfs.exportCSV()">EXPORT CSV</button>
+        </div>
+        <div class="export-card">
+          <h4>🛰 GMAT SCRIPT</h4>
+          <p>GMAT mission script for /data/w5 — propagator, maneuver nodes, relative motion solver.</p>
+          <button class="btn btn-primary btn-sm" onclick="window.rfs.exportGMAT()">EXPORT GMAT</button>
+        </div>
+        <div class="export-card">
+          <h4>📄 TXT MANIFEST</h4>
+          <p>Human-readable mission manifest — parameters, results summary, CW solution, burn schedule.</p>
+          <button class="btn btn-primary btn-sm" onclick="window.rfs.exportTXT()">EXPORT TXT</button>
+        </div>
+        <div class="export-card">
+          <h4>🖼 PNG SNAPSHOT</h4>
+          <p>Export the current 3D orbital view as a high-resolution PNG image.</p>
+          <button class="btn btn-teal btn-sm" onclick="window.rfs.exportPNG()">EXPORT PNG</button>
+        </div>
+        <div class="export-card">
+          <h4>📋 YAML CONFIG</h4>
+          <p>YAML configuration — all parameters for reproducible mission runs and pipeline integration.</p>
+          <button class="btn btn-secondary btn-sm" onclick="window.rfs.exportYAML()">EXPORT YAML</button>
+        </div>
+      </div>
+    </div>
+  </div><!-- /sim-main -->
+</div><!-- /sim-body -->
+<script>
+window.rfs = (function(){
+  'use strict';
+
+  // ── CONSTANTS ──
+  const MU = 398600.4418; // km³/s²
+  const RE = 6371.0;      // km
+  const J2 = 1.08263e-3;
+  const G0 = 0.00981;     // km/s²
+  const RAD = Math.PI/180;
+  const DEG = 180/Math.PI;
+
+  // ── STATE ──
+  let state = {
+    computed: false,
+    playing: false,
+    animFrame: null,
+    t: 0,           // current sim time (s)
+    tMax: 0,        // total sim duration (s)
+    dt: 10,         // time step (s)
+    speed: 100,     // playback multiplier
+    orb: {},        // orbital elements
+    traj: [],       // trajectory log [{t,x,y,z,alt,vel,phase,dv}]
+    chaser: {x:0,y:0,z:0},
+    target: {x:0,y:0,z:0},
+    dvUsed: 0,
+    propLeft: 100,
+    results: {},
+    sweep: []
+  };
+
+  // ── UTILS ──
+  function p(id){ return document.getElementById(id); }
+  function pv(id){ return parseFloat(p(id).value)||0; }
+  function pvc(id){ return p(id).checked; }
+  function pvs(id){ return p(id).value; }
+  function fmt(n,d=2){ return (typeof n==='number'&&!isNaN(n))?n.toFixed(d):'—'; }
+  function fmtTime(s){
+    const h=Math.floor(s/3600), m=Math.floor((s%3600)/60), sec=Math.floor(s%60);
+    return 'T+'+String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0');
+  }
+
+  // ── ORBITAL MECHANICS ──
+  function sma(alt){ return RE + alt; }
+  function circVel(alt){ return Math.sqrt(MU/sma(alt)); }
+  function period(alt){ const a=sma(alt); return 2*Math.PI*Math.sqrt(a*a*a/MU); }
+  function visViva(r,a){ return Math.sqrt(MU*(2/r-1/a)); }
+  function hohmannDV(alt1, alt2){
+    const a1=sma(alt1), a2=sma(alt2), at=(a1+a2)/2;
+    const dv1=Math.sqrt(MU/at)*(Math.sqrt(2*a2/(a1+a2))-1) + Math.sqrt(MU/a1)*(1-Math.sqrt(2*a2/(a1+a2)));
+    // Cleaner: use vis-viva
+    const vc1=Math.sqrt(MU/a1);
+    const vt1=Math.sqrt(MU*(2/a1-1/at));
+    const vt2=Math.sqrt(MU*(2/a2-1/at));
+    const vc2=Math.sqrt(MU/a2);
+    return {dv1:Math.abs(vt1-vc1), dv2:Math.abs(vc2-vt2), total:Math.abs(vt1-vc1)+Math.abs(vc2-vt2)};
+  }
+  function biellipticDV(alt1, alt2, altInt){
+    const a1=sma(alt1), a2=sma(alt2), ai=sma(altInt);
+    const at1=(a1+ai)/2, at2=(ai+a2)/2;
+    const vc1=Math.sqrt(MU/a1), vt1a=Math.sqrt(MU*(2/a1-1/at1));
+    const vt1b=Math.sqrt(MU*(2/ai-1/at1)), vt2a=Math.sqrt(MU*(2/ai-1/at2));
+    const vt2b=Math.sqrt(MU*(2/a2-1/at2)), vc2=Math.sqrt(MU/a2);
+    return {dv1:Math.abs(vt1a-vc1),dv2:Math.abs(vt2a-vt1b),dv3:Math.abs(vc2-vt2b),
+            total:Math.abs(vt1a-vc1)+Math.abs(vt2a-vt1b)+Math.abs(vc2-vt2b)};
+  }
+  function j2RaanDrift(alt, inc){
+    const a=sma(alt); const n=Math.sqrt(MU/(a*a*a));
+    return -1.5*n*J2*(RE/a)*(RE/a)*Math.cos(inc*RAD)*DEG*86400; // deg/day
+  }
+  function j2ArgPeri(alt, inc){
+    const a=sma(alt); const n=Math.sqrt(MU/(a*a*a));
+    return 0.75*n*J2*(RE/a)*(RE/a)*(5*Math.cos(inc*RAD)**2-1)*DEG*86400;
+  }
+  function propMassRocket(m0, dv, isp){
+    return m0*(1-Math.exp(-dv/(G0*isp)));
+  }
+
+  // Keplerian position at epoch t
+  function keplerPos(a, e, inc, raan, argP, t){
+    const n=Math.sqrt(MU/(a**3));
+    let M=n*t; // mean anomaly (rad)
+    // Solve Kepler's equation (Newton's method)
+    let E=M; for(let i=0;i<50;i++){ E=E-(E-e*Math.sin(E)-M)/(1-e*Math.cos(E)); }
+    const nu=2*Math.atan2(Math.sqrt(1+e)*Math.sin(E/2), Math.sqrt(1-e)*Math.cos(E/2));
+    const r=a*(1-e*Math.cos(E));
+    // Perifocal coords
+    const xP=r*Math.cos(nu), yP=r*Math.sin(nu);
+    // Rotation matrices
+    const ci=Math.cos(inc*RAD),si=Math.sin(inc*RAD);
+    const cr=Math.cos(raan*RAD),sr=Math.sin(raan*RAD);
+    const cw=Math.cos(argP*RAD),sw=Math.sin(argP*RAD);
+    const x=(cr*cw-sr*sw*ci)*xP+(-cr*sw-sr*cw*ci)*yP;
+    const y=(sr*cw+cr*sw*ci)*xP+(-sr*sw+cr*cw*ci)*yP;
+    const z=(sw*si)*xP+(cw*si)*yP;
+    return {x,y,z,r,nu};
+  }
+
+  // Hill-Clohessy-Wiltshire relative motion
+  function cwSolution(x0,y0,z0,dx0,dy0,dz0,n,t){
+    const nt=n*t;
+    const x=  (4-3*Math.cos(nt))*x0 + Math.sin(nt)*dx0/n + 2*(1-Math.cos(nt))*dy0/n;
+    const y=  6*(Math.sin(nt)-nt)*x0 + y0 - 2*(1-Math.cos(nt))*dx0/n + (4*Math.sin(nt)-3*nt)*dy0/n;
+    const z=  z0*Math.cos(nt) + dz0*Math.sin(nt)/n;
+    const dx= 3*n*Math.sin(nt)*x0 + Math.cos(nt)*dx0 + 2*Math.sin(nt)*dy0;
+    const dy= 6*n*(Math.cos(nt)-1)*x0 - 2*Math.sin(nt)*dx0 + (4*Math.cos(nt)-3)*dy0;
+    const dz=-z0*n*Math.sin(nt) + dz0*Math.cos(nt);
+    return {x,y,z,dx,dy,dz};
+  }
+
+  // ── COMPUTE ──
+  function compute(){
+    const alt=pv('p-alt'), inc=pv('p-inc'), raan=pv('p-raan'), ecc=pv('p-ecc');
+    const mass=pv('p-mass'), thrust=pv('p-thrust'), isp=pv('p-isp'), prop0=pv('p-prop');
+    const range0=pv('p-range0'), orbits=pv('p-orbits'), manType=pvs('p-maneuver');
+    const dt=pv('p-dt');
+    const a=sma(alt), n=Math.sqrt(MU/(a**3));
+    const T=period(alt); const vc=circVel(alt);
+    const tMax=T*orbits;
+
+    // Hohmann ΔV
+    const hvObj=hohmannDV(alt-range0*0.5, alt);
+    const beObj=biellipticDV(alt-range0*0.5, alt, alt+500);
+
+    let dvTotal=manType==='hohmann'?hvObj.total:manType==='bielliptic'?beObj.total:
+                manType==='cw'?(range0*n*2):manType==='direct'?vc*0.005:hvObj.total;
+
+    const propUsed=propMassRocket(mass,dvTotal,isp);
+    const ttransfer=manType==='hohmann'?Math.PI*Math.sqrt(((sma(alt-range0*0.5)+a)/2)**3/MU):
+                   manType==='bielliptic'?Math.PI*(Math.sqrt(((sma(alt-range0*0.5)+sma(alt+500))/2)**3/MU)+Math.sqrt(((sma(alt+500)+a)/2)**3/MU)):
+                   T/2;
+
+    // J2
+    const raanDrift=j2RaanDrift(alt,inc);
+    const apDrift=j2ArgPeri(alt,inc);
+
+    // Trajectory generation
+    const traj=[];
+    let phase0=range0/a*DEG; // approximate phase angle
+    let dvAcc=0, propLeft=prop0;
+
+    for(let t=0;t<=tMax;t+=dt){
+      const pos=keplerPos(a,ecc,inc,raan,0,t);
+      // Chaser slightly behind (phase offset)
+      const phaseT=phase0*(1-Math.min(t/ttransfer,1)); // closing phase
+      const chaserPos=keplerPos(a,ecc,inc,raan,0,t-phaseT*a*RAD/n);
+      const rangeKm=Math.sqrt((pos.x-chaserPos.x)**2+(pos.y-chaserPos.y)**2+(pos.z-chaserPos.z)**2);
+      const velKm=Math.sqrt(MU*(2/pos.r-1/a));
+      const dvStep=t<ttransfer&&t<dt*2?dvTotal*0.5:t>=ttransfer&&t<ttransfer+dt*2?dvTotal*0.5:0;
+      dvAcc+=dvStep; propLeft-=propMassRocket(mass,dvStep,isp);
+      traj.push({t,x:pos.x,y:pos.y,z:pos.z,
+                 cx:chaserPos.x,cy:chaserPos.y,cz:chaserPos.z,
+                 alt:pos.r-RE,vel:velKm,range:rangeKm,dv:dvAcc,phase:phaseT,
+                 propLeft:Math.max(propLeft,0)});
+    }
+
+    state.orb={alt,inc,raan,ecc,a,n,T,vc,mass,thrust,isp,prop0,range0,orbits,dt,
+               dvTotal,propUsed,ttransfer,raanDrift,apDrift,hvObj,beObj,manType};
+    state.traj=traj; state.t=0; state.tMax=tMax; state.dt=dt;
+    state.computed=true;
+    state.results={dvTotal,propUsed,ttransfer,raanDrift,apDrift};
+
+    // Update telemetry
+    p('tv-alt').textContent=fmt(alt,0);
+    p('tv-vel').textContent=fmt(vc,3);
+    p('tv-dv').textContent=fmt(dvTotal,3);
+    p('tv-inc').textContent=fmt(inc,1);
+    p('tv-period').textContent=fmt(T/60,1);
+    p('tv-phase').textContent=fmt(phase0,1);
+    p('tv-range').textContent=fmt(range0,1);
+
+    // Results summary
+    p('rs-dv').textContent=fmt(dvTotal,3)+' km/s';
+    p('rs-tt').textContent=fmt(ttransfer/60,1)+' min';
+    p('rs-prop').textContent=fmt(propUsed,1)+' kg';
+    p('rs-phase').textContent=fmt(phase0,1)+'°';
+    p('rs-intercept').textContent=fmt(ttransfer/60,0)+' min';
+
+    // Update CW table
+    buildCWTable();
+
+    // Render plots
+    render3D();
+    plotTrajectory();
+    plotCW();
+    plotTelem();
+    updateTelemTable();
+
+    // Beacon
+    try{ localStorage.setItem('achilles_beacon_rfs',JSON.stringify({ts:Date.now(),path:'/sims/rfs-extraction',status:'LIVE',alt,inc,dvTotal,propUsed})); }catch(e){}
+
+    return state.results;
+  }
+
+  // ── 3D PLOT ──
+  function render3D(){
+    if(!state.computed) return;
+    const {a,inc,raan,ecc,n,T,orbits}=state.orb;
+    const numPts=360;
+    const tgt_x=[],tgt_y=[],tgt_z=[];
+    const cha_x=[],cha_y=[],cha_z=[];
+
+    for(let i=0;i<=numPts;i++){
+      const t=(T/numPts)*i;
+      const tp=keplerPos(a,ecc,inc,raan,0,t);
+      tgt_x.push(tp.x); tgt_y.push(tp.y); tgt_z.push(tp.z);
+      // Chaser starts phase-offset
+      const phOff=state.orb.range0/a;
+      const cp=keplerPos(a,ecc,inc,raan,0,t-phOff*T/(2*Math.PI));
+      cha_x.push(cp.x); cha_y.push(cp.y); cha_z.push(cp.z);
+    }
+
+    // Earth sphere
+    const earthPts=40;
+    const eu=[],ev=[],ex=[],ey=[],ez=[];
+    for(let i=0;i<=earthPts;i++){
+      for(let j=0;j<=earthPts;j++){
+        const theta=i/earthPts*Math.PI, phi=j/earthPts*2*Math.PI;
+        ex.push(RE*Math.sin(theta)*Math.cos(phi));
+        ey.push(RE*Math.sin(theta)*Math.sin(phi));
+        ez.push(RE*Math.cos(theta));
+      }
+    }
+    const earthX=[], earthY=[], earthZ=[];
+    for(let i=0;i<=earthPts;i++){
+      const row_x=[],row_y=[],row_z=[];
+      for(let j=0;j<=earthPts;j++){
+        const theta=i/earthPts*Math.PI, phi=j/earthPts*2*Math.PI;
+        row_x.push(RE*Math.sin(theta)*Math.cos(phi));
+        row_y.push(RE*Math.sin(theta)*Math.sin(phi));
+        row_z.push(RE*Math.cos(theta));
+      }
+      earthX.push(row_x); earthY.push(row_y); earthZ.push(row_z);
+    }
+
+    // Current positions
+    const T0=state.traj[Math.min(state.frameIdx||0, state.traj.length-1)]||state.traj[0];
+
+    const traces=[
+      // Earth
+      {type:'surface',x:earthX,y:earthY,z:earthZ,
+       colorscale:[[0,'#0B2444'],[0.4,'#1A4A7A'],[0.6,'#2B6CB0'],[1,'#4EC5C1']],
+       showscale:false,opacity:0.95,name:'Earth',
+       lighting:{ambient:0.6,diffuse:0.8,specular:0.2},
+       lightposition:{x:1e5,y:1e5,z:1e5},
+       hoverinfo:'skip'},
+      // Target orbit
+      {type:'scatter3d',mode:'lines',x:tgt_x,y:tgt_y,z:tgt_z,
+       line:{color:'#B87333',width:2},name:'Target Orbit',hoverinfo:'skip'},
+      // Chaser orbit
+      {type:'scatter3d',mode:'lines',x:cha_x,y:cha_y,z:cha_z,
+       line:{color:'#4EC5C1',width:1.5,dash:'dot'},name:'Chaser Orbit',hoverinfo:'skip'},
+      // Target spacecraft
+      {type:'scatter3d',mode:'markers+text',x:[T0.x],y:[T0.y],z:[T0.z],
+       marker:{size:8,color:'#B87333',symbol:'diamond'},text:['TARGET'],
+       textfont:{color:'#B87333',size:9},name:'Target'},
+      // Chaser spacecraft
+      {type:'scatter3d',mode:'markers+text',x:[T0.cx],y:[T0.cy],z:[T0.cz],
+       marker:{size:6,color:'#4EC5C1',symbol:'circle'},text:['CHASER'],
+       textfont:{color:'#4EC5C1',size:9},name:'Chaser'},
+      // Range line
+      {type:'scatter3d',mode:'lines',
+       x:[T0.x,T0.cx],y:[T0.y,T0.cy],z:[T0.z,T0.cz],
+       line:{color:'#C9A24A',width:1,dash:'dot'},name:'Range',hoverinfo:'skip'}
+    ];
+
+    const layout={
+      paper_bgcolor:'#0B0D10',plot_bgcolor:'#0B0D10',
+      scene:{
+        xaxis:{showgrid:false,zeroline:false,showticklabels:false,title:'',backgroundcolor:'#0B0D10'},
+        yaxis:{showgrid:false,zeroline:false,showticklabels:false,title:'',backgroundcolor:'#0B0D10'},
+        zaxis:{showgrid:false,zeroline:false,showticklabels:false,title:'',backgroundcolor:'#0B0D10'},
+        bgcolor:'#0B0D10',
+        camera:{eye:{x:1.8,y:1.2,z:0.8}},
+        aspectmode:'data'
+      },
+      margin:{l:0,r:0,t:0,b:0},
+      showlegend:true,
+      legend:{font:{family:'JetBrains Mono',size:9,color:'#8A8F9A'},
+              bgcolor:'rgba(18,21,26,0.8)',bordercolor:'#2A2F3A',x:0,y:1}
+    };
+    Plotly.react('plot-3d',traces,layout,{responsive:true,displayModeBar:false});
+    state.plot3dReady=true;
+  }
+
+  // ── TRAJECTORY PLOTS ──
+  function plotTrajectory(){
+    if(!state.traj.length) return;
+    const times=state.traj.map(d=>d.t/60);
+    const alts=state.traj.map(d=>d.alt);
+    const dv=state.traj.map(d=>d.dv);
+    const baseLayout={paper_bgcolor:'#0B0D10',plot_bgcolor:'#12151A',
+      font:{family:'JetBrains Mono',size:9,color:'#8A8F9A'},
+      margin:{l:50,r:10,t:30,b:40},
+      xaxis:{gridcolor:'#2A2F3A',color:'#8A8F9A',title:{text:'Time (min)',font:{size:9}}},
+      yaxis:{gridcolor:'#2A2F3A',color:'#8A8F9A'}};
+
+    Plotly.react('plot-alt',[
+      {x:times,y:alts,type:'scatter',mode:'lines',line:{color:'#B87333',width:2},
+       fill:'tozeroy',fillcolor:'rgba(184,115,51,0.1)',name:'Altitude (km)'}
+    ],{...baseLayout,title:{text:'Altitude vs Time',font:{size:10,color:'#B87333'}},
+       yaxis:{...baseLayout.yaxis,title:{text:'Altitude (km)',font:{size:9}}}},{responsive:true,displayModeBar:false});
+
+    // ΔV bar — burn events
+    const burns=[{label:'Burn 1',dv:state.orb.dvTotal*0.5},{label:'Burn 2',dv:state.orb.dvTotal*0.5}];
+    Plotly.react('plot-dv-bar',[
+      {x:burns.map(b=>b.label),y:burns.map(b=>b.dv),type:'bar',
+       marker:{color:['#B87333','#4EC5C1']},name:'ΔV (km/s)'}
+    ],{...baseLayout,title:{text:'ΔV Budget',font:{size:10,color:'#B87333'}},
+       yaxis:{...baseLayout.yaxis,title:{text:'ΔV (km/s)',font:{size:9}}}},{responsive:true,displayModeBar:false});
+  }
+
+  // ── CW PLOT ──
+  function plotCW(){
+    if(!state.computed) return;
+    const {a,n,range0}=state.orb;
+    // Generate CW relative trajectory
+    const x0=range0, y0=0, z0=0;
+    const n_mean=n;
+    // Initial relative velocity for approach (passive ellipse)
+    const dx0=0, dy0=-1.5*n_mean*x0, dz0=0;
+    const cwPts=[];
+    for(let t=0;t<=state.tMax;t+=state.dt){
+      const cw=cwSolution(x0,y0,z0,dx0,dy0,dz0,n_mean,t);
+      cwPts.push(cw);
+    }
+    const cx=cwPts.map(d=>d.x), cy=cwPts.map(d=>d.y);
+    Plotly.react('plot-cw',[
+      {x:cx,y:cy,type:'scatter',mode:'lines',
+       line:{color:'#4EC5C1',width:2},name:'Relative Trajectory (CW)',
+       fill:'none'},
+      {x:[x0],y:[0],type:'scatter',mode:'markers',
+       marker:{size:10,color:'#B87333',symbol:'diamond'},name:'Target (origin)'},
+      {x:[cx[cx.length-1]],y:[cy[cy.length-1]],type:'scatter',mode:'markers',
+       marker:{size:8,color:'#C9A24A',symbol:'circle'},name:'Chaser End'}
+    ],{paper_bgcolor:'#0B0D10',plot_bgcolor:'#12151A',
+       font:{family:'JetBrains Mono',size:9,color:'#8A8F9A'},
+       margin:{l:50,r:10,t:30,b:40},
+       title:{text:'CW Relative Motion (LVLH Frame)',font:{size:10,color:'#B87333'}},
+       xaxis:{gridcolor:'#2A2F3A',color:'#8A8F9A',title:{text:'Radial (km)',font:{size:9}}},
+       yaxis:{gridcolor:'#2A2F3A',color:'#8A8F9A',title:{text:'Along-track (km)',font:{size:9}}},
+       showlegend:true,legend:{font:{family:'JetBrains Mono',size:8,color:'#8A8F9A'},bgcolor:'rgba(18,21,26,0.8)'}
+    },{responsive:true,displayModeBar:false});
+  }
+
+  // ── CW TABLE ──
+  function buildCWTable(){
+    if(!state.computed) return;
+    const {a,n,range0,dvTotal,ttransfer,vc,T}=state.orb;
+    const rows=[
+      ['Mean Motion (n)','rad/s',fmt(n,6)],
+      ['Initial Range','km',fmt(range0,1)],
+      ['CW Approach ΔV','km/s',fmt(dvTotal,4)],
+      ['Transfer Time','min',fmt(ttransfer/60,1)],
+      ['Orbital Velocity','km/s',fmt(vc,4)],
+      ['Orbital Period','min',fmt(T/60,1)],
+      ['Safety Ellipse a','km',fmt(range0*2,1)],
+      ['Safety Ellipse b','km',fmt(range0,1)]
+    ];
+    const tbody=p('cw-tbody');
+    tbody.innerHTML=rows.map(r=>`<tr><td>${r[0]}</td><td style="color:var(--teal)">${r[2]}</td><td style="color:var(--muted)">${r[1]}</td></tr>`).join('');
+    p('cw-msg').textContent='CW proximity solution computed. Passive ellipse approach.';
+    p('cw-msg').className='msg-box';
+  }
+
+  // ── TELEMETRY PLOT ──
+  function plotTelem(){
+    if(!state.traj.length) return;
+    const param=pvs('telem-param');
+    const times=state.traj.map(d=>d.t/60);
+    const pmap={alt:'alt',vel:'vel',dv:'dv',range:'range',phase:'phase',
+                energy:null};
+    let ydata;
+    if(param==='energy') ydata=state.traj.map(d=>-MU/(2*state.orb.a));
+    else ydata=state.traj.map(d=>d[param]);
+    const labels={alt:'Altitude (km)',vel:'Velocity (km/s)',dv:'ΔV Used (km/s)',
+                  range:'Range (km)',phase:'Phase Angle (°)',energy:'Spec. Energy (km²/s²)'};
+    Plotly.react('plot-telem',[
+      {x:times,y:ydata,type:'scatter',mode:'lines',
+       line:{color:'#4EC5C1',width:2},fill:'tozeroy',
+       fillcolor:'rgba(78,197,193,0.08)',name:labels[param]}
+    ],{paper_bgcolor:'#0B0D10',plot_bgcolor:'#12151A',
+       font:{family:'JetBrains Mono',size:9,color:'#8A8F9A'},
+       margin:{l:55,r:10,t:20,b:40},
+       xaxis:{gridcolor:'#2A2F3A',color:'#8A8F9A',title:{text:'Time (min)',font:{size:9}}},
+       yaxis:{gridcolor:'#2A2F3A',color:'#8A8F9A',title:{text:labels[param],font:{size:9}}}
+    },{responsive:true,displayModeBar:false});
+  }
+
+  // ── TELEM TABLE ──
+  function updateTelemTable(){
+    const rows=state.traj.filter((_,i)=>i%Math.max(1,Math.floor(state.traj.length/30))===0);
+    p('telem-tbody').innerHTML=rows.map(r=>
+      `<tr><td>${fmt(r.t/60,1)}</td><td>${fmt(r.alt,1)}</td><td>${fmt(r.vel,3)}</td>
+       <td>${fmt(r.range,1)}</td><td>${fmt(r.dv,4)}</td><td>${fmt(r.phase,1)}</td></tr>`
+    ).join('');
+  }
+
+  // ── ANIMATION ──
+  let animInterval=null;
+  state.frameIdx=0;
+
+  function playPause(){
+    if(!state.computed){ compute(); return; }
+    state.playing=!state.playing;
+    p('pb-play').textContent=state.playing?'⏸ PAUSE':'▶ PLAY';
+    p('btn-run').textContent=state.playing?'⏸ PAUSE':'▶ RUN SIM';
+    if(state.playing) startAnim();
+    else stopAnim();
+  }
+
+  function startAnim(){
+    if(animInterval) clearInterval(animInterval);
+    const spd=parseInt(pvs('anim-speed')||100);
+    // Refresh rate ~30fps
+    animInterval=setInterval(()=>{
+      if(!state.playing){ stopAnim(); return; }
+      state.frameIdx=Math.min(state.frameIdx+Math.max(1,Math.floor(spd/10)), state.traj.length-1);
+      updateAnimFrame();
+      if(state.frameIdx>=state.traj.length-1){ state.playing=false; stopAnim(); p('pb-play').textContent='▶ PLAY'; }
+    }, 33);
+  }
+
+  function stopAnim(){ if(animInterval){clearInterval(animInterval);animInterval=null;} }
+
+  function updateAnimFrame(){
+    if(!state.traj.length) return;
+    const fr=state.traj[state.frameIdx];
+    // Update telemetry bar
+    p('tv-alt').textContent=fmt(fr.alt,0);
+    p('tv-vel').textContent=fmt(fr.vel,3);
+    p('tv-dv').textContent=fmt(fr.dv,4);
+    p('tv-range').textContent=fmt(fr.range,1);
+    p('tv-phase').textContent=fmt(fr.phase,1);
+    p('tv-time').textContent=fmtTime(fr.t);
+    p('anim-time').textContent=fmtTime(fr.t);
+    // Progress bar
+    const pct=(state.frameIdx/(state.traj.length-1))*100;
+    p('prog-fill').style.width=pct+'%';
+    // Update 3D trace positions
+    if(state.plot3dReady){
+      Plotly.restyle('plot-3d',{x:[[fr.x],[fr.cx],[fr.x,fr.cx]],y:[[fr.y],[fr.cy],[fr.y,fr.cy]],z:[[fr.z],[fr.cz],[fr.z,fr.cz]]},[3,4,5]);
+    }
+  }
+
+  function stepForward(){ state.frameIdx=Math.min(state.frameIdx+1,state.traj.length-1); updateAnimFrame(); }
+  function resetAnim(){ state.frameIdx=0; updateAnimFrame(); }
+
+  function seekAnim(e){
+    const track=p('prog-track'); const rect=track.getBoundingClientRect();
+    const pct=Math.max(0,Math.min(1,(e.clientX-rect.left)/rect.width));
+    state.frameIdx=Math.round(pct*(state.traj.length-1));
+    updateAnimFrame();
+  }
+
+  // ── SWEEP ──
+  function runSweep(){
+    const varName=pvs('sw-var'), start=pv('sw-start'), end=pv('sw-end'), steps=pv('sw-steps');
+    const outName=pvs('sw-out');
+    const vals=[]; const results=[];
+    for(let i=0;i<steps;i++){
+      const v=start+(end-start)*i/(steps-1);
+      let res=0;
+      const alt=varName==='alt'?v:pv('p-alt');
+      const inc=varName==='inc'?v:pv('p-inc');
+      const ecc=varName==='ecc'?v:pv('p-ecc');
+      const range0=varName==='range'?v:pv('p-range0');
+      const mass=varName==='mass'?v:pv('p-mass');
+      const isp=varName==='isp'?v:pv('p-isp');
+      const a=sma(alt);
+      if(outName==='dv') res=hohmannDV(alt-range0*0.5,alt).total;
+      else if(outName==='period') res=period(alt)/60;
+      else if(outName==='vel') res=circVel(alt);
+      else if(outName==='tt') res=Math.PI*Math.sqrt(((sma(alt-range0*0.5)+a)/2)**3/MU)/60;
+      else if(outName==='prop') res=propMassRocket(mass,hohmannDV(alt-range0*0.5,alt).total,isp);
+      vals.push(v); results.push(res);
+    }
+    state.sweep={vals,results};
+    const outLabels={dv:'Transfer ΔV (km/s)',period:'Orbital Period (min)',vel:'Circular Vel (km/s)',tt:'Transfer Time (min)',prop:'Propellant (kg)'};
+    const varLabels={alt:'Altitude (km)',inc:'Inclination (°)',ecc:'Eccentricity',range:'Initial Range (km)',mass:'Chaser Mass (kg)',isp:'Isp (s)'};
+    Plotly.react('plot-sweep',[
+      {x:vals,y:results,type:'scatter',mode:'lines+markers',
+       line:{color:'#B87333',width:2},marker:{color:'#C9A24A',size:4},name:outLabels[outName]}
+    ],{paper_bgcolor:'#0B0D10',plot_bgcolor:'#12151A',
+       font:{family:'JetBrains Mono',size:9,color:'#8A8F9A'},
+       margin:{l:55,r:10,t:25,b:40},
+       title:{text:`Sweep: ${varLabels[varName]} vs ${outLabels[outName]}`,font:{size:10,color:'#B87333'}},
+       xaxis:{gridcolor:'#2A2F3A',color:'#8A8F9A',title:{text:varLabels[varName],font:{size:9}}},
+       yaxis:{gridcolor:'#2A2F3A',color:'#8A8F9A',title:{text:outLabels[outName],font:{size:9}}}
+    },{responsive:true,displayModeBar:false});
+    p('sweep-tbody').innerHTML=vals.map((v,i)=>`<tr><td>${fmt(v,3)}</td><td style="color:var(--teal)">${fmt(results[i],4)}</td></tr>`).join('');
+  }
+
+  // ── TAB SWITCH ──
+  function tab(name){
+    document.querySelectorAll('.tab-btn').forEach(b=>{b.classList.remove('active');if(b.textContent.toLowerCase().includes(name.toLowerCase().slice(0,3)))b.classList.add('active');});
+    document.querySelectorAll('.tab-pane').forEach(p=>{p.classList.remove('active');});
+    const el=document.getElementById('tab-'+name);
+    if(el) el.classList.add('active');
+    // Trigger resize for Plotly
+    setTimeout(()=>{
+      if(name==='3d'&&state.plot3dReady) Plotly.relayout('plot-3d',{});
+      if(name==='traj') {Plotly.relayout('plot-alt',{}); Plotly.relayout('plot-dv-bar',{});}
+      if(name==='telem') plotTelem();
+      if(name==='rv') Plotly.relayout('plot-cw',{});
+    },50);
+  }
+
+  // ── DATASPACE ──
+  function sendDS(ws){
+    if(!state.computed){ p('ds-status').textContent='⚠ Compute orbit first.'; return; }
+    const payload={ts:Date.now(),tool:'rfs_extraction',v:'2.0.0',
+      orbitalElements:state.orb, results:state.results,
+      trajectory:state.traj.filter((_,i)=>i%10===0)};
+    const targets=ws==='all'?['w1','w2','w3','w4','w5','w6']:[ws];
+    try{
+      targets.forEach(w=>{
+        localStorage.setItem('achilles_sim_rfs_'+w, JSON.stringify(payload));
+        // Also flag the relevant calc workspace
+        if(w==='w2') localStorage.setItem('achilles_calc_orbital_w2_rfs_flag', Date.now());
+      });
+      p('ds-status').textContent='✓ Routed to: '+targets.map(w=>w.toUpperCase()).join(', ')+' ['+new Date().toTimeString().slice(0,5)+']';
+    }catch(e){ p('ds-status').textContent='⚠ DS write error: '+e.message; }
+  }
+
+  // ── EXPORT ──
+  function exportJSON(){
+    const d=JSON.stringify({meta:{tool:'RFS Extraction',v:'2.0.0',ts:new Date().toISOString()},orb:state.orb,results:state.results,traj:state.traj},null,2);
+    dl(d,'rfs_mission_state.json','application/json');
+  }
+  function exportCSV(){
+    const h='time_min,alt_km,vel_kms,range_km,dv_kms,phase_deg,prop_kg\n';
+    const rows=state.traj.map(r=>`${fmt(r.t/60,2)},${fmt(r.alt,2)},${fmt(r.vel,4)},${fmt(r.range,3)},${fmt(r.dv,4)},${fmt(r.phase,2)},${fmt(r.propLeft,2)}`).join('\n');
+    dl(h+rows,'rfs_trajectory.csv','text/csv');
+  }
+  function exportTXT(){
+    const o=state.orb, r=state.results;
+    const t=`RFS EXTRACTION — MISSION MANIFEST
+================================
+Generated: ${new Date().toISOString()}
+Tool Version: v2.0.0
+
+ORBITAL PARAMETERS
+  Target Altitude: ${fmt(o.alt,0)} km
+  Inclination: ${fmt(o.inc,2)} °
+  RAAN: ${fmt(o.raan,2)} °
+  Eccentricity: ${fmt(o.ecc,4)}
+  Semi-major Axis: ${fmt(o.a,2)} km
+  Orbital Period: ${fmt(o.T/60,2)} min
+  Circular Velocity: ${fmt(o.vc,4)} km/s
+
+RENDEZVOUS SOLUTION
+  Maneuver Type: ${o.manType}
+  Total ΔV: ${fmt(r.dvTotal,4)} km/s
+  Transfer Time: ${fmt(r.ttransfer/60,2)} min
+  Propellant Used: ${fmt(r.propUsed,2)} kg
+
+J2 PERTURBATIONS
+  RAAN Drift: ${fmt(o.raanDrift,4)} °/day
+  Arg Peri Drift: ${fmt(o.apDrift,4)} °/day
+
+HOHMANN SOLUTION
+  ΔV₁: ${fmt(o.hvObj.dv1,5)} km/s
+  ΔV₂: ${fmt(o.hvObj.dv2,5)} km/s
+  Total: ${fmt(o.hvObj.total,5)} km/s
+`;
+    dl(t,'rfs_manifest.txt','text/plain');
+  }
+  function exportGMAT(){
+    const o=state.orb;
+    const g=`% RFS Extraction — GMAT Mission Script
+% Generated: ${new Date().toISOString()}
+% Tool: RFS Extraction v2.0.0 — Römer Industries / EMASSC
+
+Create Spacecraft TARGET;
+TARGETTING.SMA = ${fmt(o.a,2)};
+TARGETTING.ECC = ${fmt(o.ecc,5)};
+TARGETTING.INC = ${fmt(o.inc,4)};
+TARGETTING.RAAN = ${fmt(o.raan,4)};
+TARGETTING.AOP = 0;
+TARGETTING.TA = 0;
+
+Create Spacecraft CHASER;
+CHASER.SMA = ${fmt(o.a,2)};
+CHASER.ECC = ${fmt(o.ecc,5)};
+CHASER.INC = ${fmt(o.inc,4)};
+CHASER.RAAN = ${fmt(o.raan,4)};
+CHASER.AOP = 0;
+CHASER.TA = ${fmt(state.orb.range0/o.a*180/Math.PI,4)};
+CHASER.DryMass = ${fmt(o.mass,1)};
+CHASER.Tanks = {ChemicalTank};
+
+Create ChemicalThruster MainEngine;
+MainEngine.Isp = ${fmt(o.isp,1)};
+
+Create ForceModel FM;
+FM.GravityField.Earth.Degree = 4;
+FM.GravityField.Earth.Order = 4;
+
+Create Propagator Prop;
+Prop.FM = FM;
+
+BeginMissionSequence
+  Propagate Prop(CHASER, TARGET) {CHASER.ElapsedSecs = ${fmt(o.ttransfer,0)}};
+  Maneuver MainEngine(CHASER) {CHASER.DeltaVX = ${fmt(o.dvTotal*0.5,5)}, CHASER.DeltaVY = 0, CHASER.DeltaVZ = 0};
+  Propagate Prop(CHASER, TARGET) {CHASER.ElapsedSecs = ${fmt(o.ttransfer,0)}};
+  Maneuver MainEngine(CHASER) {CHASER.DeltaVX = ${fmt(o.dvTotal*0.5,5)}, CHASER.DeltaVY = 0, CHASER.DeltaVZ = 0};
+`;
+    dl(g,'rfs_gmat_mission.script','text/plain');
+  }
+  function exportYAML(){
+    const o=state.orb,r=state.results;
+    const y=`# RFS Extraction YAML Config — v2.0.0
+meta:
+  tool: RFS Extraction
+  version: 2.0.0
+  generated: "${new Date().toISOString()}"
+orbital:
+  altitude_km: ${fmt(o.alt,1)}
+  inclination_deg: ${fmt(o.inc,2)}
+  raan_deg: ${fmt(o.raan,2)}
+  eccentricity: ${fmt(o.ecc,5)}
+vehicle:
+  mass_kg: ${fmt(o.mass,1)}
+  thrust_n: ${fmt(o.thrust,3)}
+  isp_s: ${fmt(o.isp,1)}
+  propellant_kg: ${fmt(o.prop0,1)}
+results:
+  dv_total_kms: ${fmt(r.dvTotal,5)}
+  propellant_used_kg: ${fmt(r.propUsed,3)}
+  transfer_time_min: ${fmt(r.ttransfer/60,2)}
+`;
+    dl(y,'rfs_config.yaml','text/plain');
+  }
+  function exportPNG(){ if(state.plot3dReady) Plotly.downloadImage('plot-3d',{format:'png',filename:'rfs_3d_orbit',width:1400,height:900}); }
+  function dl(content,filename,mime){ const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([content],{type:mime}));a.download=filename;a.click(); }
+
+  function run(){ if(!state.computed) compute(); playPause(); }
+  function reset(){ stopAnim(); state.frameIdx=0; state.playing=false; p('pb-play').textContent='▶ PLAY'; p('btn-run').textContent='▶ RUN SIM'; updateAnimFrame(); }
+
+  // ── INIT ──
+  function init(){
+    // Beacon ping
+    try{ localStorage.setItem('achilles_beacon_rfs',JSON.stringify({ts:Date.now(),path:'/sims/rfs-extraction',status:'LIVE'})); }catch(e){}
+    p('rfs-beacon-ts').textContent='Beacon: '+new Date().toLocaleTimeString();
+    // Build initial 3D from defaults
+    compute();
+  }
+
+  return {compute,run,playPause,stepForward,resetAnim,seekAnim,tab,sendDS,plotTelem,runSweep,
+          exportJSON,exportCSV,exportTXT,exportGMAT,exportYAML,exportPNG,reset,init};
+})();
+
+window.addEventListener('DOMContentLoaded',()=>window.rfs.init());
+if(document.readyState!=='loading') window.rfs.init();
+</script>
+</body></html>
