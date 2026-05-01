@@ -1,0 +1,823 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>EMFF Node — Electromagnetic Formation Flight | Römer Industries</title>
+<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0B0D10;--surface:#12151A;--surface2:#1A1E25;--surface3:#222831;
+  --copper:#B87333;--gold:#C9A24A;--teal:#4EC5C1;--cyan:#00E5FF;
+  --ivory:#F2F1EC;--muted:#8A8F9A;--border:#2A2F3A;
+  --font-ui:'Inter',system-ui,sans-serif;--font-data:'JetBrains Mono',monospace;
+}
+html,body{background:var(--bg);color:var(--ivory);font-family:var(--font-ui);font-size:13px;height:100%;overflow-x:hidden}
+.ops-tracker{display:flex;align-items:center;justify-content:space-between;padding:7px 14px;background:#0A0C0F;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:6px;position:sticky;top:0;z-index:100}
+.ops-beacon{display:flex;align-items:center;gap:8px}
+.beacon-dot{width:8px;height:8px;border-radius:50%;background:var(--teal);box-shadow:0 0 6px var(--teal);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.ops-title{font-family:var(--font-data);font-size:11px;font-weight:700;color:var(--copper);letter-spacing:1.5px;text-transform:uppercase}
+.ops-desc{font-family:var(--font-data);font-size:9px;color:var(--muted);letter-spacing:0.5px}
+.ops-nav{display:flex;gap:4px;flex-wrap:wrap;align-items:center}
+.nav-pill{font-family:var(--font-data);font-size:9px;font-weight:700;padding:3px 7px;border-radius:3px;border:1px solid var(--border);color:var(--muted);cursor:pointer;text-decoration:none;letter-spacing:0.8px;transition:all 0.2s;background:transparent}
+.nav-pill:hover{border-color:var(--copper);color:var(--copper)}
+.nav-pill.active{background:var(--copper);color:#0B0D10;border-color:var(--copper)}
+.nav-pill.w-pill{border-color:#2A3040;color:#4A5060}
+.nav-pill.w-pill:hover{border-color:var(--teal);color:var(--teal)}
+.beacon-bar{background:#090B0E;border-bottom:1px solid var(--border);padding:4px 14px;display:flex;align-items:center;gap:10px}
+.beacon-live{font-family:var(--font-data);font-size:9px;color:var(--teal);font-weight:700;letter-spacing:1px}
+.beacon-path{font-family:var(--font-data);font-size:9px;color:var(--muted)}
+.beacon-sep{color:var(--border)}
+.beacon-brand{font-family:var(--font-data);font-size:9px;color:var(--copper)}
+.sim-header{padding:14px 18px 10px;border-bottom:1px solid var(--border);background:var(--surface)}
+.sim-title{font-family:var(--font-ui);font-size:20px;font-weight:700;color:var(--copper);letter-spacing:0.5px;margin-bottom:3px}
+.sim-desc{font-size:11px;color:var(--muted);margin-bottom:8px}
+.sim-badges{display:flex;gap:6px;flex-wrap:wrap}
+.badge{font-family:var(--font-data);font-size:9px;padding:2px 8px;border-radius:2px;border:1px solid var(--border);color:var(--muted)}
+.badge.teal{border-color:var(--teal);color:var(--teal)}
+.badge.copper{border-color:var(--copper);color:var(--copper)}
+.badge.gold{border-color:var(--gold);color:var(--gold)}
+.telem-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border-bottom:1px solid var(--border)}
+.telem-cell{background:var(--surface2);padding:8px 10px}
+.telem-label{font-family:var(--font-data);font-size:8px;color:var(--muted);letter-spacing:0.8px;text-transform:uppercase;margin-bottom:2px}
+.telem-val{font-family:var(--font-data);font-size:18px;font-weight:700;color:var(--teal);line-height:1}
+.telem-unit{font-family:var(--font-data);font-size:9px;color:var(--muted)}
+.telem-cell.warning .telem-val{color:var(--gold)}
+.sim-body{display:grid;grid-template-columns:260px 1fr;height:calc(100vh - 115px);min-height:580px}
+.sim-controls{background:var(--surface);border-right:1px solid var(--border);overflow-y:auto}
+.sim-main{display:flex;flex-direction:column;overflow:hidden;background:var(--bg)}
+.ctrl-section{border-bottom:1px solid var(--border);padding:12px 14px}
+.ctrl-label{font-family:var(--font-data);font-size:9px;font-weight:700;color:var(--copper);letter-spacing:1.2px;text-transform:uppercase;margin-bottom:8px}
+.ctrl-row{margin-bottom:8px}
+.ctrl-row label{display:block;font-size:10px;color:var(--muted);margin-bottom:3px;font-family:var(--font-data)}
+.ctrl-row input[type=number],.ctrl-row select{width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--ivory);padding:5px 8px;border-radius:3px;font-family:var(--font-data);font-size:11px}
+.ctrl-row input[type=number]:focus,.ctrl-row select:focus{outline:none;border-color:var(--copper)}
+.ctrl-row select option{background:var(--surface2)}
+.range-wrap{display:flex;align-items:center;gap:8px}
+.ctrl-row input[type=range]{flex:1;accent-color:var(--copper);height:3px}
+.range-val{font-family:var(--font-data);font-size:10px;color:var(--gold);min-width:50px;text-align:right}
+.tab-bar{display:flex;background:var(--surface);border-bottom:1px solid var(--border);padding:0 14px}
+.tab-btn{font-family:var(--font-data);font-size:10px;font-weight:600;padding:9px 14px;cursor:pointer;border:none;background:transparent;color:var(--muted);letter-spacing:0.8px;border-bottom:2px solid transparent;transition:all 0.2s}
+.tab-btn:hover{color:var(--ivory)}
+.tab-btn.active{color:var(--copper);border-bottom-color:var(--copper)}
+.tab-content{flex:1;overflow:hidden}
+.tab-pane{display:none;height:100%;overflow:auto}
+.tab-pane.active{display:flex;flex-direction:column}
+.plot-container{flex:1;min-height:350px}
+.btn{font-family:var(--font-data);font-size:10px;font-weight:700;padding:6px 14px;border-radius:3px;border:none;cursor:pointer;letter-spacing:0.8px;transition:all 0.2s}
+.btn-primary{background:var(--copper);color:#0B0D10}
+.btn-primary:hover{background:var(--gold)}
+.btn-secondary{background:transparent;border:1px solid var(--border);color:var(--muted)}
+.btn-secondary:hover{border-color:var(--teal);color:var(--teal)}
+.btn-teal{background:var(--teal);color:#0B0D10}
+.btn-sm{padding:4px 10px;font-size:9px}
+.btn-row{display:flex;gap:6px;flex-wrap:wrap;padding:8px 14px}
+.playback-bar{display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--surface2);border-bottom:1px solid var(--border)}
+.time-display{font-family:var(--font-data);font-size:12px;color:var(--teal);min-width:80px}
+.progress-track{flex:1;height:4px;background:var(--border);border-radius:2px;cursor:pointer}
+.progress-fill{height:100%;background:var(--copper);border-radius:2px;transition:width 0.1s}
+.sweep-grid{display:grid;grid-template-columns:250px 1fr;gap:0;height:100%}
+.sweep-config{padding:14px;border-right:1px solid var(--border);overflow-y:auto}
+.export-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:14px}
+.export-card{background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:12px}
+.export-card h4{font-family:var(--font-data);font-size:10px;color:var(--copper);letter-spacing:1px;margin-bottom:6px}
+.export-card p{font-size:10px;color:var(--muted);margin-bottom:10px;line-height:1.5}
+.ds-panel{padding:12px 14px;border-top:1px solid var(--border);background:var(--surface)}
+.ds-title{font-family:var(--font-data);font-size:9px;color:var(--teal);letter-spacing:1px;margin-bottom:8px;font-weight:700}
+.ds-btns{display:flex;gap:4px;flex-wrap:wrap}
+.ds-btn{font-family:var(--font-data);font-size:9px;font-weight:700;padding:4px 10px;border-radius:3px;background:var(--surface3);border:1px solid var(--border);color:var(--muted);cursor:pointer;transition:all 0.2s}
+.ds-btn:hover{border-color:var(--teal);color:var(--teal)}
+.ds-btn.all{border-color:var(--copper);color:var(--copper)}
+.ds-btn.all:hover{background:var(--copper);color:#0B0D10}
+.ds-status{font-family:var(--font-data);font-size:9px;color:var(--gold);margin-top:6px;min-height:14px}
+.data-table{width:100%;border-collapse:collapse;font-family:var(--font-data);font-size:10px}
+.data-table th{background:var(--surface3);color:var(--copper);padding:6px 10px;text-align:left;font-size:9px;letter-spacing:0.8px;border-bottom:1px solid var(--border)}
+.data-table td{padding:5px 10px;border-bottom:1px solid var(--border);color:var(--ivory)}
+.data-table tr:hover td{background:var(--surface2)}
+.table-wrap{overflow-x:auto;max-height:250px;overflow-y:auto}
+.msg-box{margin:10px 14px;padding:8px 12px;border-radius:3px;font-family:var(--font-data);font-size:10px;border-left:3px solid var(--teal);background:rgba(78,197,193,0.07);color:var(--teal)}
+.results-summary{padding:8px 14px;background:var(--surface2);border-bottom:1px solid var(--border);display:flex;gap:14px;flex-wrap:wrap}
+.rs-item{display:flex;flex-direction:column;gap:2px}
+.rs-label{font-family:var(--font-data);font-size:8px;color:var(--muted);letter-spacing:0.8px}
+.rs-val{font-family:var(--font-data);font-size:13px;color:var(--teal);font-weight:700}
+.node-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:8px 0}
+</style></head><body>
+<div class="ops-tracker">
+  <div class="ops-beacon">
+    <div class="beacon-dot"></div>
+    <div>
+      <div class="ops-title">EMFF NODE — ELECTROMAGNETIC FORMATION FLIGHT</div>
+      <div class="ops-desc">3D EM formation · Biot-Savart dipole forces · Formation control · Plotly 3D · /sim/node</div>
+    </div>
+  </div>
+  <div class="ops-nav">
+    <a class="nav-pill calc" href="/calc/orbital">ORB</a>
+    <a class="nav-pill calc" href="/calc/launch">LW</a>
+    <a class="nav-pill calc" href="/calc/magnetostatics">MAG</a>
+    <a class="nav-pill calc" href="/calc/energy">PWR</a>
+    <a class="nav-pill calc" href="/calc/fluids">FLD</a>
+    <a class="nav-pill sim" href="/sims/rfs-extraction">RFS</a>
+    <a class="nav-pill sim active" href="/sim/node">EMFF</a>
+    <a class="nav-pill sim" href="/sim/fields">EMF</a>
+    <a class="nav-pill sim" href="/sim/re-entry">ENTRY</a>
+    <a class="nav-pill w1" href="/w1/data">W1</a>
+    <a class="nav-pill w2" href="/w2/data">W2</a>
+    <a class="nav-pill w3" href="/w3/data">W3</a>
+    <a class="nav-pill w4" href="/w4/data">W4</a>
+    <a class="nav-pill w5" href="/w5/data">W5</a>
+    <a class="nav-pill w6" href="/w6/data">W6</a>
+    <a class="nav-pill util" href="/data/achilles">ACH</a>
+    <a class="nav-pill util" href="/library">LIB</a>
+    <a class="nav-pill util" href="/gmat">GMAT</a>
+    <a class="nav-pill util" href="/dash">DASH</a>
+  </div>
+</div>
+<div class="beacon-bar">
+  <span class="beacon-live">● LIVE</span>
+  <span class="beacon-path">/sim/node</span>
+  <span class="beacon-sep">·</span>
+  <span class="beacon-path">Universal — callable by all workspaces &amp; dataspaces</span>
+  <span class="beacon-sep">·</span>
+  <span class="beacon-brand">Römer Industries / EMASSC</span>
+  <span class="beacon-sep">·</span>
+  <span class="beacon-path" id="emff-beacon-ts"></span>
+</div>
+<div class="sim-header">
+  <div class="sim-title">EMFF Node — Electromagnetic Formation Flight</div>
+  <div class="sim-desc">3D multi-satellite EM formation · Biot-Savart dipole-dipole forces · Formation stability analysis · PD control law · Power budget per node</div>
+  <div class="sim-badges">
+    <span class="badge teal"></span>
+    <span class="badge">SI Units</span>
+    <span class="badge copper">Universal Tool — W1–W6 Callable</span>
+    <span class="badge teal">Plotly 3D Formation</span>
+    <span class="badge gold">Animated Playback</span>
+    <span class="badge">JetBrains Mono · Inter</span>
+  </div>
+</div>
+<div class="telem-grid">
+  <div class="telem-cell"><div class="telem-label">NODE COUNT</div><div class="telem-val" id="tv-nodes">3</div><div class="telem-unit">nodes</div></div>
+  <div class="telem-cell"><div class="telem-label">SEPARATION</div><div class="telem-val" id="tv-sep">50</div><div class="telem-unit">m</div></div>
+  <div class="telem-cell warning"><div class="telem-label">EM FORCE (MAX)</div><div class="telem-val" id="tv-force">—</div><div class="telem-unit">mN</div></div>
+  <div class="telem-cell"><div class="telem-label">TOTAL CURRENT</div><div class="telem-val" id="tv-current">1000</div><div class="telem-unit">A</div></div>
+  <div class="telem-cell"><div class="telem-label">FIELD STRENGTH</div><div class="telem-val" id="tv-field">1.0</div><div class="telem-unit">T</div></div>
+  <div class="telem-cell"><div class="telem-label">POWER / NODE</div><div class="telem-val" id="tv-power">—</div><div class="telem-unit">W</div></div>
+  <div class="telem-cell"><div class="telem-label">FORMATION ERR</div><div class="telem-val" id="tv-err">0.0</div><div class="telem-unit">m</div></div>
+  <div class="telem-cell"><div class="telem-label">SIM TIME</div><div class="telem-val" id="tv-time">T+00:00</div><div class="telem-unit">hh:mm</div></div>
+</div>
+<div class="sim-body">
+  <div class="sim-controls">
+    <div class="ctrl-section">
+      <div class="ctrl-label">⚡ FORMATION CONFIG</div>
+      <div class="ctrl-row">
+        <label>Node Count</label>
+        <select id="p-nodes" onchange="window.emff.updateNodeCount()">
+          <option value="2">2 Nodes</option>
+          <option value="3" selected>3 Nodes</option>
+          <option value="4">4 Nodes</option>
+          <option value="5">5 Nodes</option>
+        </select>
+      </div>
+      <div class="ctrl-row">
+        <label>Formation Type</label>
+        <select id="p-formation">
+          <option value="triangle" selected>Triangle</option>
+          <option value="line">Line</option>
+          <option value="square">Square</option>
+          <option value="diamond">Diamond</option>
+          <option value="pentagon">Pentagon</option>
+        </select>
+      </div>
+      <div class="ctrl-row">
+        <label>Separation (m)</label>
+        <div class="range-wrap">
+          <input type="range" id="p-sep" min="5" max="500" value="50" step="5" oninput="document.getElementById('v-sep').textContent=this.value+'m';document.getElementById('tv-sep').textContent=this.value">
+          <span class="range-val" id="v-sep">50m</span>
+        </div>
+      </div>
+      <div class="ctrl-row">
+        <label>Orbital Altitude (km)</label>
+        <input type="number" id="p-alt" value="400" min="200" max="2000" step="10">
+      </div>
+    </div>
+    <div class="ctrl-section">
+      <div class="ctrl-label">🔋 EM PARAMETERS</div>
+      <div class="ctrl-row">
+        <label>Field Strength (T)</label>
+        <div class="range-wrap">
+          <input type="range" id="p-field" min="0.1" max="20" value="1" step="0.1" oninput="document.getElementById('v-field').textContent=parseFloat(this.value).toFixed(1)+'T';document.getElementById('tv-field').textContent=parseFloat(this.value).toFixed(1)">
+          <span class="range-val" id="v-field">1.0T</span>
+        </div>
+      </div>
+      <div class="ctrl-row">
+        <label>Coil Current (A)</label>
+        <input type="number" id="p-current" value="1000" min="10" max="50000" step="100" oninput="document.getElementById('tv-current').textContent=this.value">
+      </div>
+      <div class="ctrl-row">
+        <label>Coil Turns</label>
+        <input type="number" id="p-turns" value="100" min="1" max="10000" step="10">
+      </div>
+      <div class="ctrl-row">
+        <label>Coil Radius (m)</label>
+        <input type="number" id="p-radius" value="0.5" min="0.01" max="5" step="0.1">
+      </div>
+      <div class="ctrl-row">
+        <label>Dipole Alignment</label>
+        <select id="p-align">
+          <option value="aligned" selected>Aligned</option>
+          <option value="anti">Anti-aligned</option>
+          <option value="perp">Perpendicular</option>
+          <option value="custom">Custom</option>
+        </select>
+      </div>
+    </div>
+    <div class="ctrl-section">
+      <div class="ctrl-label">🎮 CONTROL LAW</div>
+      <div class="ctrl-row">
+        <label>Control Mode</label>
+        <select id="p-control">
+          <option value="hold" selected>Formation Hold (PD)</option>
+          <option value="reconfig">Reconfiguration (LQR)</option>
+          <option value="keepout">Station Keeping</option>
+          <option value="open">Open Loop</option>
+        </select>
+      </div>
+      <div class="ctrl-row">
+        <label>Node Mass (kg each)</label>
+        <input type="number" id="p-mass" value="50" min="1" max="5000" step="1">
+      </div>
+      <div class="ctrl-row">
+        <label>PD Gain Kp</label>
+        <input type="number" id="p-kp" value="0.1" min="0.001" max="10" step="0.01">
+      </div>
+      <div class="ctrl-row">
+        <label>PD Gain Kd</label>
+        <input type="number" id="p-kd" value="0.05" min="0.001" max="5" step="0.005">
+      </div>
+    </div>
+    <div class="ctrl-section">
+      <div class="ctrl-label">▶ PLAYBACK</div>
+      <div class="ctrl-row">
+        <label>Duration (orbits)</label>
+        <input type="number" id="p-orbits" value="2" min="0.5" max="10" step="0.5">
+      </div>
+      <div class="ctrl-row">
+        <label>Sim Speed</label>
+        <select id="p-speed">
+          <option value="10">10×</option>
+          <option value="100" selected>100×</option>
+          <option value="500">500×</option>
+          <option value="1000">1000×</option>
+        </select>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="window.emff.compute()">COMPUTE</button>
+      <button class="btn btn-teal" onclick="window.emff.run()" id="btn-run">▶ RUN SIM</button>
+      <button class="btn btn-secondary btn-sm" onclick="window.emff.reset()">RESET</button>
+    </div>
+    <div class="ds-panel">
+      <div class="ds-title">⬡ ROUTE TO DATASPACE</div>
+      <div class="ds-btns">
+        <button class="ds-btn" onclick="window.emff.sendDS('w1')">W1</button>
+        <button class="ds-btn" onclick="window.emff.sendDS('w2')">W2</button>
+        <button class="ds-btn" onclick="window.emff.sendDS('w3')">W3</button>
+        <button class="ds-btn" onclick="window.emff.sendDS('w4')">W4</button>
+        <button class="ds-btn" onclick="window.emff.sendDS('w5')">W5</button>
+        <button class="ds-btn" onclick="window.emff.sendDS('w6')">W6</button>
+        <button class="ds-btn all" onclick="window.emff.sendDS('all')">ALL</button>
+      </div>
+      <div class="ds-status" id="ds-status"></div>
+    </div>
+  </div>
+  <div class="sim-main">
+    <div class="tab-bar">
+      <button class="tab-btn active" onclick="window.emff.tab('3d')">3D FORMATION</button>
+      <button class="tab-btn" onclick="window.emff.tab('field')">FIELD MAP</button>
+      <button class="tab-btn" onclick="window.emff.tab('dynamics')">DYNAMICS</button>
+      <button class="tab-btn" onclick="window.emff.tab('telem')">TELEMETRY</button>
+      <button class="tab-btn" onclick="window.emff.tab('sweep')">SWEEP</button>
+      <button class="tab-btn" onclick="window.emff.tab('export')">EXPORT</button>
+    </div>
+    <div class="tab-pane active" id="tab-3d">
+      <div class="playback-bar">
+        <button class="btn btn-primary btn-sm" id="pb-play" onclick="window.emff.playPause()">▶ PLAY</button>
+        <button class="btn btn-secondary btn-sm" onclick="window.emff.stepForward()">⏭ STEP</button>
+        <button class="btn btn-secondary btn-sm" onclick="window.emff.resetAnim()">⏮ RESET</button>
+        <div class="progress-track" onclick="window.emff.seekAnim(event)" id="prog-track"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+        <span class="time-display" id="anim-time">T+00:00:00</span>
+        <select id="anim-speed" style="background:var(--surface2);border:1px solid var(--border);color:var(--ivory);padding:2px 6px;font-family:var(--font-data);font-size:9px;border-radius:2px">
+          <option value="10">10×</option><option value="100" selected>100×</option><option value="500">500×</option>
+        </select>
+      </div>
+      <div class="plot-container" id="plot-3d"></div>
+    </div>
+    <div class="tab-pane" id="tab-field">
+      <div class="results-summary" id="field-summary">
+        <div class="rs-item"><span class="rs-label">PEAK B-FIELD</span><span class="rs-val" id="rs-bmax">—</span></div>
+        <div class="rs-item"><span class="rs-label">MIN B-FIELD</span><span class="rs-val" id="rs-bmin">—</span></div>
+        <div class="rs-item"><span class="rs-label">FIELD UNIFORMITY</span><span class="rs-val" id="rs-bunif">—</span></div>
+        <div class="rs-item"><span class="rs-label">TOTAL MOMENT</span><span class="rs-val" id="rs-moment">—</span></div>
+      </div>
+      <div id="plot-field" style="flex:1;min-height:350px"></div>
+    </div>
+    <div class="tab-pane" id="tab-dynamics">
+      <div style="display:grid;grid-template-columns:1fr 1fr;flex:1;gap:1px;background:var(--border)">
+        <div id="plot-force" style="background:var(--bg)"></div>
+        <div id="plot-power" style="background:var(--bg)"></div>
+      </div>
+    </div>
+    <div class="tab-pane" id="tab-telem">
+      <div class="results-summary" id="node-summary"></div>
+      <div id="plot-telem" style="flex:1;min-height:300px"></div>
+      <div class="table-wrap">
+        <table class="data-table"><thead><tr><th>NODE</th><th>POSITION (m)</th><th>EM FORCE (mN)</th><th>CURRENT (A)</th><th>MAG MOMENT (A·m²)</th><th>POWER (W)</th></tr></thead>
+        <tbody id="node-tbody"></tbody></table>
+      </div>
+    </div>
+    <div class="tab-pane" id="tab-sweep">
+      <div class="sweep-grid">
+        <div class="sweep-config">
+          <div class="ctrl-label">⚡ SWEEP CONFIG</div>
+          <div class="ctrl-row" style="margin-top:8px"><label>Variable</label>
+            <select id="sw-var">
+              <option value="sep">Separation (m)</option>
+              <option value="current">Current (A)</option>
+              <option value="field">Field Strength (T)</option>
+              <option value="nodes">Node Count</option>
+              <option value="mass">Node Mass (kg)</option>
+            </select>
+          </div>
+          <div class="ctrl-row"><label>Start</label><input type="number" id="sw-start" value="10"></div>
+          <div class="ctrl-row"><label>End</label><input type="number" id="sw-end" value="200"></div>
+          <div class="ctrl-row"><label>Steps</label><input type="number" id="sw-steps" value="20" min="5" max="50"></div>
+          <div class="ctrl-row"><label>Output</label>
+            <select id="sw-out">
+              <option value="force">EM Force (mN)</option>
+              <option value="power">Power per Node (W)</option>
+              <option value="stability">Stability Index</option>
+              <option value="moment">Magnetic Moment (A·m²)</option>
+            </select>
+          </div>
+          <button class="btn btn-primary" style="width:100%;margin-top:10px" onclick="window.emff.runSweep()">RUN SWEEP</button>
+        </div>
+        <div style="display:flex;flex-direction:column">
+          <div id="plot-sweep" style="flex:1;min-height:300px"></div>
+          <div class="table-wrap"><table class="data-table"><thead><tr><th>INPUT</th><th>OUTPUT</th></tr></thead><tbody id="sweep-tbody"></tbody></table></div>
+        </div>
+      </div>
+    </div>
+    <div class="tab-pane" id="tab-export">
+      <div class="export-grid">
+        <div class="export-card"><h4>⬡ JSON STATE</h4><p>Full formation state — node positions, forces, field map, control law parameters.</p><button class="btn btn-primary btn-sm" onclick="window.emff.exportJSON()">EXPORT JSON</button></div>
+        <div class="export-card"><h4>📊 CSV DYNAMICS</h4><p>Time-series per-node dynamics — position, force, current, power vs time.</p><button class="btn btn-primary btn-sm" onclick="window.emff.exportCSV()">EXPORT CSV</button></div>
+        <div class="export-card"><h4>🛰 GMAT SCRIPT</h4><p>GMAT formation script — multi-body propagator with EM force model for W5 integration.</p><button class="btn btn-primary btn-sm" onclick="window.emff.exportGMAT()">EXPORT GMAT</button></div>
+        <div class="export-card"><h4>📄 TXT MANIFEST</h4><p>Mission manifest — formation config, EM parameters, stability analysis, power budget.</p><button class="btn btn-primary btn-sm" onclick="window.emff.exportTXT()">EXPORT TXT</button></div>
+        <div class="export-card"><h4>🖼 PNG SNAPSHOT</h4><p>Export current 3D formation view as high-resolution PNG.</p><button class="btn btn-teal btn-sm" onclick="window.emff.exportPNG()">EXPORT PNG</button></div>
+        <div class="export-card"><h4>📋 YAML CONFIG</h4><p>YAML formation configuration for pipeline integration and reproducibility.</p><button class="btn btn-secondary btn-sm" onclick="window.emff.exportYAML()">EXPORT YAML</button></div>
+      </div>
+    </div>
+  </div>
+</div><script>
+window.emff = (function(){
+  'use strict';
+  const MU0 = 4*Math.PI*1e-7; // H/m
+  const MU = 398600.4418; const RE = 6371.0;
+  const RAD = Math.PI/180; const DEG = 180/Math.PI;
+
+  let state = {
+    computed:false, playing:false, frameIdx:0,
+    nodes:[], traj:[], results:{}, sweep:[], dt:1,
+    t:0, tMax:0, animInterval:null, plot3dReady:false
+  };
+
+  function p(id){return document.getElementById(id);}
+  function pv(id){return parseFloat(p(id).value)||0;}
+  function pvs(id){return p(id).value;}
+  function fmt(n,d=2){return(typeof n==='number'&&!isNaN(n))?n.toFixed(d):'—';}
+  function fmtTime(s){const h=Math.floor(s/3600),m=Math.floor((s%3600)/60),sec=Math.floor(s%60);return 'T+'+String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0');}
+
+  // ── PHYSICS ──
+  // Magnetic dipole moment: m = N * I * A = N * I * pi * r²
+  function dipoleMoment(N,I,r){ return N*I*Math.PI*r*r; }
+
+  // Dipole-dipole force (simplified aligned case)
+  // F = (3*mu0/4pi) * m1*m2 / r^4 * factor
+  function dipoleDipoleForce(m1, m2, r_m, alignment){
+    const factor = alignment==='aligned'?2 : alignment==='anti'?-2 : 1;
+    const F = (3*MU0/(4*Math.PI)) * (m1*m2)/(r_m**4) * factor;
+    return F * 1000; // convert to mN
+  }
+
+  // Biot-Savart field at distance r from dipole
+  function dipoleField(m, r_m, theta_rad=0){
+    const B_r = (MU0/(4*Math.PI))*(2*m*Math.cos(theta_rad))/(r_m**3);
+    const B_theta = (MU0/(4*Math.PI))*(m*Math.sin(theta_rad))/(r_m**3);
+    return Math.sqrt(B_r**2+B_theta**2);
+  }
+
+  // Power estimate: P = I^2 * R_coil (assume R = rho_Cu * 2*pi*r*N / A_wire)
+  function coilPower(I,N,r,wireA=1e-6){
+    const rho_cu=1.68e-8; // Ohm/m
+    const L=2*Math.PI*r*N;
+    const R=rho_cu*L/wireA;
+    return I*I*R; // W
+  }
+
+  // Formation geometry generator
+  function formationPositions(type, n, sep){
+    const pos=[];
+    if(type==='triangle'||n===3){
+      for(let i=0;i<3;i++){
+        const a=i*2*Math.PI/3; pos.push({x:sep*Math.cos(a),y:sep*Math.sin(a),z:0});
+      }
+    } else if(type==='line'||n===2){
+      for(let i=0;i<n;i++) pos.push({x:(i-(n-1)/2)*sep,y:0,z:0});
+    } else if(type==='square'||n===4){
+      const s=sep/Math.sqrt(2);
+      [[1,1],[1,-1],[-1,-1],[-1,1]].forEach(([a,b])=>pos.push({x:s*a,y:s*b,z:0}));
+    } else if(type==='diamond'){
+      [[0,1],[1,0],[0,-1],[-1,0]].forEach(([a,b])=>pos.push({x:sep*a,y:sep*b,z:0}));
+    } else {
+      // Pentagon or generic
+      for(let i=0;i<n;i++){
+        const a=i*2*Math.PI/n; pos.push({x:sep*Math.cos(a),y:sep*Math.sin(a),z:0});
+      }
+    }
+    return pos;
+  }
+
+  function compute(){
+    const nCount=parseInt(pvs('p-nodes'));
+    const formType=pvs('p-formation');
+    const sep=pv('p-sep');
+    const B=pv('p-field');
+    const I=pv('p-current');
+    const N=pv('p-turns');
+    const r=pv('p-radius');
+    const mass=pv('p-mass');
+    const alt=pv('p-alt');
+    const orbits=pv('p-orbits');
+    const align=pvs('p-align');
+    const Kp=pv('p-kp'), Kd=pv('p-kd');
+
+    const T_orb=2*Math.PI*Math.sqrt(((RE+alt)*1000)**3/((3.986e14)))/1; // seconds
+    const period=2*Math.PI*Math.sqrt(((RE+alt)**3)/398600.4418); // seconds in km
+    const tMax=period*orbits;
+    const dt=30; // 30s time steps for dynamics
+
+    // Dipole moment per node
+    const m=dipoleMoment(N,I,r);
+    const P=coilPower(I,N,r);
+
+    // Formation node positions
+    const pos0=formationPositions(formType, nCount, sep);
+    const nodes=pos0.map((p,i)=>({id:i+1,x:p.x,y:p.y,z:p.z, m, I, N, r, mass,
+      vx:0,vy:0,vz:0, fx:0,fy:0,fz:0, power:P, err:0}));
+
+    // Compute inter-node forces
+    nodes.forEach((ni,i)=>{
+      ni.fx=0; ni.fy=0; ni.fz=0;
+      nodes.forEach((nj,j)=>{
+        if(i===j) return;
+        const dx=nj.x-ni.x, dy=nj.y-ni.y, dz=nj.z-ni.z;
+        const r_dist=Math.sqrt(dx*dx+dy*dy+dz*dz);
+        const F=dipoleDipoleForce(ni.m,nj.m,r_dist,align);
+        const mag=Math.sqrt(dx*dx+dy*dy+dz*dz);
+        ni.fx+=F*dx/mag; ni.fy+=F*dy/mag; ni.fz+=F*dz/mag;
+      });
+    });
+
+    const maxForce=Math.max(...nodes.map(n=>Math.sqrt(n.fx**2+n.fy**2+n.fz**2)));
+    const totalPower=nodes.reduce((s,n)=>s+n.power,0);
+
+    // Build trajectory: simple PD-controlled oscillation simulation
+    const traj=[]; const simNodes=nodes.map(n=>({...n,px:n.x,py:n.y,pz:n.z}));
+    for(let t=0;t<=Math.min(tMax,3600*2);t+=dt){
+      simNodes.forEach((ni,i)=>{
+        // Target position
+        const tp=pos0[i];
+        // PD control force towards target
+        const ex=tp.x-ni.px, ey=tp.y-ni.py, ez=tp.z-ni.pz;
+        const ax=Kp*ex-Kd*ni.vx, ay=Kp*ey-Kd*ni.vy, az=Kp*ez-Kd*ni.vz;
+        ni.vx+=ax*dt/mass; ni.vy+=ay*dt/mass; ni.vz+=az*dt/mass;
+        ni.px+=ni.vx*dt; ni.py+=ni.vy*dt; ni.pz+=ni.vz*dt;
+        ni.err=Math.sqrt(ex**2+ey**2+ez**2);
+        // EM force perturbation (scaled)
+        const F=dipoleDipoleForce(m,m,Math.max(sep*0.8,1),align)*1e-6;
+        ni.px+=F*Math.cos(t*0.01)*dt*dt/(2*mass);
+      });
+      traj.push({t, nodes:simNodes.map(n=>({...n}))});
+    }
+
+    state.nodes=nodes; state.traj=traj; state.t=0; state.tMax=Math.min(tMax,3600*2);
+    state.results={nCount,formType,sep,B,I,N,r,mass,m,P,maxForce,totalPower,align,period};
+    state.computed=true; state.frameIdx=0;
+
+    // Update telemetry
+    p('tv-nodes').textContent=nCount;
+    p('tv-sep').textContent=sep;
+    p('tv-field').textContent=fmt(B,1);
+    p('tv-current').textContent=I;
+    p('tv-force').textContent=fmt(maxForce,2);
+    p('tv-power').textContent=fmt(P,0);
+
+    // Read from Magnetostatics dataspace if available
+    try{
+      const magData=localStorage.getItem('achilles_calc_mag_w3');
+      if(magData){const md=JSON.parse(magData);console.log('Magnetostatics data linked: w3');}
+    }catch(e){}
+
+    render3D();
+    plotFieldMap();
+    plotDynamics();
+    updateNodeTable();
+    localStorage.setItem('achilles_beacon_emff',JSON.stringify({ts:Date.now(),path:'/sim/node',status:'LIVE',nodes:nCount,sep,force:maxForce}));
+    return state.results;
+  }
+
+  function render3D(){
+    if(!state.computed) return;
+    const fr=state.traj[state.frameIdx]||{nodes:state.nodes};
+    const nArr=fr.nodes||state.nodes;
+    const traces=[];
+
+    // Field lines between nodes (dipole field arcs)
+    nArr.forEach((ni,i)=>{
+      nArr.forEach((nj,j)=>{
+        if(j<=i) return;
+        // Draw a line connecting nodes with midpoint offset for arc effect
+        const mx=(ni.px||ni.x+nj.px||nj.x)/2;
+        const my=(ni.py||ni.y+nj.py||nj.y)/2;
+        const mz=(ni.pz||ni.z+nj.pz||nj.z)/2+state.results.sep*0.3;
+        traces.push({type:'scatter3d',mode:'lines',
+          x:[ni.px||ni.x, mx, nj.px||nj.x],
+          y:[ni.py||ni.y, my, nj.py||nj.y],
+          z:[ni.pz||ni.z, mz, nj.pz||nj.z],
+          line:{color:'rgba(0,229,255,0.4)',width:1.5},
+          showlegend:false,hoverinfo:'skip'});
+      });
+    });
+
+    // Dipole orientation vectors
+    nArr.forEach((ni,i)=>{
+      const x=ni.px||ni.x, y=ni.py||ni.y, z=ni.pz||ni.z;
+      const len=state.results.sep*0.2;
+      traces.push({type:'scatter3d',mode:'lines',
+        x:[x,x+len],y:[y,y],z:[z,z+len],
+        line:{color:'#C9A24A',width:3},showlegend:i===0,name:i===0?'Dipole Axes':'',
+        hoverinfo:'skip'});
+    });
+
+    // Node markers
+    const nx=nArr.map(n=>n.px||n.x), ny=nArr.map(n=>n.py||n.y), nz=nArr.map(n=>n.pz||n.z);
+    const forceArr=nArr.map(n=>Math.sqrt((n.fx||0)**2+(n.fy||0)**2+(n.fz||0)**2));
+    traces.push({type:'scatter3d',mode:'markers+text',x:nx,y:ny,z:nz,
+      marker:{size:12,color:forceArr,colorscale:[[0,'#B87333'],[0.5,'#C9A24A'],[1,'#4EC5C1']],
+              showscale:true,colorbar:{title:{text:'Force (mN)',font:{size:9,color:'#8A8F9A'}},
+              tickfont:{size:8,color:'#8A8F9A'},len:0.5,thickness:8}},
+      text:nArr.map((_,i)=>'N'+(i+1)),textfont:{color:'#F2F1EC',size:9},
+      name:'Nodes',hovertemplate:'Node %{text}<br>F: %{marker.color:.2f} mN<extra></extra>'});
+
+    // Center of formation marker
+    const cx=nx.reduce((a,b)=>a+b,0)/nx.length;
+    const cy=ny.reduce((a,b)=>a+b,0)/ny.length;
+    const cz=nz.reduce((a,b)=>a+b,0)/nz.length;
+    traces.push({type:'scatter3d',mode:'markers',x:[cx],y:[cy],z:[cz],
+      marker:{size:4,color:'#4EC5C1',symbol:'x'},name:'Formation Center',hoverinfo:'skip'});
+
+    const sep=state.results.sep;
+    Plotly.react('plot-3d',traces,{
+      paper_bgcolor:'#0B0D10',
+      scene:{xaxis:{showgrid:true,gridcolor:'#1A2030',zeroline:false,color:'#4A5060',title:{text:'X (m)',font:{size:9,color:'#4A5060'}}},
+             yaxis:{showgrid:true,gridcolor:'#1A2030',zeroline:false,color:'#4A5060',title:{text:'Y (m)',font:{size:9,color:'#4A5060'}}},
+             zaxis:{showgrid:true,gridcolor:'#1A2030',zeroline:false,color:'#4A5060',title:{text:'Z (m)',font:{size:9,color:'#4A5060'}}},
+             bgcolor:'#0B0D10',camera:{eye:{x:1.5,y:1.5,z:1.0}},
+             aspectmode:'cube'},
+      margin:{l:0,r:0,t:20,b:0},
+      showlegend:true,
+      legend:{font:{family:'JetBrains Mono',size:9,color:'#8A8F9A'},bgcolor:'rgba(18,21,26,0.8)',bordercolor:'#2A2F3A',x:0,y:1},
+      title:{text:'EM Formation — '+state.results.nCount+' Nodes ('+state.results.formType+')',font:{family:'JetBrains Mono',size:11,color:'#B87333'}}
+    },{responsive:true,displayModeBar:false});
+    state.plot3dReady=true;
+  }
+
+  function plotFieldMap(){
+    if(!state.computed) return;
+    const {sep,m:moment,N,I,r}=state.results;
+    const gridN=40;
+    const range=sep*2.5;
+    const z_matrix=[], x_arr=[], y_arr=[];
+    for(let i=0;i<gridN;i++){
+      const y=(-range+2*range*i/(gridN-1));
+      y_arr.push(y);
+      const row=[];
+      for(let j=0;j<gridN;j++){
+        const x=(-range+2*range*j/(gridN-1));
+        if(i===0) x_arr.push(x);
+        let B_total=0;
+        state.nodes.forEach(nd=>{
+          const dx=x-(nd.x||0), dy=y-(nd.y||0);
+          const r_dist=Math.sqrt(dx*dx+dy*dy)+0.01;
+          const theta=Math.atan2(Math.sqrt(dx*dx+dy*dy), 0); // simplified
+          B_total+=dipoleField(moment,r_dist,theta);
+        });
+        row.push(Math.log10(B_total+1e-10));
+      }
+      z_matrix.push(row);
+    }
+
+    // Node positions overlay
+    const nodeX=state.nodes.map(n=>n.x||0), nodeY=state.nodes.map(n=>n.y||0);
+
+    const bMax=Math.max(...z_matrix.flat()), bMin=Math.min(...z_matrix.flat());
+    p('rs-bmax').textContent=fmt(Math.pow(10,bMax),3)+' T';
+    p('rs-bmin').textContent=fmt(Math.pow(10,bMin),6)+' T';
+    p('rs-bunif').textContent=fmt(((1-Math.abs(bMax-bMin)/(Math.abs(bMax)+1))*100),1)+'%';
+    p('rs-moment').textContent=fmt(moment,1)+' A·m²';
+
+    Plotly.react('plot-field',[
+      {type:'heatmap',z:z_matrix,x:x_arr,y:y_arr,
+       colorscale:[[0,'#0B0D10'],[0.3,'#1A3050'],[0.6,'#B87333'],[1,'#4EC5C1']],
+       showscale:true,colorbar:{title:{text:'log₁₀(B/T)',font:{size:9,color:'#8A8F9A'}},
+       tickfont:{size:8,color:'#8A8F9A'}},name:'B-Field Intensity'},
+      {type:'scatter',mode:'markers+text',x:nodeX,y:nodeY,
+       marker:{size:12,color:'#F2F1EC',symbol:'circle-open',line:{width:2}},
+       text:state.nodes.map((_,i)=>'N'+(i+1)),textposition:'top center',
+       textfont:{color:'#F2F1EC',size:9},name:'Nodes'}
+    ],{paper_bgcolor:'#0B0D10',plot_bgcolor:'#0B0D10',
+       font:{family:'JetBrains Mono',size:9,color:'#8A8F9A'},
+       margin:{l:50,r:60,t:30,b:40},
+       title:{text:'EM Field Map — '+state.results.formType+' Formation (log scale)',font:{size:11,color:'#B87333'}},
+       xaxis:{gridcolor:'#1A2030',color:'#4A5060',title:{text:'X (m)',font:{size:9}}},
+       yaxis:{gridcolor:'#1A2030',color:'#4A5060',title:{text:'Y (m)',font:{size:9}}}
+    },{responsive:true,displayModeBar:false});
+  }
+
+  function plotDynamics(){
+    if(!state.traj.length) return;
+    const times=state.traj.map(d=>d.t/60);
+    const baseLayout={paper_bgcolor:'#0B0D10',plot_bgcolor:'#12151A',font:{family:'JetBrains Mono',size:9,color:'#8A8F9A'},margin:{l:50,r:10,t:30,b:40},xaxis:{gridcolor:'#2A2F3A',color:'#8A8F9A',title:{text:'Time (min)',font:{size:9}}}};
+    const colors=['#B87333','#4EC5C1','#C9A24A','#00E5FF','#8A8F9A'];
+    const forceTr=state.nodes.map((nd,i)=>({
+      x:times,y:state.traj.map(fr=>Math.sqrt((fr.nodes[i]?.fx||0)**2+(fr.nodes[i]?.fy||0)**2+(fr.nodes[i]?.fz||0)**2)),
+      type:'scatter',mode:'lines',line:{color:colors[i%colors.length],width:1.5},name:'Node '+(i+1)
+    }));
+    Plotly.react('plot-force',forceTr,{...baseLayout,title:{text:'EM Force per Node (mN)',font:{size:10,color:'#B87333'}},yaxis:{gridcolor:'#2A2F3A',color:'#8A8F9A',title:{text:'Force (mN)',font:{size:9}}}},{responsive:true,displayModeBar:false});
+    const powerTr=[{x:state.nodes.map((_,i)=>'Node '+(i+1)),y:state.nodes.map(n=>n.power),type:'bar',marker:{color:colors.slice(0,state.nodes.length)},name:'Power (W)'}];
+    Plotly.react('plot-power',powerTr,{...baseLayout,title:{text:'Power Budget per Node (W)',font:{size:10,color:'#B87333'}},yaxis:{gridcolor:'#2A2F3A',color:'#8A8F9A',title:{text:'Power (W)',font:{size:9}}}},{responsive:true,displayModeBar:false});
+  }
+
+  function updateNodeTable(){
+    if(!state.nodes.length) return;
+    p('node-tbody').innerHTML=state.nodes.map((n,i)=>
+      `<tr><td style="color:var(--copper)">N${i+1}</td>
+       <td>(${fmt(n.x||0,1)}, ${fmt(n.y||0,1)}, ${fmt(n.z||0,1)})</td>
+       <td style="color:var(--teal)">${fmt(Math.sqrt((n.fx||0)**2+(n.fy||0)**2+(n.fz||0)**2),3)}</td>
+       <td>${fmt(n.I,0)}</td>
+       <td>${fmt(n.m,2)}</td>
+       <td style="color:var(--gold)">${fmt(n.power,1)}</td></tr>`
+    ).join('');
+    p('node-summary').innerHTML=`
+      <div class="rs-item"><span class="rs-label">TOTAL POWER</span><span class="rs-val">${fmt(state.results.totalPower,1)} W</span></div>
+      <div class="rs-item"><span class="rs-label">MAX FORCE</span><span class="rs-val">${fmt(state.results.maxForce,3)} mN</span></div>
+      <div class="rs-item"><span class="rs-label">DIPOLE MOMENT</span><span class="rs-val">${fmt(state.results.m,2)} A·m²</span></div>
+      <div class="rs-item"><span class="rs-label">ALIGNMENT</span><span class="rs-val">${state.results.align}</span></div>
+    `;
+  }
+
+  let animInterval=null;
+  function playPause(){
+    if(!state.computed){compute();return;}
+    state.playing=!state.playing;
+    p('pb-play').textContent=state.playing?'⏸ PAUSE':'▶ PLAY';
+    p('btn-run').textContent=state.playing?'⏸ PAUSE':'▶ RUN SIM';
+    if(state.playing) startAnim(); else stopAnim();
+  }
+  function startAnim(){
+    if(animInterval) clearInterval(animInterval);
+    const spd=parseInt(p('anim-speed').value||100);
+    animInterval=setInterval(()=>{
+      if(!state.playing){stopAnim();return;}
+      state.frameIdx=Math.min(state.frameIdx+Math.max(1,Math.floor(spd/20)),state.traj.length-1);
+      updateAnimFrame();
+      if(state.frameIdx>=state.traj.length-1){state.playing=false;stopAnim();p('pb-play').textContent='▶ PLAY';}
+    },33);
+  }
+  function stopAnim(){if(animInterval){clearInterval(animInterval);animInterval=null;}}
+  function updateAnimFrame(){
+    if(!state.traj.length) return;
+    const fr=state.traj[state.frameIdx];
+    p('tv-time').textContent=fmtTime(fr.t);
+    p('anim-time').textContent=fmtTime(fr.t);
+    const pct=(state.frameIdx/(state.traj.length-1))*100;
+    p('prog-fill').style.width=pct+'%';
+    const maxErr=Math.max(...fr.nodes.map(n=>n.err||0));
+    p('tv-err').textContent=fmt(maxErr,2);
+    if(state.plot3dReady) render3D();
+  }
+  function stepForward(){state.frameIdx=Math.min(state.frameIdx+1,state.traj.length-1);updateAnimFrame();}
+  function resetAnim(){state.frameIdx=0;updateAnimFrame();}
+  function seekAnim(e){const t=p('prog-track');const rect=t.getBoundingClientRect();const pct=Math.max(0,Math.min(1,(e.clientX-rect.left)/rect.width));state.frameIdx=Math.round(pct*(state.traj.length-1));updateAnimFrame();}
+
+  function runSweep(){
+    const varN=pvs('sw-var'),start=pv('sw-start'),end=pv('sw-end'),steps=pv('sw-steps');
+    const outN=pvs('sw-out');
+    const vals=[],results=[];
+    for(let i=0;i<steps;i++){
+      const v=start+(end-start)*i/(steps-1);
+      const sep=varN==='sep'?v:pv('p-sep');
+      const I=varN==='current'?v:pv('p-current');
+      const B=varN==='field'?v:pv('p-field');
+      const nC=varN==='nodes'?Math.round(v):parseInt(pvs('p-nodes'));
+      const mass=varN==='mass'?v:pv('p-mass');
+      const m=dipoleMoment(pv('p-turns'),I,pv('p-radius'));
+      let res=0;
+      if(outN==='force') res=dipoleDipoleForce(m,m,Math.max(sep,0.01),pvs('p-align'));
+      else if(outN==='power') res=coilPower(I,pv('p-turns'),pv('p-radius'));
+      else if(outN==='stability') res=Math.max(0,1-(Math.abs(dipoleDipoleForce(m,m,Math.max(sep,0.01),pvs('p-align')))/(mass*10+1)));
+      else if(outN==='moment') res=m;
+      vals.push(v);results.push(res);
+    }
+    const outL={force:'EM Force (mN)',power:'Power (W)',stability:'Stability Index',moment:'Moment (A·m²)'};
+    const varL={sep:'Separation (m)',current:'Current (A)',field:'Field Strength (T)',nodes:'Node Count',mass:'Node Mass (kg)'};
+    Plotly.react('plot-sweep',[{x:vals,y:results,type:'scatter',mode:'lines+markers',line:{color:'#B87333',width:2},marker:{color:'#C9A24A',size:4}}],
+      {paper_bgcolor:'#0B0D10',plot_bgcolor:'#12151A',font:{family:'JetBrains Mono',size:9,color:'#8A8F9A'},margin:{l:55,r:10,t:25,b:40},
+       title:{text:varL[varN]+' vs '+outL[outN],font:{size:10,color:'#B87333'}},
+       xaxis:{gridcolor:'#2A2F3A',color:'#8A8F9A',title:{text:varL[varN],font:{size:9}}},
+       yaxis:{gridcolor:'#2A2F3A',color:'#8A8F9A',title:{text:outL[outN],font:{size:9}}}},{responsive:true,displayModeBar:false});
+    p('sweep-tbody').innerHTML=vals.map((v,i)=>`<tr><td>${fmt(v,3)}</td><td style="color:var(--teal)">${fmt(results[i],4)}</td></tr>`).join('');
+  }
+
+  function tab(name){
+    document.querySelectorAll('.tab-btn').forEach(b=>{b.classList.remove('active');if(b.textContent.toLowerCase().startsWith(name.slice(0,3).toLowerCase()))b.classList.add('active');});
+    document.querySelectorAll('.tab-pane').forEach(p=>{p.classList.remove('active');});
+    const el=document.getElementById('tab-'+name);
+    if(el)el.classList.add('active');
+    setTimeout(()=>{
+      if(name==='3d'&&state.plot3dReady)Plotly.relayout('plot-3d',{});
+      if(name==='field')Plotly.relayout('plot-field',{});
+      if(name==='dynamics'){Plotly.relayout('plot-force',{});Plotly.relayout('plot-power',{});}
+    },50);
+  }
+
+  function sendDS(ws){
+    if(!state.computed){p('ds-status').textContent='⚠ Compute formation first.';return;}
+    const payload={ts:Date.now(),tool:'emff_node',v:'2.0.0',params:state.results,
+      nodes:state.nodes,traj:state.traj.filter((_,i)=>i%10===0)};
+    const targets=ws==='all'?['w1','w2','w3','w4','w5','w6']:[ws];
+    try{
+      targets.forEach(w=>{localStorage.setItem('achilles_sim_emff_'+w,JSON.stringify(payload));});
+      if(targets.includes('w3')) localStorage.setItem('achilles_calc_mag_w3_emff_flag',Date.now());
+      p('ds-status').textContent='✓ Routed to: '+targets.map(w=>w.toUpperCase()).join(', ')+' ['+new Date().toTimeString().slice(0,5)+']';
+    }catch(e){p('ds-status').textContent='⚠ DS error: '+e.message;}
+  }
+
+  function dl(c,f,m){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([c],{type:m}));a.download=f;a.click();}
+  function exportJSON(){dl(JSON.stringify({meta:{tool:'EMFF Node',v:'2.0.0',ts:new Date().toISOString()},params:state.results,nodes:state.nodes},null,2),'emff_formation_state.json','application/json');}
+  function exportCSV(){
+    const h='time_min,node,pos_x,pos_y,pos_z,force_mN,power_W\n';
+    const rows=state.traj.filter((_,i)=>i%5===0).flatMap(fr=>fr.nodes.map((n,i)=>
+      `${fmt(fr.t/60,2)},${i+1},${fmt(n.px||0,2)},${fmt(n.py||0,2)},${fmt(n.pz||0,2)},${fmt(Math.sqrt((n.fx||0)**2+(n.fy||0)**2+(n.fz||0)**2),4)},${fmt(n.power,2)}`)).join('\n');
+    dl(h+rows,'emff_dynamics.csv','text/csv');
+  }
+  function exportTXT(){
+    const r=state.results;
+    const t=`EMFF NODE — FORMATION MANIFEST\n============================\nGenerated: ${new Date().toISOString()}\n\nFORMATION\n  Nodes: ${r.nCount}\n  Type: ${r.formType}\n  Separation: ${fmt(r.sep,1)} m\n\nEM PARAMETERS\n  Field Strength: ${fmt(r.B,2)} T\n  Current: ${fmt(r.I,0)} A\n  Dipole Moment: ${fmt(r.m,3)} A·m²\n  Alignment: ${r.align}\n\nPERFORMANCE\n  Max EM Force: ${fmt(r.maxForce,4)} mN\n  Power/Node: ${fmt(r.P,2)} W\n  Total Power: ${fmt(r.totalPower,2)} W\n`;
+    dl(t,'emff_manifest.txt','text/plain');
+  }
+  function exportGMAT(){
+    const r=state.results;
+    const g=`% EMFF Node — GMAT Formation Script\n% v2.0.0 — Römer Industries / EMASSC\n\nCreate Formation EMFFFormation;\nEMFFFormation.Add = {${state.nodes.map((_,i)=>'Node'+(i+1)).join(',')}}\n\n${state.nodes.map((_,i)=>`Create Spacecraft Node${i+1};\nNode${i+1}.SMA = ${(6371+r.alt||400).toFixed(2)};\nNode${i+1}.ECC = 0;\nNode${i+1}.INC = 28.5;`).join('\n\n')}\n`;
+    dl(g,'emff_gmat.script','text/plain');
+  }
+  function exportYAML(){
+    const r=state.results;
+    const y=`# EMFF Node YAML — v2.0.0\nmeta:\n  tool: EMFF Node\n  version: 2.0.0\nformation:\n  nodes: ${r.nCount}\n  type: ${r.formType}\n  separation_m: ${fmt(r.sep,1)}\nem_params:\n  field_strength_T: ${fmt(r.B,2)}\n  current_A: ${fmt(r.I,0)}\n  dipole_moment_Am2: ${fmt(r.m,4)}\nresults:\n  max_force_mN: ${fmt(r.maxForce,4)}\n  power_per_node_W: ${fmt(r.P,2)}\n`;
+    dl(y,'emff_config.yaml','text/plain');
+  }
+  function exportPNG(){if(state.plot3dReady)Plotly.downloadImage('plot-3d',{format:'png',filename:'emff_formation',width:1400,height:900});}
+
+  function updateNodeCount(){
+    const n=parseInt(pvs('p-nodes'));
+    const formations=['triangle','line','square','diamond','pentagon'];
+    const fp=p('p-formation');
+    fp.innerHTML='';
+    if(n===2){fp.innerHTML='<option value="line">Line</option>';}
+    else if(n===3){fp.innerHTML='<option value="triangle" selected>Triangle</option><option value="line">Line</option>';}
+    else if(n===4){fp.innerHTML='<option value="square" selected>Square</option><option value="diamond">Diamond</option><option value="line">Line</option>';}
+    else{fp.innerHTML='<option value="pentagon" selected>Pentagon</option><option value="line">Line</option>';}
+  }
+
+  function run(){if(!state.computed)compute();playPause();}
+  function reset(){stopAnim();state.frameIdx=0;state.playing=false;p('pb-play').textContent='▶ PLAY';p('btn-run').textContent='▶ RUN SIM';updateAnimFrame();}
+
+  function init(){
+    try{localStorage.setItem('achilles_beacon_emff',JSON.stringify({ts:Date.now(),path:'/sim/node',status:'LIVE'}));}catch(e){}
+    p('emff-beacon-ts').textContent='Beacon: '+new Date().toLocaleTimeString();
+    compute();
+  }
+
+  return {compute,run,playPause,stepForward,resetAnim,seekAnim,tab,sendDS,runSweep,
+          exportJSON,exportCSV,exportTXT,exportGMAT,exportYAML,exportPNG,updateNodeCount,reset,init};
+})();
+window.addEventListener('DOMContentLoaded',()=>window.emff.init());
+if(document.readyState!=='loading') window.emff.init();
+</script></body></html>
