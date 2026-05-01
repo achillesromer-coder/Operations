@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Magnetostatics Calculator | Romer Industries</title>
+<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0B0D10;--surface:#12151A;--panel:#161B22;--border:#1E2530;
+  --copper:#B87333;--gold:#C9A24A;--teal:#4EC5C1;--cyan:#00E5FF;
+  --ivory:#F2F1EC;--muted:#8A9BB0;--dim:#4A5568;
+  --w1:#E53E3E;--w2:#DD6B20;--w3:#D69E2E;--w4:#38A169;--w5:#3182CE;--w6:#805AD5;
+  --font-ui:'Inter',sans-serif;--font-mono:'JetBrains Mono',monospace;
+}
+html,body{width:100%;min-height:100vh;background:var(--bg);color:var(--ivory);font-family:var(--font-ui);font-size:14px;overflow-x:hidden}
+.ops-tracker{display:flex;align-items:center;justify-content:space-between;background:var(--surface);border-bottom:1px solid var(--border);padding:0 16px;height:40px;flex-shrink:0}
+.ops-id{display:flex;align-items:center;gap:10px}
+.ops-beacon{width:8px;height:8px;border-radius:50%;background:var(--copper);box-shadow:0 0 6px var(--copper);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.ops-title{font-family:var(--font-mono);font-size:11px;color:var(--teal);font-weight:600;letter-spacing:.05em}
+.ops-sub{font-size:10px;color:var(--muted);font-family:var(--font-mono)}
+.ops-nav{display:flex;gap:4px;align-items:center}
+.ops-pill{font-family:var(--font-mono);font-size:9px;font-weight:700;padding:2px 7px;border-radius:3px;cursor:pointer;letter-spacing:.06em;text-decoration:none;border:1px solid transparent;transition:all .15s}
+.ops-pill.calc{color:var(--gold);border-color:var(--gold);background:rgba(201,162,74,.08)}
+.ops-pill.calc:hover{background:rgba(201,162,74,.18)}
+.ops-pill.calc.active{background:rgba(201,162,74,.22);box-shadow:0 0 8px rgba(201,162,74,.3)}
+.ops-pill.w1{color:var(--w1);border-color:var(--w1);background:rgba(229,62,62,.06)}.ops-pill.w1:hover{background:rgba(229,62,62,.14)}
+.ops-pill.w2{color:var(--w2);border-color:var(--w2);background:rgba(221,107,32,.06)}.ops-pill.w2:hover{background:rgba(221,107,32,.14)}
+.ops-pill.w3{color:var(--w3);border-color:var(--w3);background:rgba(214,158,46,.06)}.ops-pill.w3:hover{background:rgba(214,158,46,.14)}
+.ops-pill.w4{color:var(--w4);border-color:var(--w4);background:rgba(56,161,105,.06)}.ops-pill.w4:hover{background:rgba(56,161,105,.14)}
+.ops-pill.w5{color:var(--w5);border-color:var(--w5);background:rgba(49,130,206,.06)}.ops-pill.w5:hover{background:rgba(49,130,206,.14)}
+.ops-pill.w6{color:var(--w6);border-color:var(--w6);background:rgba(128,90,213,.06)}.ops-pill.w6:hover{background:rgba(128,90,213,.14)}
+.ops-pill.util{color:var(--muted);border-color:var(--dim);background:transparent}.ops-pill.util:hover{color:var(--ivory);border-color:var(--muted)}
+.beacon-bar{background:var(--panel);border-bottom:1px solid var(--border);padding:5px 16px;display:flex;align-items:center;gap:10px}
+.beacon-dot{width:6px;height:6px;border-radius:50%;background:#22c55e;box-shadow:0 0 5px #22c55e;flex-shrink:0}
+.beacon-text{font-family:var(--font-mono);font-size:9px;color:var(--muted)}
+.beacon-text span{color:var(--teal)}
+.calc-header{padding:20px 24px 16px;border-bottom:1px solid var(--border)}
+.calc-title{font-size:22px;font-weight:700;color:var(--copper);letter-spacing:-.01em;margin-bottom:4px}
+.calc-desc{font-size:11px;color:var(--muted);line-height:1.5}
+.calc-badges{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.badge{font-family:var(--font-mono);font-size:9px;font-weight:600;padding:3px 8px;border-radius:3px;letter-spacing:.04em}
+.badge-ver{background:rgba(78,197,193,.1);color:var(--teal);border:1px solid rgba(78,197,193,.25)}
+.badge-tag{background:rgba(184,115,51,.1);color:var(--copper);border:1px solid rgba(184,115,51,.25)}
+.badge-util{background:rgba(138,155,176,.08);color:var(--muted);border:1px solid var(--dim)}
+.calc-body{display:grid;grid-template-columns:280px 1fr;gap:0;min-height:calc(100vh - 120px)}
+.config-panel{background:var(--surface);border-right:1px solid var(--border);padding:0;overflow-y:auto}
+.results-panel{background:var(--bg);overflow:hidden;display:flex;flex-direction:column}
+.cfg-section{border-bottom:1px solid var(--border);padding:14px 16px}
+.cfg-label{font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:.1em;color:var(--copper);text-transform:uppercase;margin-bottom:10px}
+.cfg-field{margin-bottom:10px}
+.cfg-field label{display:block;font-size:10px;color:var(--muted);margin-bottom:4px;font-family:var(--font-mono)}
+.cfg-field input,.cfg-field select{width:100%;background:var(--panel);border:1px solid var(--border);color:var(--ivory);font-family:var(--font-mono);font-size:11px;padding:6px 8px;border-radius:4px;outline:none;transition:border-color .2s}
+.cfg-field input:focus,.cfg-field select:focus{border-color:var(--copper)}
+.cfg-field select option{background:var(--panel)}
+.cfg-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.cfg-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.cfg-checkbox{display:flex;align-items:center;gap:8px;cursor:pointer;font-size:10px;color:var(--muted);font-family:var(--font-mono)}
+.cfg-checkbox input{accent-color:var(--copper);width:13px;height:13px}
+.btn{font-family:var(--font-mono);font-size:10px;font-weight:700;letter-spacing:.06em;padding:8px 14px;border-radius:4px;border:none;cursor:pointer;transition:all .15s;text-transform:uppercase}
+.btn-primary{background:linear-gradient(135deg,var(--copper),var(--gold));color:#0B0D10}
+.btn-primary:hover{opacity:.88;transform:translateY(-1px)}
+.btn-secondary{background:transparent;color:var(--teal);border:1px solid var(--teal)}
+.btn-secondary:hover{background:rgba(78,197,193,.08)}
+.btn-sm{padding:5px 10px;font-size:9px}
+.btn-row{display:flex;flex-wrap:wrap;gap:8px;padding:14px 16px}
+.btn-full{width:100%}
+.btn-group{display:flex;gap:6px;width:100%}
+.btn-group .btn{flex:1}
+.tab-bar{display:flex;background:var(--surface);border-bottom:1px solid var(--border);overflow-x:auto;flex-shrink:0}
+.tab{font-family:var(--font-mono);font-size:10px;font-weight:600;letter-spacing:.06em;padding:10px 16px;cursor:pointer;border-bottom:2px solid transparent;color:var(--muted);white-space:nowrap;transition:all .15s;text-transform:uppercase}
+.tab.active{color:var(--copper);border-bottom-color:var(--copper)}
+.tab:hover:not(.active){color:var(--ivory)}
+.tab-content{flex:1;overflow:hidden;display:none;padding:16px;flex-direction:column;gap:12px}
+.tab-content.active{display:flex}
+.plot-container{background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:12px;flex:1}
+.plot-title{font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.source-card{background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:10px;margin-bottom:8px;position:relative}
+.source-card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.source-name{font-family:var(--font-mono);font-size:10px;font-weight:700;color:var(--ivory)}
+.source-type{font-family:var(--font-mono);font-size:9px;color:var(--teal);background:rgba(78,197,193,.1);border:1px solid rgba(78,197,193,.25);padding:1px 6px;border-radius:2px}
+.source-remove{font-size:10px;color:#e53e3e;cursor:pointer;background:none;border:none;font-family:var(--font-mono)}
+.stat-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(30,37,48,.5)}
+.stat-row:last-child{border-bottom:none}
+.stat-label{font-size:10px;color:var(--muted);font-family:var(--font-mono)}
+.stat-val{font-family:var(--font-mono);font-size:11px;font-weight:700;color:var(--ivory)}
+.info-box{background:var(--panel);border:1px solid var(--border);border-left:3px solid var(--teal);border-radius:4px;padding:10px 14px;font-family:var(--font-mono);font-size:10px;color:var(--teal);line-height:1.6}
+.export-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.export-card{background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:14px;text-align:center;cursor:pointer;transition:all .15s}
+.export-card:hover{border-color:var(--copper);background:rgba(184,115,51,.04)}
+.export-card .ec-icon{font-size:22px;margin-bottom:6px}
+.export-card .ec-label{font-family:var(--font-mono);font-size:10px;font-weight:700;color:var(--ivory);margin-bottom:3px}
+.export-card .ec-desc{font-size:9px;color:var(--muted)}
+.range-wrap{display:flex;align-items:center;gap:8px}
+.range-wrap input[type=range]{flex:1;accent-color:var(--copper)}
+.range-val{font-family:var(--font-mono);font-size:10px;color:var(--teal);min-width:42px;text-align:right}
+::-webkit-scrollbar{width:5px;height:5px}::-webkit-scrollbar-track{background:var(--surface)}::-webkit-scrollbar-thumb{background:var(--dim);border-radius:3px}::-webkit-scrollbar-thumb:hover{background:var(--copper)}
+@media(max-width:900px){.calc-body{grid-template-columns:1fr}.config-panel{border-right:none;border-bottom:1px solid var(--border)}}
+</style>
+</head>
+<body>
+<div class="ops-tracker">
+  <div class="ops-id">
+    <div class="ops-beacon"></div>
+    <div>
+      <div class="ops-title">MAGNETOSTATICS CALCULATOR</div>
+      <div class="ops-sub">Biot-Savart · Dipole · Loop · Solenoid · Helmholtz · Field-line visualisation · Universal tool /calc/magnetostatics</div>
+    </div>
+  </div>
+  <nav class="ops-nav">
+    <a class="ops-pill calc" href="/calc/orbital">ORB</a>
+    <a class="ops-pill calc" href="/calc/launch">LW</a>
+    <a class="ops-pill calc active" href="/calc/magnetostatics">MAG</a>
+    <a class="ops-pill calc" href="/calc/energy">PWR</a>
+    <a class="ops-pill calc" href="/calc/fluids">FLD</a>
+    <a class="ops-pill sim" href="/sims/rfs-extraction">RFS</a>
+    <a class="ops-pill sim" href="/sim/node">EMFF</a>
+    <a class="ops-pill sim" href="/sim/fields">EMF</a>
+    <a class="ops-pill sim" href="/sim/re-entry">ENTRY</a>
+    <a class="ops-pill w1" href="/w1/data">W1</a>
+    <a class="ops-pill w2" href="/w2/data">W2</a>
+    <a class="ops-pill w3" href="/w3/data">W3</a>
+    <a class="ops-pill w4" href="/w4/data">W4</a>
+    <a class="ops-pill w5" href="/w5/data">W5</a>
+    <a class="ops-pill w6" href="/w6/data">W6</a>
+    <a class="ops-pill util" href="/data/achilles">ACH</a>
+    <a class="ops-pill util" href="/library">LIB</a>
+    <a class="ops-pill util" href="/gmat">GMAT</a>
+    <a class="ops-pill util" href="/dash">DASH</a>
+  </nav>
+</div>
+<div class="beacon-bar">
+  <div class="beacon-dot"></div>
+  <span class="beacon-text"><span>LIVE</span> &nbsp;/calc/magnetostatics &nbsp;·&nbsp; Universal – callable by all workspaces &amp; dataspaces &nbsp;·&nbsp; Römer Industries / EMASSC</span>
+</div>
+<div class="calc-header">
+  <div class="calc-title">Magnetostatics Calculator</div>
+  <div class="calc-desc">Biot-Savart law · Magnetic dipole · Current loop · Solenoid · Helmholtz coils · 2D/3D field-line plots · Parameter sweeps · GMAT export</div>
+  <div class="calc-badges">
+    <span class="badge badge-ver"></span>
+    <span class="badge badge-tag">SI Units</span>
+    <span class="badge badge-tag">Universal Tool – W1-W6 callable</span>
+    <span class="badge badge-tag">Plotly Visualisation</span>
+    <span class="badge badge-util">JetBrains Mono · Inter</span>
+  </div>
+</div>
+<div class="calc-body">
+  <div class="config-panel">
+    <div class="cfg-section">
+      <div class="cfg-label">Source Configuration</div>
+      <div class="cfg-field">
+        <label>Source Type</label>
+        <select id="mag-source-type">
+          <option value="dipole">Magnetic Dipole</option>
+          <option value="loop">Current Loop</option>
+          <option value="solenoid">Solenoid</option>
+          <option value="helmholtz">Helmholtz Coils</option>
+          <option value="wire">Infinite Wire</option>
+          <option value="bar">Bar Magnet</option>
+        </select>
+      </div>
+      <div id="mag-params-dipole">
+        <div class="cfg-field"><label>Dipole Moment m (A·m²)</label><input type="number" id="mag-moment" value="1.0" step="0.1"></div>
+        <div class="cfg-row">
+          <div class="cfg-field"><label>Position X (m)</label><input type="number" id="mag-pos-x" value="0" step="0.01"></div>
+          <div class="cfg-field"><label>Position Y (m)</label><input type="number" id="mag-pos-y" value="0" step="0.01"></div>
+        </div>
+        <div class="cfg-field"><label>Orientation θ (°)</label><input type="number" id="mag-orient" value="0" step="1"></div>
+      </div>
+      <div id="mag-params-loop" style="display:none">
+        <div class="cfg-field"><label>Current I (A)</label><input type="number" id="mag-current" value="10" step="0.1"></div>
+        <div class="cfg-field"><label>Radius R (m)</label><input type="number" id="mag-radius" value="0.05" step="0.001"></div>
+        <div class="cfg-field"><label>N Turns</label><input type="number" id="mag-turns" value="1" step="1" min="1"></div>
+      </div>
+      <div id="mag-params-solenoid" style="display:none">
+        <div class="cfg-field"><label>Current I (A)</label><input type="number" id="mag-sol-current" value="10" step="0.1"></div>
+        <div class="cfg-field"><label>Radius R (m)</label><input type="number" id="mag-sol-radius" value="0.05" step="0.001"></div>
+        <div class="cfg-field"><label>Length L (m)</label><input type="number" id="mag-sol-length" value="0.2" step="0.01"></div>
+        <div class="cfg-field"><label>Turns per metre (n)</label><input type="number" id="mag-sol-turns" value="1000" step="10"></div>
+      </div>
+      <div id="mag-params-helmholtz" style="display:none">
+        <div class="cfg-field"><label>Current I (A)</label><input type="number" id="mag-hh-current" value="10" step="0.1"></div>
+        <div class="cfg-field"><label>Coil Radius R (m)</label><input type="number" id="mag-hh-radius" value="0.1" step="0.001"></div>
+        <div class="cfg-field"><label>Separation d (m) [auto=R for Helmholtz]</label><input type="number" id="mag-hh-sep" value="0.1" step="0.001"></div>
+        <div class="cfg-field"><label>N Turns each coil</label><input type="number" id="mag-hh-turns" value="100" step="1"></div>
+        <label class="cfg-checkbox"><input type="checkbox" id="mag-hh-anti"> Anti-Helmholtz (Maxwell pair)</label>
+      </div>
+      <div id="mag-params-wire" style="display:none">
+        <div class="cfg-field"><label>Current I (A)</label><input type="number" id="mag-wire-current" value="100" step="1"></div>
+      </div>
+      <div id="mag-params-bar" style="display:none">
+        <div class="cfg-field"><label>Surface B-field B₀ (T)</label><input type="number" id="mag-bar-b0" value="1.0" step="0.01"></div>
+        <div class="cfg-field"><label>Length L (m)</label><input type="number" id="mag-bar-len" value="0.1" step="0.001"></div>
+      </div>
+    </div>
+    <div class="cfg-section">
+      <div class="cfg-label">Visualisation Domain</div>
+      <div class="cfg-row">
+        <div class="cfg-field"><label>X range (m)</label><input type="number" id="mag-xrange" value="0.15" step="0.01" min="0.001"></div>
+        <div class="cfg-field"><label>Y range (m)</label><input type="number" id="mag-yrange" value="0.15" step="0.01" min="0.001"></div>
+      </div>
+      <div class="cfg-field"><label>Grid Resolution</label>
+        <select id="mag-resolution">
+          <option value="20">20×20 (fast)</option>
+          <option value="30" selected>30×30 (standard)</option>
+          <option value="50">50×50 (detailed)</option>
+          <option value="80">80×80 (high-res)</option>
+        </select>
+      </div>
+      <label class="cfg-checkbox"><input type="checkbox" id="mag-show-fieldlines" checked> Show field lines</label>
+      <label class="cfg-checkbox" style="margin-top:6px"><input type="checkbox" id="mag-show-quiver" checked> Show vector arrows (quiver)</label>
+      <label class="cfg-checkbox" style="margin-top:6px"><input type="checkbox" id="mag-show-magnitude"> Show |B| magnitude heatmap</label>
+    </div>
+    <div class="cfg-section">
+      <div class="cfg-label">Sweep</div>
+      <div class="cfg-field"><label>Sweep Variable</label>
+        <select id="mag-sweep-var">
+          <option value="current">Current (A)</option>
+          <option value="radius">Radius (m)</option>
+          <option value="turns">Turns</option>
+          <option value="distance">Distance from source (m)</option>
+          <option value="angle">Field angle (°)</option>
+        </select>
+      </div>
+      <div class="cfg-row">
+        <div class="cfg-field"><label>Min</label><input type="number" id="mag-sweep-min" value="1" step="0.1"></div>
+        <div class="cfg-field"><label>Max</label><input type="number" id="mag-sweep-max" value="50" step="0.1"></div>
+      </div>
+      <div class="cfg-field"><label>Steps</label><input type="number" id="mag-sweep-steps" value="20" step="1" min="5" max="100"></div>
+    </div>
+    <div class="btn-row" style="flex-direction:column">
+      <button class="btn btn-primary btn-full" onclick="magCalculate()">CALCULATE FIELD</button>
+      <div class="btn-group">
+        <button class="btn btn-secondary btn-sm" onclick="magSweep()">RUN SWEEP</button>
+        <button class="btn btn-secondary btn-sm" onclick="magDemo()">LOAD DEMO</button>
+      </div>
+    </div>
+  </div>
+  <div class="results-panel">
+    <div class="tab-bar">
+      <div class="tab active" onclick="magTab('field2d',this)">FIELD 2D</div>
+      <div class="tab" onclick="magTab('field3d',this)">FIELD 3D</div>
+      <div class="tab" onclick="magTab('profile',this)">PROFILE</div>
+      <div class="tab" onclick="magTab('sweep',this)">SWEEP</div>
+      <div class="tab" onclick="magTab('results',this)">RESULTS</div>
+      <div class="tab" onclick="magTab('export',this)">EXPORT</div>
+    </div>
+    <div id="tab-field2d" class="tab-content active">
+      <div class="info-box" id="mag-status">Configure source and click CALCULATE FIELD.</div>
+      <div class="plot-container"><div class="plot-title">Magnetic Field — 2D Cross-Section (XY plane)</div><div id="mag-plot-2d" style="height:460px"></div></div>
+    </div>
+    <div id="tab-field3d" class="tab-content">
+      <div class="plot-container"><div class="plot-title">Magnetic Field — 3D Surface</div><div id="mag-plot-3d" style="height:460px"></div></div>
+    </div>
+    <div id="tab-profile" class="tab-content">
+      <div class="plot-container"><div class="plot-title">|B| along axis (z-axis through source)</div><div id="mag-plot-axial" style="height:220px"></div></div>
+      <div class="plot-container"><div class="plot-title">|B| along radial axis (r at z=0)</div><div id="mag-plot-radial" style="height:220px"></div></div>
+    </div>
+    <div id="tab-sweep" class="tab-content">
+      <div class="info-box" id="mag-sweep-status">Select sweep variable and click RUN SWEEP.</div>
+      <div class="plot-container"><div class="plot-title">Sweep Results</div><div id="mag-plot-sweep" style="height:260px"></div></div>
+      <div style="overflow-x:auto;max-height:300px"><table class="sweep-table" style="width:100%;border-collapse:collapse;font-family:var(--font-mono);font-size:10px" id="mag-sweep-table"></table></div>
+    </div>
+    <div id="tab-results" class="tab-content">
+      <div class="info-box">Run calculation to populate field results.</div>
+      <div id="mag-result-rows"></div>
+    </div>
+    <div id="tab-export" class="tab-content">
+      <div class="info-box">Export field data to workspace dataspaces or download files.</div>
+      <div class="export-grid">
+        <div class="export-card" onclick="magExport('json')"><div class="ec-icon">📦</div><div class="ec-label">JSON</div><div class="ec-desc">Full field data</div></div>
+        <div class="export-card" onclick="magExport('csv')"><div class="ec-icon">📊</div><div class="ec-label">CSV</div><div class="ec-desc">Grid B-field values</div></div>
+        <div class="export-card" onclick="magExport('txt')"><div class="ec-icon">📄</div><div class="ec-label">MANIFEST</div><div class="ec-desc">Source summary</div></div>
+        <div class="export-card" onclick="magExport('yaml')"><div class="ec-icon">🗂️</div><div class="ec-label">YAML</div><div class="ec-desc">Config export</div></div>
+        <div class="export-card" onclick="magExport('png')"><div class="ec-icon">🖼️</div><div class="ec-label">PNG</div><div class="ec-desc">Save all plots</div></div>
+        <div class="export-card" onclick="magExport('gmat')"><div class="ec-icon">🛰️</div><div class="ec-label">GMAT</div><div class="ec-desc">Field script</div></div>
+      </div>
+      <div style="margin-top:12px">
+        <div style="font-family:var(--font-mono);font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:8px">Send to Dataspace</div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px">
+          <button class="btn btn-secondary btn-sm" onclick="magRoute('w1')">→ W1</button>
+          <button class="btn btn-secondary btn-sm" onclick="magRoute('w2')">→ W2</button>
+          <button class="btn btn-secondary btn-sm" onclick="magRoute('w3')">→ W3</button>
+          <button class="btn btn-secondary btn-sm" onclick="magRoute('w4')">→ W4</button>
+          <button class="btn btn-secondary btn-sm" onclick="magRoute('w5')">→ W5</button>
+          <button class="btn btn-secondary btn-sm" onclick="magRoute('w6')">→ W6</button>
+          <button class="btn btn-primary btn-sm" onclick="magRouteAll()">→ ALL</button>
+        </div>
+        <div id="mag-route-status" style="margin-top:10px;display:none"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+// ═══ MAGNETOSTATICS  ═══════════════════════
+const MU0 = 4*Math.PI*1e-7;
+let MAG_STATE = null;
+
+// ── Plotly Römer Theme ───────────────────────────
+const MPLT = {
+  base: { paper_bgcolor:'#12151A', plot_bgcolor:'#0B0D10',
+    font:{family:"'JetBrains Mono',monospace",color:'#F2F1EC',size:10},
+    margin:{t:30,r:20,b:40,l:50},
+    xaxis:{gridcolor:'#1E2530',zerolinecolor:'#1E2530',linecolor:'#1E2530',tickfont:{size:9}},
+    yaxis:{gridcolor:'#1E2530',zerolinecolor:'#1E2530',linecolor:'#1E2530',tickfont:{size:9}},
+    hoverlabel:{bgcolor:'#161B22',bordercolor:'#B87333',font:{family:"'JetBrains Mono',monospace",size:10,color:'#F2F1EC'}},
+    modebar:{bgcolor:'transparent',color:'#4A5568',activecolor:'#B87333'}},
+  cfg:{responsive:true,displayModeBar:true,displaylogo:false,modeBarButtonsToRemove:['select2d','lasso2d'],toImageButtonOptions:{format:'png',filename:'romer-mag',scale:2}}
+};
+
+// ── Field computations ───────────────────────────
+function bDipole2D(x, y, mx, my, m, theta_deg) {
+  const t = theta_deg * Math.PI/180;
+  const mx_ = m * Math.sin(t), my_ = m * Math.cos(t);
+  const dx = x-mx, dy = y-my;
+  const r = Math.sqrt(dx*dx+dy*dy);
+  if (r < 1e-10) return {bx:0,by:0,mag:0};
+  const r3 = r*r*r, r5 = r3*r*r;
+  const mdotr = mx_*dx + my_*dy;
+  const bx = (MU0/(4*Math.PI)) * (3*mdotr*dx/r5 - mx_/r3);
+  const by = (MU0/(4*Math.PI)) * (3*mdotr*dy/r5 - my_/r3);
+  return {bx, by, mag:Math.sqrt(bx*bx+by*by)};
+}
+
+function bLoop2D(x, y, I, R, N=1) {
+  // On-axis approximation (Biot-Savart for loop in XZ plane, evaluated at XY)
+  const r = Math.sqrt(x*x+y*y);
+  const bz = (MU0*N*I*R*R) / (2*Math.pow(R*R + r*r, 1.5));
+  const phi = Math.atan2(y,x);
+  // Approximate: for off-axis use full Biot-Savart (simplified here)
+  const br = -(MU0*N*I*R*R*r) / (4*Math.pow(R*R + r*r, 2.5)) * r;
+  return {bx: br*Math.cos(phi), by: br*Math.sin(phi), bz, mag:Math.sqrt(br*br+bz*bz)};
+}
+
+function bSolenoid2D(x, y, I, R, L, n) {
+  // Simplified solenoid field (on-axis: uniform inside, fringe outside)
+  const Baxis = MU0*n*I;
+  const inside = Math.abs(x) < L/2 && Math.abs(y) < R;
+  const fringe = !inside && Math.abs(y) < R*2 && Math.abs(x) < L;
+  if (inside) return {bx:Baxis, by:0, mag:Baxis};
+  if (fringe) {
+    const factor = Math.exp(-2*Math.sqrt((Math.abs(x)-L/2)**2 + y**2)/R);
+    return {bx:Baxis*factor, by:Baxis*factor*0.1*(y/R), mag:Baxis*factor};
+  }
+  const r = Math.sqrt(x*x+y*y); if(r<1e-10) return {bx:0,by:0,mag:0};
+  const dipM = MU0*n*I*Math.PI*R*R*L/(4*Math.PI);
+  return bDipole2D(x,y,0,0,dipM,0);
+}
+
+function bHelmholtz2D(x, y, I, R, d, N, anti=false) {
+  // Two loops at z = ±d/2
+  const b1 = bLoop2D(x-d/2, y, I, R, N);
+  const sign = anti ? -1 : 1;
+  const b2 = bLoop2D(x+d/2, y, sign*I, R, N);
+  const bx = b1.bx+b2.bx, by = b1.by+b2.by, bz = b1.bz+b2.bz;
+  return {bx, by, bz, mag:Math.sqrt(bx*bx+by*by+bz*bz)};
+}
+
+function bWire2D(x, y, I) {
+  const r = Math.sqrt(x*x+y*y); if(r<1e-10) return {bx:0,by:0,mag:0};
+  const B = (MU0*I)/(2*Math.PI*r);
+  const phi = Math.atan2(y,x);
+  return {bx:-B*Math.sin(phi), by:B*Math.cos(phi), mag:B};
+}
+
+function bBar2D(x, y, B0, L) {
+  const m = B0*Math.PI*(L/10)*(L/10)*L/MU0;
+  return bDipole2D(x,y,0,0,m,0);
+}
+
+// ── Get B field at point based on current source type ──
+function getBatPoint(x, y, params) {
+  const t = params.type;
+  if (t==='dipole') return bDipole2D(x,y,params.px,params.py,params.moment,params.orient);
+  if (t==='loop')  return bLoop2D(x-params.px,y-params.py,params.current,params.radius,params.turns);
+  if (t==='solenoid') return bSolenoid2D(x-params.px,y-params.py,params.current,params.radius,params.length,params.turns);
+  if (t==='helmholtz') return bHelmholtz2D(x-params.px,y-params.py,params.current,params.radius,params.sep,params.turns,params.anti);
+  if (t==='wire')  return bWire2D(x-params.px,y-params.py,params.current);
+  if (t==='bar')   return bBar2D(x-params.px,y-params.py,params.b0,params.length);
+  return {bx:0,by:0,mag:0};
+}
+
+// ── Build 2D grid ─────────────────────────────────
+function buildGrid(params, xr, yr, N) {
+  const xs=[],ys=[],bxs=[],bys=[],mags=[];
+  for(let i=0;i<N;i++) for(let j=0;j<N;j++){
+    const x=-xr+2*xr*i/(N-1), y=-yr+2*yr*j/(N-1);
+    const b = getBatPoint(x,y,params);
+    xs.push(x);ys.push(y);bxs.push(b.bx);bys.push(b.by);mags.push(b.mag);
+  }
+  return {xs,ys,bxs,bys,mags};
+}
+
+// ── Read UI params ────────────────────────────────
+function readMagParams() {
+  const type = document.getElementById('mag-source-type').value;
+  const base = {type, px:0, py:0};
+  if(type==='dipole') return {...base, moment:+document.getElementById('mag-moment').value, px:+document.getElementById('mag-pos-x').value, py:+document.getElementById('mag-pos-y').value, orient:+document.getElementById('mag-orient').value};
+  if(type==='loop')   return {...base, current:+document.getElementById('mag-current').value, radius:+document.getElementById('mag-radius').value, turns:+document.getElementById('mag-turns').value};
+  if(type==='solenoid') return {...base, current:+document.getElementById('mag-sol-current').value, radius:+document.getElementById('mag-sol-radius').value, length:+document.getElementById('mag-sol-length').value, turns:+document.getElementById('mag-sol-turns').value};
+  if(type==='helmholtz') return {...base, current:+document.getElementById('mag-hh-current').value, radius:+document.getElementById('mag-hh-radius').value, sep:+document.getElementById('mag-hh-sep').value, turns:+document.getElementById('mag-hh-turns').value, anti:document.getElementById('mag-hh-anti').checked};
+  if(type==='wire')   return {...base, current:+document.getElementById('mag-wire-current').value};
+  if(type==='bar')    return {...base, b0:+document.getElementById('mag-bar-b0').value, length:+document.getElementById('mag-bar-len').value};
+  return base;
+}
+
+// ── Tab switcher ──────────────────────────────────
+function magTab(name, el) {
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('tab-'+name).classList.add('active');
+  setTimeout(()=>{['mag-plot-2d','mag-plot-3d','mag-plot-axial','mag-plot-radial','mag-plot-sweep'].forEach(id=>{try{Plotly.Plots.resize(document.getElementById(id));}catch(e){}});},50);
+}
+
+// ── Source type switcher ──────────────────────────
+function magSourceSwitch() {
+  const t = document.getElementById('mag-source-type').value;
+  ['dipole','loop','solenoid','helmholtz','wire','bar'].forEach(s=>{
+    const el=document.getElementById('mag-params-'+s);
+    if(el) el.style.display = (s===t)?'':'none';
+  });
+}
+
+// ── Main calculate ────────────────────────────────
+function magCalculate() {
+  const params = readMagParams();
+  const xr = +document.getElementById('mag-xrange').value;
+  const yr = +document.getElementById('mag-yrange').value;
+  const N  = +document.getElementById('mag-resolution').value;
+  const showFL = document.getElementById('mag-show-fieldlines').checked;
+  const showQ  = document.getElementById('mag-show-quiver').checked;
+  const showMag= document.getElementById('mag-show-magnitude').checked;
+
+  const grid = buildGrid(params, xr, yr, N);
+  MAG_STATE = {params, xr, yr, N, grid, timestamp: new Date().toISOString()};
+
+  render2DField(grid, xr, yr, N, params, showFL, showQ, showMag);
+  render3DField(grid, xr, yr, N);
+  renderAxialProfile(params, yr);
+  renderRadialProfile(params, xr);
+  renderResultStats(params, grid);
+
+  const maxB = Math.max(...grid.mags.filter(isFinite));
+  document.getElementById('mag-status').textContent =
+    `Source: ${params.type} · Max |B|: ${(maxB*1000).toFixed(3)} mT · Grid: ${N}×${N} · Domain: ±${xr}×±${yr} m`;
+  try{
+    const pay = {calculator:'magnetostatics',version:'2.0.0',timestamp:MAG_STATE.timestamp,type:params.type,maxB_T:maxB};
+    localStorage.setItem('achilles_calc_mag_w1',JSON.stringify(pay));
+    localStorage.setItem('achilles_calc_mag_w3',JSON.stringify(pay));
+  }catch(e){}
+}
+
+// ── 2D Field Plot ─────────────────────────────────
+function render2DField(grid, xr, yr, N, params, showFL, showQ, showMag) {
+  const traces = [];
+  const xUniq = [...new Set(grid.xs.map(v=>+v.toFixed(8)))].sort((a,b)=>a-b);
+  const yUniq = [...new Set(grid.ys.map(v=>+v.toFixed(8)))].sort((a,b)=>a-b);
+  const Bz = Array.from({length:N},(_,j)=>Array.from({length:N},(_,i)=>grid.mags[i*N+j]||0));
+
+  if(showMag) traces.push({type:'heatmap',x:xUniq,y:yUniq,z:Bz,colorscale:[[0,'#0B0D10'],[0.2,'#1a2030'],[0.5,'#B87333'],[0.8,'#C9A24A'],[1,'#00E5FF']],name:'|B| (T)',colorbar:{title:{text:'|B| T',font:{size:8}},tickfont:{size:8}},hovertemplate:'x:%{x:.3f}<br>y:%{y:.3f}<br>|B|:%{z:.4e} T<extra></extra>'});
+
+  if(showQ) {
+    // Subsample for quiver
+    const step = Math.max(1, Math.floor(N/15));
+    const qx=[],qy=[],qu=[],qv=[];
+    for(let i=0;i<N;i+=step) for(let j=0;j<N;j+=step){
+      const idx=i*N+j;
+      const mag=grid.mags[idx];if(mag===0||!isFinite(mag))continue;
+      const scale=Math.min(2*xr/N*step*0.7/mag,1e6)*0.3;
+      qx.push(grid.xs[idx]);qy.push(grid.ys[idx]);
+      qu.push(grid.bxs[idx]*scale);qv.push(grid.bys[idx]*scale);
+    }
+    traces.push({type:'scatter',mode:'markers',x:qx,y:qy,marker:{size:2,color:'rgba(78,197,193,0.4)'},showlegend:false,hoverinfo:'skip'});
+    for(let k=0;k<qx.length;k++){
+      traces.push({type:'scatter',mode:'lines',x:[qx[k],qx[k]+qu[k]],y:[qy[k],qy[k]+qv[k]],line:{color:'rgba(78,197,193,0.5)',width:1},showlegend:false,hoverinfo:'skip'});
+    }
+  }
+
+  if(showFL) {
+    // Streamline approximation — seed points on circle
+    const nSeeds=20;
+    for(let s=0;s<nSeeds;s++){
+      const ang=2*Math.PI*s/nSeeds;
+      const seedR=Math.min(xr,yr)*0.15;
+      let cx=params.px+seedR*Math.cos(ang), cy=params.py+seedR*Math.sin(ang);
+      const lx=[cx],ly=[cy];
+      const ds=Math.min(xr,yr)*0.015;
+      for(let step=0;step<300;step++){
+        if(Math.abs(cx)>xr*1.1||Math.abs(cy)>yr*1.1)break;
+        const b=getBatPoint(cx,cy,params);
+        if(b.mag<1e-30)break;
+        cx+=b.bx/b.mag*ds;cy+=b.by/b.mag*ds;
+        lx.push(cx);ly.push(cy);
+      }
+      traces.push({type:'scatter',mode:'lines',x:lx,y:ly,line:{color:'rgba(0,229,255,0.55)',width:1},showlegend:s===0,name:s===0?'Field Lines':'',hoverinfo:'skip'});
+    }
+  }
+
+  // Source marker
+  traces.push({type:'scatter',mode:'markers',x:[params.px||0],y:[params.py||0],marker:{size:12,color:'#C9A24A',symbol:'star',line:{color:'#F2F1EC',width:1.5}},name:'Source',hovertemplate:`Source: ${params.type}<extra></extra>`});
+
+  const layout={...MPLT.base,height:450,xaxis:{...MPLT.base.xaxis,title:{text:'x (m)',font:{size:9}},range:[-xr,xr]},yaxis:{...MPLT.base.yaxis,title:{text:'y (m)',font:{size:9}},range:[-yr,yr],scaleanchor:'x'}};
+  Plotly.react('mag-plot-2d',traces,layout,MPLT.cfg);
+}
+
+// ── 3D Field ──────────────────────────────────────
+function render3DField(grid, xr, yr, N) {
+  const xUniq=[...new Set(grid.xs.map(v=>+v.toFixed(8)))].sort((a,b)=>a-b);
+  const yUniq=[...new Set(grid.ys.map(v=>+v.toFixed(8)))].sort((a,b)=>a-b);
+  const Bz=Array.from({length:N},(_,j)=>Array.from({length:N},(_,i)=>Math.log10(Math.max(grid.mags[i*N+j],1e-20)+1)||0));
+  const traces=[{type:'surface',x:xUniq,y:yUniq,z:Bz,colorscale:[[0,'#0B0D10'],[0.3,'#B87333'],[0.6,'#C9A24A'],[1,'#00E5FF']],showscale:true,colorbar:{title:{text:'log₁₀|B|',font:{size:8}},tickfont:{size:8}},hovertemplate:'x:%{x:.3f}<br>y:%{y:.3f}<br>log|B|:%{z:.2f}<extra></extra>',name:'|B| surface'}];
+  const layout={...MPLT.base,height:450,scene:{bgcolor:'#0B0D10',xaxis:{gridcolor:'#1E2530',title:{text:'x (m)',font:{size:9}},tickfont:{size:8}},yaxis:{gridcolor:'#1E2530',title:{text:'y (m)',font:{size:9}},tickfont:{size:8}},zaxis:{gridcolor:'#1E2530',title:{text:'log₁₀|B|',font:{size:9}},tickfont:{size:8}}},margin:{t:20,r:0,b:0,l:0}};
+  Plotly.react('mag-plot-3d',traces,layout,MPLT.cfg);
+}
+
+// ── Axial / Radial profiles ───────────────────────
+function renderAxialProfile(params, range) {
+  const zs=Array.from({length:100},(_,i)=>-range+2*range*i/99);
+  const Bvals=zs.map(z=>{const b=getBatPoint(0,z,params);return b.mag;});
+  const layout={...MPLT.base,height:210,xaxis:{...MPLT.base.xaxis,title:{text:'z (m)',font:{size:9}}},yaxis:{...MPLT.base.yaxis,title:{text:'|B| (T)',font:{size:9}}}};
+  Plotly.react('mag-plot-axial',[{type:'scatter',mode:'lines',x:zs,y:Bvals,line:{color:'#B87333',width:2},name:'|B| on-axis',hovertemplate:'z:%{x:.4f} m<br>|B|:%{y:.4e} T<extra></extra>'}],layout,MPLT.cfg);
+}
+
+function renderRadialProfile(params, range) {
+  const rs=Array.from({length:100},(_,i)=>-range+2*range*i/99);
+  const Bvals=rs.map(r=>{const b=getBatPoint(r,0,params);return b.mag;});
+  const layout={...MPLT.base,height:210,xaxis:{...MPLT.base.xaxis,title:{text:'r (m)',font:{size:9}}},yaxis:{...MPLT.base.yaxis,title:{text:'|B| (T)',font:{size:9}}}};
+  Plotly.react('mag-plot-radial',[{type:'scatter',mode:'lines',x:rs,y:Bvals,line:{color:'#4EC5C1',width:2},name:'|B| radial',hovertemplate:'r:%{x:.4f} m<br>|B|:%{y:.4e} T<extra></extra>'}],layout,MPLT.cfg);
+}
+
+// ── Result stats ──────────────────────────────────
+function renderResultStats(params, grid) {
+  const mags=grid.mags.filter(isFinite);
+  const maxB=Math.max(...mags), minB=Math.min(...mags.filter(v=>v>0)||[0]);
+  const meanB=mags.reduce((a,b)=>a+b,0)/mags.length;
+  const rows=[
+    ['Source Type',params.type.toUpperCase()],
+    ['Max |B|',(maxB*1000).toFixed(4)+' mT'],
+    ['Min |B| (non-zero)',(minB*1000).toFixed(6)+' mT'],
+    ['Mean |B|',(meanB*1000).toFixed(4)+' mT'],
+    ['B at origin',(getBatPoint(0,0,params).mag*1000).toFixed(4)+' mT'],
+    ['μ₀',MU0.toExponential(4)+' H/m'],
+    ...((params.type==='loop'||params.type==='helmholtz')?[['Centre B (est.)',(MU0*(params.turns||1)*(params.current||0)/(2*(params.radius||0.05))*1000).toFixed(3)+' mT']]:[] ),
+    ...((params.type==='solenoid')?[['Interior B (est.)',(MU0*(params.turns||1000)*(params.current||10)*1000).toFixed(3)+' mT']]:[] ),
+  ];
+  document.getElementById('mag-result-rows').innerHTML = rows.map(([l,v])=>`<div class="stat-row"><span class="stat-label">${l}</span><span class="stat-val">${v}</span></div>`).join('');
+}
+
+// ── Sweep ─────────────────────────────────────────
+function magSweep() {
+  const varName=document.getElementById('mag-sweep-var').value;
+  const min=+document.getElementById('mag-sweep-min').value;
+  const max=+document.getElementById('mag-sweep-max').value;
+  const steps=+document.getElementById('mag-sweep-steps').value;
+  const params=readMagParams();
+  const xr=+document.getElementById('mag-xrange').value;
+  const results=[];
+  for(let i=0;i<steps;i++){
+    const val=min+(max-min)*i/(steps-1);
+    let p={...params};
+    if(varName==='current')p.current=p.sol_current=p.hh_current=val;
+    else if(varName==='radius')p.radius=p.sol_radius=p.hh_radius=val;
+    else if(varName==='turns')p.turns=Math.round(val);
+    const bCenter=getBatPoint(0,0,p);
+    const bAxis=getBatPoint(0,xr/4,p);
+    results.push({var:val,bCenter:bCenter.mag,bAxis:bAxis.mag,ratio:bAxis.mag/(bCenter.mag||1e-30)});
+  }
+  const xLabel={current:'I (A)',radius:'R (m)',turns:'N turns',distance:'d (m)',angle:'θ (°)'}[varName];
+  const traces=[
+    {type:'scatter',mode:'lines+markers',x:results.map(r=>r.var),y:results.map(r=>r.bCenter),line:{color:'#B87333',width:2},marker:{size:4},name:'|B| at origin',hovertemplate:'%{x:.2f}<br>%{y:.4e} T<extra></extra>'},
+    {type:'scatter',mode:'lines',x:results.map(r=>r.var),y:results.map(r=>r.bAxis),line:{color:'#4EC5C1',width:1.5,dash:'dot'},name:'|B| at ¼ range'},
+  ];
+  const layout={...MPLT.base,height:250,xaxis:{...MPLT.base.xaxis,title:{text:xLabel,font:{size:9}}},yaxis:{...MPLT.base.yaxis,title:{text:'|B| (T)',font:{size:9}}}};
+  Plotly.react('mag-plot-sweep',traces,layout,MPLT.cfg);
+  document.getElementById('mag-sweep-table').innerHTML=
+    `<thead><tr>${['#',xLabel,'|B| origin (T)','|B| ¼r (T)'].map(h=>`<th style="background:#12151A;color:#8A9BB0;padding:5px 8px;border-bottom:1px solid #1E2530;font-size:9px">${h}</th>`).join('')}</tr></thead><tbody>${results.map((r,i)=>`<tr><td style="padding:4px 8px;font-size:10px;border-bottom:1px solid rgba(30,37,48,0.5)">${i+1}</td><td style="padding:4px 8px;font-size:10px;font-family:var(--font-mono)">${r.var.toFixed(2)}</td><td style="padding:4px 8px;font-size:10px;font-family:var(--font-mono);color:#B87333">${r.bCenter.toExponential(3)}</td><td style="padding:4px 8px;font-size:10px;font-family:var(--font-mono);color:#4EC5C1">${r.bAxis.toExponential(3)}</td></tr>`).join('')}</tbody>`;
+  document.getElementById('mag-sweep-status').textContent=`Sweep complete: ${steps} points · ${varName}`;
+  magTab('sweep',document.querySelector('.tab:nth-child(4)'));
+}
+
+// ── Demo ──────────────────────────────────────────
+function magDemo() {
+  document.getElementById('mag-source-type').value='helmholtz';
+  magSourceSwitch();
+  document.getElementById('mag-hh-current').value=10;
+  document.getElementById('mag-hh-radius').value=0.1;
+  document.getElementById('mag-hh-sep').value=0.1;
+  document.getElementById('mag-hh-turns').value=100;
+  document.getElementById('mag-xrange').value=0.3;
+  document.getElementById('mag-yrange').value=0.3;
+  document.getElementById('mag-show-fieldlines').checked=true;
+  document.getElementById('mag-show-magnitude').checked=true;
+  document.getElementById('mag-resolution').value=30;
+  magCalculate();
+}
+
+// ── Export ────────────────────────────────────────
+function magExport(type) {
+  if(!MAG_STATE&&type!=='png'){alert('Run calculation first.');return;}
+  if(type==='png'){['mag-plot-2d','mag-plot-3d','mag-plot-axial','mag-plot-radial'].forEach((id,i)=>{const el=document.getElementById(id);if(el&&el.data)setTimeout(()=>Plotly.downloadImage(id,{format:'png',filename:`romer-mag-${id}`,width:800,height:500,scale:2}),i*500);});return;}
+  const s=MAG_STATE;
+  let content='',filename='',mime='';
+  if(type==='json'){content=JSON.stringify(s,null,2);filename='romer-mag.json';mime='application/json';}
+  else if(type==='csv'){const hdr='x,y,bx,by,mag_T\n';const rows=s.grid.xs.map((_,i)=>`${s.grid.xs[i]},${s.grid.ys[i]},${s.grid.bxs[i]},${s.grid.bys[i]},${s.grid.mags[i]}`).join('\n');content=hdr+rows;filename='romer-mag-grid.csv';mime='text/csv';}
+  else if(type==='txt'){content=`RÖMER MAGNETOSTATICS REPORT \nSource: ${s.params.type}\nTimestamp: ${s.timestamp}\nMax|B|: ${(Math.max(...s.grid.mags.filter(isFinite))*1000).toFixed(3)} mT\nDomain: ±${s.xr}×±${s.yr} m\nGrid: ${s.N}×${s.N}\n`;filename='romer-mag-report.txt';mime='text/plain';}
+  else if(type==='yaml'){content=`romer_magnetostatics:\n  version: 2.0.0\n  source_type: ${s.params.type}\n  timestamp: ${s.timestamp}\n  domain_m: [${s.xr},${s.yr}]\n  grid: ${s.N}\n  max_B_T: ${Math.max(...s.grid.mags.filter(isFinite))}\n`;filename='romer-mag.yaml';mime='text/yaml';}
+  else if(type==='gmat'){content=`% GMAT Magnetostatics Reference\n% Römer Industries \n% Source: ${s.params.type}\n% Max|B|: ${(Math.max(...s.grid.mags.filter(isFinite))*1000).toFixed(3)} mT\n`;filename='romer-mag.script';mime='text/plain';}
+  const blob=new Blob([content],{type:mime});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=filename;a.click();
+}
+
+// ── Route ─────────────────────────────────────────
+function magRoute(ws) {
+  if(!MAG_STATE){alert('Run calculation first.');return;}
+  const pay={calculator:'magnetostatics',version:'2.0.0',timestamp:MAG_STATE.timestamp,type:MAG_STATE.params.type,maxB_T:Math.max(...MAG_STATE.grid.mags.filter(isFinite))};
+  try{localStorage.setItem(`achilles_calc_mag_${ws}`,JSON.stringify(pay));
+    const el=document.getElementById('mag-route-status');if(el){el.className='info-box';el.style.display='';el.textContent=`✓ Routed to ${ws.toUpperCase()} — ${new Date().toISOString()}`;}}catch(e){alert(e.message);}
+}
+function magRouteAll(){['w1','w2','w3','w4','w5','w6'].forEach(ws=>magRoute(ws));const el=document.getElementById('mag-route-status');if(el){el.className='info-box';el.style.display='';el.textContent=`✓ Routed to ALL workspaces — ${new Date().toISOString()}`;}}
+
+// ── Init ──────────────────────────────────────────
+document.addEventListener('DOMContentLoaded',()=>{
+  document.getElementById('mag-source-type').addEventListener('change',magSourceSwitch);
+  magSourceSwitch();
+  try{localStorage.setItem('achilles_beacon_mag',JSON.stringify({calculator:'magnetostatics',version:'2.0.0',status:'live',timestamp:new Date().toISOString()}));}catch(e){}
+  console.log('%cMagnetostatics Calculator','color:#B87333;font-weight:bold;font-size:14px');
+  console.log('%cRömer Industries / EMASSC','color:#4EC5C1;font-size:12px');
+});
+</script>
+</body></html> 
