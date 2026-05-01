@@ -1,0 +1,705 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>EMF Fields — Electromagnetic Field Simulator | Römer Industries</title>
+<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0B0D10;--surface:#12151A;--surface2:#1A1E25;--surface3:#222831;--copper:#B87333;--gold:#C9A24A;--teal:#4EC5C1;--cyan:#00E5FF;--ivory:#F2F1EC;--muted:#8A8F9A;--border:#2A2F3A;--font-ui:'Inter',system-ui,sans-serif;--font-data:'JetBrains Mono',monospace;}
+html,body{background:var(--bg);color:var(--ivory);font-family:var(--font-ui);font-size:13px;height:100%;overflow-x:hidden}
+.ops-tracker{display:flex;align-items:center;justify-content:space-between;padding:7px 14px;background:#0A0C0F;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:6px;position:sticky;top:0;z-index:100}
+.ops-beacon{display:flex;align-items:center;gap:8px}
+.beacon-dot{width:8px;height:8px;border-radius:50%;background:var(--teal);box-shadow:0 0 6px var(--teal);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.ops-title{font-family:var(--font-data);font-size:11px;font-weight:700;color:var(--copper);letter-spacing:1.5px;text-transform:uppercase}
+.ops-desc{font-family:var(--font-data);font-size:9px;color:var(--muted);letter-spacing:0.5px}
+.ops-nav{display:flex;gap:4px;flex-wrap:wrap;align-items:center}
+.nav-pill{font-family:var(--font-data);font-size:9px;font-weight:700;padding:3px 7px;border-radius:3px;border:1px solid var(--border);color:var(--muted);cursor:pointer;text-decoration:none;letter-spacing:0.8px;transition:all 0.2s;background:transparent}
+.nav-pill:hover{border-color:var(--copper);color:var(--copper)}
+.nav-pill.active{background:var(--copper);color:#0B0D10;border-color:var(--copper)}
+.nav-pill.w-pill{border-color:#2A3040;color:#4A5060}
+.nav-pill.w-pill:hover{border-color:var(--teal);color:var(--teal)}
+.beacon-bar{background:#090B0E;border-bottom:1px solid var(--border);padding:4px 14px;display:flex;align-items:center;gap:10px}
+.beacon-live{font-family:var(--font-data);font-size:9px;color:var(--teal);font-weight:700;letter-spacing:1px}
+.beacon-path,.beacon-brand{font-family:var(--font-data);font-size:9px;color:var(--muted)}
+.beacon-brand{color:var(--copper)}
+.beacon-sep{color:var(--border)}
+.sim-header{padding:14px 18px 10px;border-bottom:1px solid var(--border);background:var(--surface)}
+.sim-title{font-family:var(--font-ui);font-size:20px;font-weight:700;color:var(--copper);letter-spacing:0.5px;margin-bottom:3px}
+.sim-desc{font-size:11px;color:var(--muted);margin-bottom:8px}
+.sim-badges{display:flex;gap:6px;flex-wrap:wrap}
+.badge{font-family:var(--font-data);font-size:9px;padding:2px 8px;border-radius:2px;border:1px solid var(--border);color:var(--muted)}
+.badge.teal{border-color:var(--teal);color:var(--teal)}.badge.copper{border-color:var(--copper);color:var(--copper)}.badge.gold{border-color:var(--gold);color:var(--gold)}
+.telem-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border-bottom:1px solid var(--border)}
+.telem-cell{background:var(--surface2);padding:8px 10px}
+.telem-label{font-family:var(--font-data);font-size:8px;color:var(--muted);letter-spacing:0.8px;text-transform:uppercase;margin-bottom:2px}
+.telem-val{font-family:var(--font-data);font-size:18px;font-weight:700;color:var(--teal);line-height:1}
+.telem-unit{font-family:var(--font-data);font-size:9px;color:var(--muted)}
+.telem-cell.warning .telem-val{color:var(--gold)}
+.sim-body{display:grid;grid-template-columns:260px 1fr;height:calc(100vh - 118px);min-height:560px}
+.sim-controls{background:var(--surface);border-right:1px solid var(--border);overflow-y:auto}
+.sim-main{display:flex;flex-direction:column;overflow:hidden;background:var(--bg)}
+.ctrl-section{border-bottom:1px solid var(--border);padding:12px 14px}
+.ctrl-label{font-family:var(--font-data);font-size:9px;font-weight:700;color:var(--copper);letter-spacing:1.2px;text-transform:uppercase;margin-bottom:8px}
+.ctrl-row{margin-bottom:8px}
+.ctrl-row label{display:block;font-size:10px;color:var(--muted);margin-bottom:3px;font-family:var(--font-data)}
+.ctrl-row input[type=number],.ctrl-row select{width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--ivory);padding:5px 8px;border-radius:3px;font-family:var(--font-data);font-size:11px}
+.ctrl-row input[type=number]:focus,.ctrl-row select:focus{outline:none;border-color:var(--copper)}
+.ctrl-row select option{background:var(--surface2)}
+.range-wrap{display:flex;align-items:center;gap:8px}
+.ctrl-row input[type=range]{flex:1;accent-color:var(--copper);height:3px}
+.range-val{font-family:var(--font-data);font-size:10px;color:var(--gold);min-width:50px;text-align:right}
+.tab-bar{display:flex;background:var(--surface);border-bottom:1px solid var(--border);padding:0 14px}
+.tab-btn{font-family:var(--font-data);font-size:10px;font-weight:600;padding:9px 14px;cursor:pointer;border:none;background:transparent;color:var(--muted);letter-spacing:0.8px;border-bottom:2px solid transparent;transition:all 0.2s}
+.tab-btn:hover{color:var(--ivory)}
+.tab-btn.active{color:var(--copper);border-bottom-color:var(--copper)}
+.tab-pane{display:none;height:100%;overflow:auto;flex-direction:column}
+.tab-pane.active{display:flex}
+.plot-container{flex:1;min-height:350px}
+.btn{font-family:var(--font-data);font-size:10px;font-weight:700;padding:6px 14px;border-radius:3px;border:none;cursor:pointer;letter-spacing:0.8px;transition:all 0.2s}
+.btn-primary{background:var(--copper);color:#0B0D10}.btn-primary:hover{background:var(--gold)}
+.btn-secondary{background:transparent;border:1px solid var(--border);color:var(--muted)}.btn-secondary:hover{border-color:var(--teal);color:var(--teal)}
+.btn-teal{background:var(--teal);color:#0B0D10}
+.btn-sm{padding:4px 10px;font-size:9px}
+.btn-row{display:flex;gap:6px;flex-wrap:wrap;padding:8px 14px}
+.sweep-grid{display:grid;grid-template-columns:240px 1fr;gap:0;height:100%}
+.sweep-config{padding:14px;border-right:1px solid var(--border);overflow-y:auto}
+.export-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:14px}
+.export-card{background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:12px}
+.export-card h4{font-family:var(--font-data);font-size:10px;color:var(--copper);letter-spacing:1px;margin-bottom:6px}
+.export-card p{font-size:10px;color:var(--muted);margin-bottom:10px;line-height:1.5}
+.ds-panel{padding:12px 14px;border-top:1px solid var(--border);background:var(--surface)}
+.ds-title{font-family:var(--font-data);font-size:9px;color:var(--teal);letter-spacing:1px;margin-bottom:8px;font-weight:700}
+.ds-btns{display:flex;gap:4px;flex-wrap:wrap}
+.ds-btn{font-family:var(--font-data);font-size:9px;font-weight:700;padding:4px 10px;border-radius:3px;background:var(--surface3);border:1px solid var(--border);color:var(--muted);cursor:pointer;transition:all 0.2s}
+.ds-btn:hover{border-color:var(--teal);color:var(--teal)}
+.ds-btn.all{border-color:var(--copper);color:var(--copper)}.ds-btn.all:hover{background:var(--copper);color:#0B0D10}
+.ds-status{font-family:var(--font-data);font-size:9px;color:var(--gold);margin-top:6px;min-height:14px}
+.data-table{width:100%;border-collapse:collapse;font-family:var(--font-data);font-size:10px}
+.data-table th{background:var(--surface3);color:var(--copper);padding:6px 10px;text-align:left;font-size:9px;letter-spacing:0.8px;border-bottom:1px solid var(--border)}
+.data-table td{padding:5px 10px;border-bottom:1px solid var(--border);color:var(--ivory)}
+.data-table tr:hover td{background:var(--surface2)}
+.table-wrap{overflow-x:auto;max-height:220px;overflow-y:auto}
+.results-summary{padding:8px 14px;background:var(--surface2);border-bottom:1px solid var(--border);display:flex;gap:14px;flex-wrap:wrap}
+.rs-item{display:flex;flex-direction:column;gap:2px}
+.rs-label{font-family:var(--font-data);font-size:8px;color:var(--muted);letter-spacing:0.8px}
+.rs-val{font-family:var(--font-data);font-size:13px;color:var(--teal);font-weight:700}
+.source-list{margin:8px 0;max-height:120px;overflow-y:auto}
+.source-item{display:flex;align-items:center;gap:6px;padding:5px 8px;background:var(--surface2);border:1px solid var(--border);border-radius:3px;margin-bottom:4px;font-family:var(--font-data);font-size:9px;cursor:pointer}
+.source-item:hover{border-color:var(--copper)}
+.source-dot{width:8px;height:8px;border-radius:50%}
+.plot-ctrl-bar{display:flex;align-items:center;gap:8px;padding:6px 12px;background:var(--surface);border-bottom:1px solid var(--border);flex-wrap:wrap}
+.plot-ctrl-bar span{font-family:var(--font-data);font-size:9px;color:var(--muted)}
+.plot-ctrl-bar select{background:var(--surface2);border:1px solid var(--border);color:var(--ivory);padding:3px 7px;border-radius:3px;font-family:var(--font-data);font-size:10px}
+</style></head><body>
+<div class="ops-tracker">
+  <div class="ops-beacon"><div class="beacon-dot"></div>
+    <div><div class="ops-title">EMF FIELDS — ELECTROMAGNETIC FIELD SIMULATOR</div>
+    <div class="ops-desc">3D volumetric EM field · Biot-Savart superposition · Multi-source · Isosurface · /sim/fields</div></div>
+  </div>
+  <div class="ops-nav">
+    <a class="nav-pill calc" href="/calc/orbital">ORB</a>
+    <a class="nav-pill calc" href="/calc/launch">LW</a>
+    <a class="nav-pill calc" href="/calc/magnetostatics">MAG</a>
+    <a class="nav-pill calc" href="/calc/energy">PWR</a>
+    <a class="nav-pill calc" href="/calc/fluids">FLD</a>
+    <a class="nav-pill sim" href="/sims/rfs-extraction">RFS</a>
+    <a class="nav-pill sim" href="/sim/node">EMFF</a>
+    <a class="nav-pill sim active" href="/sim/fields">EMF</a>
+    <a class="nav-pill sim" href="/sim/re-entry">ENTRY</a>
+    <a class="nav-pill w1" href="/w1/data">W1</a>
+    <a class="nav-pill w2" href="/w2/data">W2</a>
+    <a class="nav-pill w3" href="/w3/data">W3</a>
+    <a class="nav-pill w4" href="/w4/data">W4</a>
+    <a class="nav-pill w5" href="/w5/data">W5</a>
+    <a class="nav-pill w6" href="/w6/data">W6</a>
+    <a class="nav-pill util" href="/data/achilles">ACH</a>
+    <a class="nav-pill util" href="/library">LIB</a>
+    <a class="nav-pill util" href="/gmat">GMAT</a>
+    <a class="nav-pill util" href="/dash">DASH</a>
+  </div>
+</div>
+<div class="beacon-bar">
+  <span class="beacon-live">● LIVE</span><span class="beacon-path">/sim/fields</span><span class="beacon-sep">·</span>
+  <span class="beacon-path">Universal — callable by all workspaces &amp; dataspaces</span><span class="beacon-sep">·</span>
+  <span class="beacon-brand">Römer Industries / EMASSC</span><span class="beacon-sep">·</span>
+  <span class="beacon-path" id="emf-beacon-ts"></span>
+</div>
+<div class="sim-header">
+  <div class="sim-title">EMF Fields — Electromagnetic Field Simulator</div>
+  <div class="sim-desc">3D volumetric EM field environment · Biot-Savart + Coulomb superposition · Multi-source dipoles/loops/solenoids · Volume slice planes · Isosurface rendering</div>
+  <div class="sim-badges">
+    <span class="badge teal"></span><span class="badge">SI Units</span>
+    <span class="badge copper">Universal Tool — W1–W6 Callable</span>
+    <span class="badge teal">Plotly 3D Isosurface</span><span class="badge gold">Multi-Source Superposition</span>
+    <span class="badge">JetBrains Mono · Inter</span>
+  </div>
+</div>
+<div class="telem-grid">
+  <div class="telem-cell"><div class="telem-label">SOURCES</div><div class="telem-val" id="tv-srcs">1</div><div class="telem-unit">active</div></div>
+  <div class="telem-cell"><div class="telem-label">PEAK B-FIELD</div><div class="telem-val" id="tv-bmax">—</div><div class="telem-unit">T</div></div>
+  <div class="telem-cell warning"><div class="telem-label">FIELD AT ORIGIN</div><div class="telem-val" id="tv-b0">—</div><div class="telem-unit">T</div></div>
+  <div class="telem-cell"><div class="telem-label">GRID POINTS</div><div class="telem-val" id="tv-pts">—</div><div class="telem-unit">pts</div></div>
+  <div class="telem-cell"><div class="telem-label">VOLUME (m³)</div><div class="telem-val" id="tv-vol">—</div><div class="telem-unit">m³</div></div>
+  <div class="telem-cell"><div class="telem-label">TOTAL MOMENT</div><div class="telem-val" id="tv-moment">—</div><div class="telem-unit">A·m²</div></div>
+  <div class="telem-cell"><div class="telem-label">UNIFORMITY</div><div class="telem-val" id="tv-unif">—</div><div class="telem-unit">%</div></div>
+  <div class="telem-cell"><div class="telem-label">SLICE PLANE</div><div class="telem-val" id="tv-plane">XY</div><div class="telem-unit">z=0</div></div>
+</div>
+<div class="sim-body">
+  <div class="sim-controls">
+    <div class="ctrl-section">
+      <div class="ctrl-label">⚡ SOURCE TYPE</div>
+      <div class="ctrl-row"><label>Source Type</label>
+        <select id="p-srctype">
+          <option value="dipole" selected>Point Dipole</option>
+          <option value="loop">Circular Loop</option>
+          <option value="helmholtz">Helmholtz Pair</option>
+          <option value="solenoid">Solenoid</option>
+          <option value="toroid">Toroid</option>
+          <option value="charge">Point Charge (E-field)</option>
+        </select>
+      </div>
+      <div class="ctrl-row"><label>Source Position X (m)</label><input type="number" id="p-sx" value="0" step="0.1"></div>
+      <div class="ctrl-row"><label>Source Position Y (m)</label><input type="number" id="p-sy" value="0" step="0.1"></div>
+      <div class="ctrl-row"><label>Source Position Z (m)</label><input type="number" id="p-sz" value="0" step="0.1"></div>
+    </div>
+    <div class="ctrl-section">
+      <div class="ctrl-label">🔋 SOURCE PARAMS</div>
+      <div class="ctrl-row"><label>Current / Charge (A or C)</label><input type="number" id="p-current" value="1000" step="100"></div>
+      <div class="ctrl-row"><label>Coil Turns / Loops N</label><input type="number" id="p-turns" value="100" step="10"></div>
+      <div class="ctrl-row"><label>Coil Radius (m)</label><input type="number" id="p-radius" value="0.5" step="0.05"></div>
+      <div class="ctrl-row"><label>Orientation θ (°)</label><div class="range-wrap">
+        <input type="range" id="p-theta" min="0" max="180" value="0" step="5" oninput="document.getElementById('v-theta').textContent=this.value+'°'">
+        <span class="range-val" id="v-theta">0°</span>
+      </div></div>
+      <div class="ctrl-row"><label>Orientation φ (°)</label><div class="range-wrap">
+        <input type="range" id="p-phi" min="0" max="360" value="0" step="5" oninput="document.getElementById('v-phi').textContent=this.value+'°'">
+        <span class="range-val" id="v-phi">0°</span>
+      </div></div>
+    </div>
+    <div class="ctrl-section">
+      <div class="ctrl-label">🗺 FIELD VOLUME</div>
+      <div class="ctrl-row"><label>Volume Extent (m)</label><div class="range-wrap">
+        <input type="range" id="p-extent" min="0.5" max="10" value="2" step="0.5" oninput="document.getElementById('v-extent').textContent=this.value+'m'">
+        <span class="range-val" id="v-extent">2m</span>
+      </div></div>
+      <div class="ctrl-row"><label>Grid Resolution</label>
+        <select id="p-res"><option value="10">10³ (fast)</option><option value="15" selected>15³ (balanced)</option><option value="20">20³ (detailed)</option><option value="25">25³ (high)</option></select>
+      </div>
+      <div class="ctrl-row"><label>Slice Plane</label>
+        <select id="p-slice" onchange="document.getElementById('tv-plane').textContent=this.value">
+          <option value="XY" selected>XY (z=0)</option><option value="XZ">XZ (y=0)</option><option value="YZ">YZ (x=0)</option>
+        </select>
+      </div>
+      <div class="ctrl-row"><label>Display Mode</label>
+        <select id="p-display"><option value="heatmap" selected>Heatmap Slice</option><option value="isosurface">Isosurface 3D</option><option value="streamlines">Field Streamlines</option><option value="vectors">Vector Arrows</option></select>
+      </div>
+    </div>
+    <div class="ctrl-section">
+      <div class="ctrl-label">📍 SOURCE STACK</div>
+      <div class="source-list" id="source-list"><div class="source-item" style="color:var(--muted)">No sources added.</div></div>
+      <button class="btn btn-teal btn-sm" onclick="window.emf.addSource()" style="width:100%;margin-top:4px">+ ADD SOURCE</button>
+      <button class="btn btn-secondary btn-sm" onclick="window.emf.clearSources()" style="width:100%;margin-top:4px">✕ CLEAR ALL</button>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="window.emf.compute()">COMPUTE</button>
+      <button class="btn btn-secondary btn-sm" onclick="window.emf.reset()">RESET</button>
+    </div>
+    <div class="ds-panel">
+      <div class="ds-title">⬡ ROUTE TO DATASPACE</div>
+      <div class="ds-btns">
+        <button class="ds-btn" onclick="window.emf.sendDS('w1')">W1</button><button class="ds-btn" onclick="window.emf.sendDS('w2')">W2</button><button class="ds-btn" onclick="window.emf.sendDS('w3')">W3</button><button class="ds-btn" onclick="window.emf.sendDS('w4')">W4</button><button class="ds-btn" onclick="window.emf.sendDS('w5')">W5</button><button class="ds-btn" onclick="window.emf.sendDS('w6')">W6</button>
+        <button class="ds-btn all" onclick="window.emf.sendDS('all')">ALL</button>
+      </div>
+      <div class="ds-status" id="ds-status"></div>
+    </div>
+  </div>
+  <div class="sim-main">
+    <div class="tab-bar">
+      <button class="tab-btn active" onclick="window.emf.tab('3d')">3D FIELD</button>
+      <button class="tab-btn" onclick="window.emf.tab('slice')">2D SLICE</button>
+      <button class="tab-btn" onclick="window.emf.tab('profile')">INTENSITY</button>
+      <button class="tab-btn" onclick="window.emf.tab('sources')">SOURCES</button>
+      <button class="tab-btn" onclick="window.emf.tab('sweep')">SWEEP</button>
+      <button class="tab-btn" onclick="window.emf.tab('export')">EXPORT</button>
+    </div>
+    <div class="tab-pane active" id="tab-3d">
+      <div class="plot-ctrl-bar">
+        <span>VIEW:</span>
+        <select id="view-mode" onchange="window.emf.updateView()">
+          <option value="isosurface">Isosurface (|B|)</option>
+          <option value="volume">Volume Slice</option>
+          <option value="streamlines">Field Lines</option>
+        </select>
+        <span>ISO LEVEL:</span>
+        <select id="iso-level"><option value="0.1">10%</option><option value="0.25" selected>25%</option><option value="0.5">50%</option><option value="0.75">75%</option></select>
+        <button class="btn btn-secondary btn-sm" onclick="window.emf.compute()">REFRESH</button>
+      </div>
+      <div class="plot-container" id="plot-3d"></div>
+    </div>
+    <div class="tab-pane" id="tab-slice">
+      <div class="results-summary">
+        <div class="rs-item"><span class="rs-label">MAX (SLICE)</span><span class="rs-val" id="rs-smax">—</span></div>
+        <div class="rs-item"><span class="rs-label">MIN (SLICE)</span><span class="rs-val" id="rs-smin">—</span></div>
+        <div class="rs-item"><span class="rs-label">MEAN (SLICE)</span><span class="rs-val" id="rs-smean">—</span></div>
+        <div class="rs-item"><span class="rs-label">GRADIENT</span><span class="rs-val" id="rs-sgrad">—</span></div>
+      </div>
+      <div id="plot-slice" style="flex:1;min-height:350px"></div>
+    </div>
+    <div class="tab-pane" id="tab-profile">
+      <div class="plot-ctrl-bar">
+        <span>PROFILE AXIS:</span>
+        <select id="prof-axis">
+          <option value="x">Along X-axis</option><option value="y">Along Y-axis</option><option value="z">Along Z-axis</option><option value="r">Radial from Source</option>
+        </select>
+        <button class="btn btn-secondary btn-sm" onclick="window.emf.plotProfile()">PLOT</button>
+      </div>
+      <div id="plot-profile" style="flex:1;min-height:350px"></div>
+    </div>
+    <div class="tab-pane" id="tab-sources">
+      <div style="padding:14px;flex:1;overflow-y:auto">
+        <div style="font-family:var(--font-data);font-size:9px;color:var(--copper);letter-spacing:1px;margin-bottom:10px">ACTIVE SOURCE CONFIGURATION</div>
+        <div class="table-wrap" style="max-height:none">
+          <table class="data-table">
+            <thead><tr><th>#</th><th>TYPE</th><th>POSITION (m)</th><th>CURRENT (A)</th><th>TURNS</th><th>RADIUS (m)</th><th>MOMENT (A·m²)</th></tr></thead>
+            <tbody id="sources-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="tab-pane" id="tab-sweep">
+      <div class="sweep-grid">
+        <div class="sweep-config">
+          <div class="ctrl-label">⚡ SWEEP CONFIG</div>
+          <div class="ctrl-row" style="margin-top:8px"><label>Variable</label>
+            <select id="sw-var"><option value="current">Current (A)</option><option value="radius">Coil Radius (m)</option><option value="turns">Turns N</option><option value="dist">Distance from Source (m)</option></select>
+          </div>
+          <div class="ctrl-row"><label>Start</label><input type="number" id="sw-start" value="100"></div>
+          <div class="ctrl-row"><label>End</label><input type="number" id="sw-end" value="5000"></div>
+          <div class="ctrl-row"><label>Steps</label><input type="number" id="sw-steps" value="25" min="5" max="50"></div>
+          <div class="ctrl-row"><label>Output</label>
+            <select id="sw-out"><option value="field">Peak B-field (T)</option><option value="moment">Dipole Moment (A·m²)</option><option value="uniformity">Uniformity (%)</option></select>
+          </div>
+          <button class="btn btn-primary" style="width:100%;margin-top:10px" onclick="window.emf.runSweep()">RUN SWEEP</button>
+        </div>
+        <div style="display:flex;flex-direction:column">
+          <div id="plot-sweep" style="flex:1;min-height:300px"></div>
+          <div class="table-wrap"><table class="data-table"><thead><tr><th>INPUT</th><th>OUTPUT</th></tr></thead><tbody id="sweep-tbody"></tbody></table></div>
+        </div>
+      </div>
+    </div>
+    <div class="tab-pane" id="tab-export">
+      <div class="export-grid">
+        <div class="export-card"><h4>⬡ JSON STATE</h4><p>Full field state — source configs, 3D field data, slice data, isosurface values.</p><button class="btn btn-primary btn-sm" onclick="window.emf.exportJSON()">EXPORT JSON</button></div>
+        <div class="export-card"><h4>📊 CSV FIELD GRID</h4><p>3D field data grid — x, y, z, Bx, By, Bz, |B| for all grid points.</p><button class="btn btn-primary btn-sm" onclick="window.emf.exportCSV()">EXPORT CSV</button></div>
+        <div class="export-card"><h4>🛰 GMAT SCRIPT</h4><p>GMAT EM environment script — field model for W5 spacecraft environment simulations.</p><button class="btn btn-primary btn-sm" onclick="window.emf.exportGMAT()">EXPORT GMAT</button></div>
+        <div class="export-card"><h4>📄 TXT MANIFEST</h4><p>Source configuration manifest — all parameters, field statistics, slice summaries.</p><button class="btn btn-primary btn-sm" onclick="window.emf.exportTXT()">EXPORT TXT</button></div>
+        <div class="export-card"><h4>🖼 PNG SNAPSHOT</h4><p>Export current 3D field view as high-resolution PNG image.</p><button class="btn btn-teal btn-sm" onclick="window.emf.exportPNG()">EXPORT PNG</button></div>
+        <div class="export-card"><h4>📋 YAML CONFIG</h4><p>YAML source configuration for reproducible field environment setup.</p><button class="btn btn-secondary btn-sm" onclick="window.emf.exportYAML()">EXPORT YAML</button></div>
+      </div>
+    </div>
+  </div>
+</div><script>
+window.emf = (function(){
+  'use strict';
+  const MU0 = 4*Math.PI*1e-7;
+  const K_E = 8.99e9; // Coulomb const
+  const RAD = Math.PI/180;
+
+  let state = {
+    computed: false,
+    sources: [],
+    fieldData: null,
+    sliceData: null,
+    results: {},
+    plot3dReady: false
+  };
+
+  function p(id){return document.getElementById(id);}
+  function pv(id){return parseFloat(p(id).value)||0;}
+  function pvs(id){return p(id).value;}
+  function fmt(n,d=2){return(typeof n==='number'&&!isNaN(n))?n.toFixed(d):'—';}
+  function fmtSci(n){if(!n||isNaN(n))return '—';if(Math.abs(n)<1e-9)return n.toExponential(2);if(Math.abs(n)<0.001)return n.toExponential(3);return fmt(n,4);}
+
+  // ── PHYSICS ──
+  function dipoleMoment(N,I,r){ return N*I*Math.PI*r*r; }
+
+  // B-field from magnetic dipole at position (x,y,z) relative to source
+  function dipoleB(m, px,py,pz, ox,oy,oz, theta,phi){
+    const dx=px-ox, dy=py-oy, dz=pz-oz;
+    const r=Math.sqrt(dx*dx+dy*dy+dz*dz);
+    if(r<1e-10) return {bx:0,by:0,bz:0};
+    // Dipole axis unit vector
+    const ax=Math.sin(theta*RAD)*Math.cos(phi*RAD);
+    const ay=Math.sin(theta*RAD)*Math.sin(phi*RAD);
+    const az=Math.cos(theta*RAD);
+    // r-hat
+    const rx=dx/r, ry=dy/r, rz=dz/r;
+    // m·r-hat
+    const mr=m*(ax*rx+ay*ry+az*rz);
+    const c=MU0/(4*Math.PI);
+    const bx=c*(3*mr*rx-ax*m)/(r*r*r);
+    const by=c*(3*mr*ry-ay*m)/(r*r*r);
+    const bz=c*(3*mr*rz-az*m)/(r*r*r);
+    return {bx,by,bz};
+  }
+
+  // E-field from point charge
+  function chargeE(q, px,py,pz, ox,oy,oz){
+    const dx=px-ox, dy=py-oy, dz=pz-oz;
+    const r=Math.sqrt(dx*dx+dy*dy+dz*dz);
+    if(r<1e-10) return {ex:0,ey:0,ez:0};
+    const E=K_E*q/(r*r*r);
+    return {ex:E*dx,ey:E*dy,ez:E*dz};
+  }
+
+  // Total field at point (superposition)
+  function totalField(px,py,pz){
+    let bx=0,by=0,bz=0;
+    state.sources.forEach(src=>{
+      const m=dipoleMoment(src.N,src.I,src.r);
+      if(src.type==='charge'){
+        const e=chargeE(src.I,px,py,pz,src.x,src.y,src.z);
+        bx+=e.ex*1e-10; by+=e.ey*1e-10; bz+=e.ez*1e-10;
+      } else {
+        const b=dipoleB(m,px,py,pz,src.x,src.y,src.z,src.theta||0,src.phi||0);
+        bx+=b.bx; by+=b.by; bz+=b.bz;
+      }
+    });
+    return {bx,by,bz,bmag:Math.sqrt(bx*bx+by*by+bz*bz)};
+  }
+
+  // ── SOURCE MANAGEMENT ──
+  function addSource(){
+    const src={
+      type:pvs('p-srctype'), x:pv('p-sx'), y:pv('p-sy'), z:pv('p-sz'),
+      I:pv('p-current'), N:pv('p-turns'), r:pv('p-radius'),
+      theta:pv('p-theta'), phi:pv('p-phi'),
+      id:Date.now(), color:['#B87333','#4EC5C1','#C9A24A','#00E5FF','#8A8F9A'][state.sources.length%5]
+    };
+    state.sources.push(src);
+    p('tv-srcs').textContent=state.sources.length;
+    renderSourceList();
+  }
+
+  function clearSources(){ state.sources=[]; p('tv-srcs').textContent='0'; renderSourceList(); }
+
+  function renderSourceList(){
+    const list=p('source-list');
+    if(!state.sources.length){
+      list.innerHTML='<div class="source-item" style="color:var(--muted)">No sources added.</div>';
+      return;
+    }
+    list.innerHTML=state.sources.map((s,i)=>
+      `<div class="source-item">
+        <div class="source-dot" style="background:${s.color}"></div>
+        <span style="flex:1;${i===0?'color:var(--ivory)':'color:var(--muted)'}">#${i+1} ${s.type} (${fmt(s.x,1)},${fmt(s.y,1)},${fmt(s.z,1)}) I=${s.I}A</span>
+        <span onclick="window.emf.removeSource(${i})" style="color:#FF4444;cursor:pointer;padding:0 4px">✕</span>
+      </div>`
+    ).join('');
+    // Update sources table
+    p('sources-tbody').innerHTML=state.sources.map((s,i)=>{
+      const m=dipoleMoment(s.N,s.I,s.r);
+      return `<tr><td style="color:var(--copper)">${i+1}</td><td>${s.type}</td>
+        <td>(${fmt(s.x,1)}, ${fmt(s.y,1)}, ${fmt(s.z,1)})</td>
+        <td>${fmt(s.I,0)}</td><td>${s.N}</td><td>${fmt(s.r,2)}</td>
+        <td style="color:var(--teal)">${fmtSci(m)}</td></tr>`;
+    }).join('');
+  }
+
+  function removeSource(i){ state.sources.splice(i,1); p('tv-srcs').textContent=state.sources.length; renderSourceList(); }
+
+  // ── COMPUTE FIELD ──
+  function compute(){
+    if(!state.sources.length){
+      // Add default source if none
+      state.sources=[{type:'dipole',x:0,y:0,z:0,I:1000,N:100,r:0.5,theta:0,phi:0,
+                       id:1,color:'#B87333'}];
+      p('tv-srcs').textContent='1';
+      renderSourceList();
+    }
+
+    const extent=pv('p-extent'); const resN=parseInt(pvs('p-res'));
+    const gridN=resN;
+    const step=2*extent/(gridN-1);
+
+    const xs=[], ys=[], zs=[], vals=[];
+    let bMax=0, bMin=Infinity, bSum=0, cnt=0;
+
+    // Generate 3D field grid
+    const fieldGrid=[];
+    for(let i=0;i<gridN;i++){
+      const z=-extent+step*i;
+      for(let j=0;j<gridN;j++){
+        const y=-extent+step*j;
+        for(let k=0;k<gridN;k++){
+          const x=-extent+step*k;
+          const f=totalField(x,y,z);
+          xs.push(x); ys.push(y); zs.push(z); vals.push(f.bmag);
+          if(f.bmag>bMax) bMax=f.bmag;
+          if(f.bmag<bMin) bMin=f.bmag;
+          bSum+=f.bmag; cnt++;
+          fieldGrid.push({x,y,z,...f});
+        }
+      }
+    }
+
+    const bMean=bSum/cnt;
+    const totalMoment=state.sources.reduce((s,src)=>s+dipoleMoment(src.N,src.I,src.r),0);
+    const uniformity=Math.max(0,(1-(bMax-bMin)/(bMax+1e-30))*100);
+    const b0=totalField(0,0,0).bmag;
+
+    state.fieldData={xs,ys,zs,vals,bMax,bMin,bMean,gridN,extent,fieldGrid};
+    state.results={bMax,bMin,bMean,totalMoment,uniformity,b0,extent,gridN};
+    state.computed=true;
+
+    // Update telemetry
+    p('tv-bmax').textContent=fmtSci(bMax);
+    p('tv-b0').textContent=fmtSci(b0);
+    p('tv-pts').textContent=cnt;
+    p('tv-vol').textContent=fmt(Math.pow(2*extent,3),1);
+    p('tv-moment').textContent=fmtSci(totalMoment);
+    p('tv-unif').textContent=fmt(uniformity,1);
+
+    // Render
+    render3D();
+    renderSlice();
+    plotProfile();
+
+    // Read Magnetostatics dataspace
+    try{const md=localStorage.getItem('achilles_calc_mag_w3');if(md)console.log('Magnetostatics data linked');}catch(e){}
+    localStorage.setItem('achilles_beacon_emf',JSON.stringify({ts:Date.now(),path:'/sim/fields',status:'LIVE',bMax,sources:state.sources.length}));
+    return state.results;
+  }
+
+  // ── 3D FIELD ──
+  function render3D(){
+    if(!state.computed) return;
+    const {xs,ys,zs,vals,bMax}=state.fieldData;
+    const viewMode=pvs('view-mode');
+    const isoLevel=parseFloat(pvs('iso-level'))*bMax;
+
+    const traces=[];
+
+    if(viewMode==='isosurface'||viewMode==='volume'){
+      traces.push({
+        type:'isosurface',x:xs,y:ys,z:zs,value:vals,
+        isomin:isoLevel*0.5,isomax:bMax,
+        surface:{count:3},
+        colorscale:[[0,'#0B2040'],[0.3,'#1A4A7A'],[0.6,'#B87333'],[1,'#4EC5C1']],
+        showscale:true,opacity:0.6,
+        colorbar:{title:{text:'|B| (T)',font:{size:9,color:'#8A8F9A'}},tickfont:{size:8,color:'#8A8F9A'},len:0.5,thickness:8},
+        name:'B-Field Isosurface',caps:{x:{show:false},y:{show:false},z:{show:viewMode==='volume'}}
+      });
+    }
+
+    if(viewMode==='streamlines'||viewMode==='isosurface'){
+      // Add field line traces (sample streamlines)
+      const seedPts=[{x:0.2,y:0,z:0},{x:-0.2,y:0,z:0},{x:0,y:0.2,z:0},{x:0,y:-0.2,z:0},{x:0,y:0,z:0.2}];
+      seedPts.forEach(seed=>{
+        const lineX=[seed.x], lineY=[seed.y], lineZ=[seed.z];
+        let cx=seed.x, cy=seed.y, cz=seed.z;
+        const stepL=0.1;
+        for(let i=0;i<40;i++){
+          const f=totalField(cx,cy,cz);
+          const mag=f.bmag||1e-30;
+          cx+=f.bx/mag*stepL; cy+=f.by/mag*stepL; cz+=f.bz/mag*stepL;
+          if(Math.abs(cx)>pv('p-extent')||Math.abs(cy)>pv('p-extent')||Math.abs(cz)>pv('p-extent')) break;
+          lineX.push(cx); lineY.push(cy); lineZ.push(cz);
+        }
+        traces.push({type:'scatter3d',mode:'lines',x:lineX,y:lineY,z:lineZ,
+          line:{color:'rgba(0,229,255,0.5)',width:1},showlegend:false,hoverinfo:'skip'});
+      });
+    }
+
+    // Source markers
+    state.sources.forEach((src,i)=>{
+      traces.push({type:'scatter3d',mode:'markers+text',x:[src.x],y:[src.y],z:[src.z],
+        marker:{size:10,color:src.color,symbol:'diamond'},text:['S'+(i+1)],
+        textfont:{color:src.color,size:9},name:'Source '+(i+1)});
+    });
+
+    Plotly.react('plot-3d',traces,{
+      paper_bgcolor:'#0B0D10',
+      scene:{xaxis:{gridcolor:'#1A2030',color:'#4A5060',title:{text:'X (m)',font:{size:9}}},
+             yaxis:{gridcolor:'#1A2030',color:'#4A5060',title:{text:'Y (m)',font:{size:9}}},
+             zaxis:{gridcolor:'#1A2030',color:'#4A5060',title:{text:'Z (m)',font:{size:9}}},
+             bgcolor:'#0B0D10',camera:{eye:{x:1.5,y:1.2,z:0.8}},aspectmode:'cube'},
+      margin:{l:0,r:0,t:25,b:0},
+      showlegend:true,legend:{font:{family:'JetBrains Mono',size:9,color:'#8A8F9A'},bgcolor:'rgba(18,21,26,0.8)',x:0,y:1},
+      title:{text:'EM Field — '+state.sources.length+' source(s)',font:{family:'JetBrains Mono',size:11,color:'#B87333'}}
+    },{responsive:true,displayModeBar:false});
+    state.plot3dReady=true;
+  }
+
+  // ── 2D SLICE ──
+  function renderSlice(){
+    if(!state.computed) return;
+    const slice=pvs('p-slice');
+    const {extent,fieldGrid,gridN}=state.fieldData;
+    const step=2*extent/(gridN-1);
+    const n=gridN;
+    // Build 2D heatmap for selected slice
+    const zMatrix=[], xArr=[], yArr=[];
+    let sMax=0,sMin=Infinity,sSum=0,cnt=0;
+    for(let i=0;i<n;i++){
+      const a=-extent+step*i;
+      const row=[];
+      for(let j=0;j<n;j++){
+        const b=-extent+step*j;
+        let f;
+        if(slice==='XY') f=totalField(b,a,0);
+        else if(slice==='XZ') f=totalField(b,0,a);
+        else f=totalField(0,b,a);
+        row.push(f.bmag);
+        if(i===0) xArr.push(b);
+        if(f.bmag>sMax)sMax=f.bmag; if(f.bmag<sMin)sMin=f.bmag; sSum+=f.bmag; cnt++;
+      }
+      yArr.push(a); zMatrix.push(row);
+    }
+    const sMean=sSum/cnt;
+    p('rs-smax').textContent=fmtSci(sMax)+' T';
+    p('rs-smin').textContent=fmtSci(sMin)+' T';
+    p('rs-smean').textContent=fmtSci(sMean)+' T';
+    p('rs-sgrad').textContent=fmtSci((sMax-sMin)/(2*extent))+' T/m';
+
+    const srcX=state.sources.map(s=>s.x), srcY=state.sources.map(s=>s.y);
+    const al={XY:'X (m)',XZ:'X (m)',YZ:'Y (m)'};
+    const bl={XY:'Y (m)',XZ:'Z (m)',YZ:'Z (m)'};
+    Plotly.react('plot-slice',[
+      {type:'heatmap',z:zMatrix,x:xArr,y:yArr,
+       colorscale:[[0,'#0B0D10'],[0.25,'#0B2040'],[0.5,'#B87333'],[0.75,'#C9A24A'],[1,'#4EC5C1']],
+       showscale:true,colorbar:{title:{text:'|B| (T)',font:{size:9,color:'#8A8F9A'}},tickfont:{size:8,color:'#8A8F9A'}},name:'|B|'},
+      {type:'scatter',mode:'markers',x:srcX,y:srcY,
+       marker:{size:12,color:'#F2F1EC',symbol:'circle-open',line:{width:2,color:'#F2F1EC'}},name:'Sources'}
+    ],{paper_bgcolor:'#0B0D10',plot_bgcolor:'#0B0D10',
+       font:{family:'JetBrains Mono',size:9,color:'#8A8F9A'},margin:{l:50,r:60,t:30,b:40},
+       title:{text:slice+'-plane Field Slice',font:{size:10,color:'#B87333'}},
+       xaxis:{gridcolor:'#1A2030',color:'#4A5060',title:{text:al[slice],font:{size:9}}},
+       yaxis:{gridcolor:'#1A2030',color:'#4A5060',title:{text:bl[slice],font:{size:9}}}
+    },{responsive:true,displayModeBar:false});
+  }
+
+  // ── INTENSITY PROFILE ──
+  function plotProfile(){
+    if(!state.computed) return;
+    const axis=pvs('prof-axis')||'r';
+    const {extent}=state.fieldData;
+    const pts=50; const vals=[],pos=[];
+    for(let i=0;i<pts;i++){
+      const t=i/(pts-1);
+      let x=0,y=0,z=0,d=0;
+      if(axis==='x'){x=-extent+2*extent*t;d=x;}
+      else if(axis==='y'){y=-extent+2*extent*t;d=y;}
+      else if(axis==='z'){z=-extent+2*extent*t;d=z;}
+      else{const r=extent*t;x=r/Math.sqrt(3);y=r/Math.sqrt(3);z=r/Math.sqrt(3);d=r;}
+      const f=totalField(x,y,z);
+      pos.push(d); vals.push(f.bmag);
+    }
+    const axL={x:'X (m)',y:'Y (m)',z:'Z (m)',r:'Radial Distance (m)'};
+    Plotly.react('plot-profile',[
+      {x:pos,y:vals,type:'scatter',mode:'lines',line:{color:'#B87333',width:2},
+       fill:'tozeroy',fillcolor:'rgba(184,115,51,0.1)',name:'|B| (T)'}
+    ],{paper_bgcolor:'#0B0D10',plot_bgcolor:'#12151A',
+       font:{family:'JetBrains Mono',size:9,color:'#8A8F9A'},margin:{l:55,r:10,t:25,b:40},
+       title:{text:'Field Intensity Profile — '+axL[axis],font:{size:10,color:'#B87333'}},
+       xaxis:{gridcolor:'#2A2F3A',color:'#8A8F9A',title:{text:axL[axis],font:{size:9}}},
+       yaxis:{gridcolor:'#2A2F3A',color:'#8A8F9A',title:{text:'|B| (T)',font:{size:9}}}
+    },{responsive:true,displayModeBar:false});
+  }
+
+  function updateView(){render3D();}
+
+  function tab(name){
+    document.querySelectorAll('.tab-btn').forEach(b=>{b.classList.remove('active');if(b.textContent.toLowerCase().startsWith(name.slice(0,3).toLowerCase()))b.classList.add('active');});
+    document.querySelectorAll('.tab-pane').forEach(tp=>{tp.classList.remove('active');});
+    const el=document.getElementById('tab-'+name);
+    if(el)el.classList.add('active');
+    setTimeout(()=>{
+      if(name==='3d'&&state.plot3dReady)Plotly.relayout('plot-3d',{});
+      if(name==='slice')renderSlice();
+      if(name==='profile')plotProfile();
+    },50);
+  }
+
+  function runSweep(){
+    const varN=pvs('sw-var'),start=pv('sw-start'),end=pv('sw-end'),steps=pv('sw-steps');
+    const outN=pvs('sw-out');
+    const vals=[],results=[];
+    const baseSrc=state.sources.length>0?state.sources[0]:{type:'dipole',x:0,y:0,z:0,I:1000,N:100,r:0.5,theta:0,phi:0};
+    for(let i=0;i<steps;i++){
+      const v=start+(end-start)*i/(steps-1);
+      const I=varN==='current'?v:baseSrc.I;
+      const r=varN==='radius'?v:baseSrc.r;
+      const N=varN==='turns'?v:baseSrc.N;
+      const dist=varN==='dist'?v:1.0;
+      const m=dipoleMoment(N,I,r);
+      let res=0;
+      if(outN==='field') {
+        const tmpSave=state.sources;
+        state.sources=[{...baseSrc,I,r,N}];
+        res=totalField(dist,0,0).bmag;
+        state.sources=tmpSave;
+      } else if(outN==='moment') res=m;
+      else if(outN==='uniformity') res=Math.max(0,(1-dist/(pv('p-extent')||2))*100);
+      vals.push(v); results.push(res);
+    }
+    const outL={field:'Peak B-field (T)',moment:'Dipole Moment (A·m²)',uniformity:'Uniformity (%)'};
+    const varL={current:'Current (A)',radius:'Coil Radius (m)',turns:'Turns N',dist:'Distance (m)'};
+    Plotly.react('plot-sweep',[{x:vals,y:results,type:'scatter',mode:'lines+markers',line:{color:'#B87333',width:2},marker:{color:'#C9A24A',size:4}}],
+      {paper_bgcolor:'#0B0D10',plot_bgcolor:'#12151A',font:{family:'JetBrains Mono',size:9,color:'#8A8F9A'},margin:{l:55,r:10,t:25,b:40},
+       title:{text:varL[varN]+' vs '+outL[outN],font:{size:10,color:'#B87333'}},
+       xaxis:{gridcolor:'#2A2F3A',color:'#8A8F9A',title:{text:varL[varN],font:{size:9}}},
+       yaxis:{gridcolor:'#2A2F3A',color:'#8A8F9A',title:{text:outL[outN],font:{size:9}}}},{responsive:true,displayModeBar:false});
+    p('sweep-tbody').innerHTML=vals.map((v,i)=>`<tr><td>${fmt(v,3)}</td><td style="color:var(--teal)">${fmtSci(results[i])}</td></tr>`).join('');
+  }
+
+  function sendDS(ws){
+    if(!state.computed){p('ds-status').textContent='⚠ Compute field first.';return;}
+    const payload={ts:Date.now(),tool:'emf_fields',v:'2.0.0',results:state.results,
+      sources:state.sources,fieldSummary:{bMax:state.results.bMax,bMin:state.results.bMin,uniformity:state.results.uniformity}};
+    const targets=ws==='all'?['w1','w2','w3','w4','w5','w6']:[ws];
+    try{
+      targets.forEach(w=>{localStorage.setItem('achilles_sim_emf_'+w,JSON.stringify(payload));});
+      if(targets.includes('w3')) localStorage.setItem('achilles_calc_mag_w3_emf_flag',Date.now());
+      p('ds-status').textContent='✓ Routed to: '+targets.map(w=>w.toUpperCase()).join(', ')+' ['+new Date().toTimeString().slice(0,5)+']';
+    }catch(e){p('ds-status').textContent='⚠ DS error: '+e.message;}
+  }
+
+  function dl(c,f,m){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([c],{type:m}));a.download=f;a.click();}
+  function exportJSON(){dl(JSON.stringify({meta:{tool:'EMF Fields',v:'2.0.0',ts:new Date().toISOString()},results:state.results,sources:state.sources},null,2),'emf_field_state.json','application/json');}
+  function exportCSV(){
+    const h='x,y,z,Bx,By,Bz,Bmag\n';
+    const rows=state.fieldData.fieldGrid.filter((_,i)=>i%8===0).map(g=>`${fmt(g.x,3)},${fmt(g.y,3)},${fmt(g.z,3)},${fmtSci(g.bx)},${fmtSci(g.by)},${fmtSci(g.bz)},${fmtSci(g.bmag)}`).join('\n');
+    dl(h+rows,'emf_field_grid.csv','text/csv');
+  }
+  function exportTXT(){
+    const r=state.results;
+    const t=`EMF FIELDS — FIELD MANIFEST\n===========================\nGenerated: ${new Date().toISOString()}\n\nSOURCES: ${state.sources.length}\n${state.sources.map((s,i)=>`Source ${i+1}: ${s.type} at (${fmt(s.x,2)},${fmt(s.y,2)},${fmt(s.z,2)}) I=${s.I}A N=${s.N} r=${s.r}m`).join('\n')}\n\nFIELD STATISTICS\n  Peak B: ${fmtSci(r.bMax)} T\n  Min B: ${fmtSci(r.bMin)} T\n  Mean B: ${fmtSci(r.bMean)} T\n  At Origin: ${fmtSci(r.b0)} T\n  Uniformity: ${fmt(r.uniformity,1)}%\n  Total Moment: ${fmtSci(r.totalMoment)} A·m²\n`;
+    dl(t,'emf_manifest.txt','text/plain');
+  }
+  function exportGMAT(){
+    const g=`% EMF Fields — GMAT Environment Script\n% v2.0.0 — Römer Industries / EMASSC\n% Generated: ${new Date().toISOString()}\n\n% EM Field Environment Model\nCreate FieldOfView EMFModel;\nEMFModel.FieldStrength = ${fmtSci(state.results.bMax)};  % Tesla\nEMFModel.SourceCount = ${state.sources.length};\n${state.sources.map((s,i)=>`% Source ${i+1}: ${s.type} at (${fmt(s.x,2)},${fmt(s.y,2)},${fmt(s.z,2)})`).join('\n')}\n`;
+    dl(g,'emf_gmat.script','text/plain');
+  }
+  function exportYAML(){
+    const r=state.results;
+    const y=`# EMF Fields YAML — v2.0.0\nmeta:\n  tool: EMF Fields\n  version: 2.0.0\nsources:\n${state.sources.map((s,i)=>`  - id: ${i+1}\n    type: ${s.type}\n    x: ${fmt(s.x,3)}\n    y: ${fmt(s.y,3)}\n    z: ${fmt(s.z,3)}\n    current_A: ${s.I}\n    turns: ${s.N}\n    radius_m: ${s.r}`).join('\n')}\nresults:\n  peak_B_T: ${fmtSci(r.bMax)}\n  uniformity_pct: ${fmt(r.uniformity,2)}\n`;
+    dl(y,'emf_config.yaml','text/plain');
+  }
+  function exportPNG(){if(state.plot3dReady)Plotly.downloadImage('plot-3d',{format:'png',filename:'emf_field_3d',width:1400,height:900});}
+
+  function reset(){ state.sources=[]; state.computed=false; renderSourceList(); }
+
+  function init(){
+    try{localStorage.setItem('achilles_beacon_emf',JSON.stringify({ts:Date.now(),path:'/sim/fields',status:'LIVE'}));}catch(e){}
+    p('emf-beacon-ts').textContent='Beacon: '+new Date().toLocaleTimeString();
+    // Add default dipole source
+    addSource();
+    compute();
+  }
+
+  return {compute,tab,addSource,clearSources,removeSource,sendDS,runSweep,updateView,plotProfile,renderSlice,
+          exportJSON,exportCSV,exportTXT,exportGMAT,exportYAML,exportPNG,reset,init};
+})();
+window.addEventListener('DOMContentLoaded',()=>window.emf.init());
+if(document.readyState!=='loading') window.emf.init();
+</script></body></html>
