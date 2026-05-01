@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>W1 Incoming Deposit Analysis · Mag-Lev Capture Simulator</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+  <style>
+    :root{
+      --bg:#0a0e1a;
+      --panel:#11182a;
+      --line:#1f2940;
+      --cyan:#00d4ff;
+      --blue:#00aaff;
+      --green:#00ff88;
+      --pink:#ff6b9d;
+      --amber:#ffaa00;
+      --red:#ff5b5b;
+      --text:#e8eaf0;
+      --muted:#8b92a8;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:Inter,system-ui,Segoe UI,Arial,sans-serif;background:linear-gradient(135deg,#0a0e1a 0%,#121a2d 45%,#0f1627 100%);color:var(--text);min-height:100vh;padding:18px}
+    .container{max-width:1600px;margin:0 auto}
+    .top-shell{border:1px solid color-mix(in srgb,var(--cyan) 40%, black);border-radius:14px;overflow:hidden;background:rgba(10,14,26,.75);box-shadow:0 18px 40px rgba(0,0,0,.35);margin-bottom:22px}
+    .dt-hdr{background:#151b2a;padding:.7rem 1rem;display:flex;align-items:center;gap:.8rem;flex-wrap:wrap;border-bottom:1px solid var(--line)}
+    .dt-logo{font-size:1.15rem;color:var(--cyan)}
+    .dt-ttl{flex:1;min-width:220px}
+    .dt-ttl h2{font-size:.95rem;font-weight:800;color:var(--cyan);letter-spacing:.08em;text-transform:uppercase}
+    .dt-ttl p{font-size:.68rem;color:var(--muted);margin-top:.1rem}
+    .dt-fuse{display:flex;gap:.35rem;flex-wrap:wrap}
+    .dt-fuse a{padding:.28rem .52rem;border-radius:6px;font-size:.68rem;font-weight:700;text-decoration:none;color:var(--muted);background:#232a3d;border:1px solid #33405d}
+    .dt-fuse a.on{color:var(--cyan);border-color:var(--cyan);background:rgba(0,212,255,.08)}
+    .dt-fuse a.lib{color:var(--pink);border-color:var(--pink)}
+    .dt-fuse a.ds{color:var(--green);border-color:var(--green);background:rgba(0,255,136,.08)}
+    .dt-meta{background:#1b2132;padding:.35rem 1rem;display:flex;align-items:center;gap:.8rem;font-size:.67rem;color:var(--muted);flex-wrap:wrap;border-bottom:1px solid var(--line)}
+    .dt-pill{padding:.12rem .4rem;border-radius:999px;font-size:.62rem;font-weight:800;background:rgba(0,255,136,.14);color:var(--green)}
+    .dt-body{display:grid;grid-template-columns:1fr 1fr 1fr}
+    .dt-col{padding:.8rem 1rem;border-right:1px solid var(--line)}
+    .dt-col:last-child{border-right:none}
+    .dt-col-hd{font-size:.72rem;font-weight:800;color:var(--cyan);letter-spacing:.07em;text-transform:uppercase;margin-bottom:.5rem}
+    .dt-task{background:#171d2d;border:1px solid #303b58;border-radius:9px;padding:.55rem .7rem;margin-bottom:.42rem;display:flex;gap:.55rem;align-items:flex-start}
+    .dt-task-txt{flex:1;font-size:.7rem;color:var(--text);line-height:1.45}
+    .dt-task-sub{font-size:.62rem;color:var(--muted);margin-top:.12rem}
+    .dt-badge{padding:.12rem .38rem;border-radius:999px;font-size:.58rem;font-weight:800;white-space:nowrap;margin-top:.08rem}
+    .dt-badge.prog{background:rgba(0,212,255,.12);color:var(--cyan)}
+    .dt-badge.done{background:rgba(0,255,136,.12);color:var(--green)}
+    .dt-badge.block{background:rgba(255,91,91,.12);color:var(--red)}
+    .dt-badge.queue{background:rgba(255,170,0,.12);color:var(--amber)}
+    .dt-metrics{background:#171d2d;border:1px solid #303b58;border-radius:9px;padding:.6rem .75rem;margin-top:.45rem}
+    .dt-metric-row{display:flex;justify-content:space-between;align-items:center;font-size:.68rem;padding:.14rem 0}
+    .dt-metric-lbl{color:var(--muted)}
+    .dt-metric-val{color:var(--cyan);font-weight:700}
+    .dt-log-entry{font-size:.66rem;color:var(--muted);padding:.22rem 0;border-bottom:1px solid rgba(58,64,89,.45);display:flex;gap:.55rem}
+    .dt-log-ts{color:#58627f;white-space:nowrap;flex-shrink:0}
+    .dt-log-msg span{color:var(--cyan)}
+    .dt-footer{background:#151b2a;padding:.45rem 1rem;display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;border-top:1px solid var(--line)}
+    .dt-footer-lbl{font-size:.66rem;color:var(--muted)}
+    .dt-link-btn{padding:.28rem .64rem;border-radius:7px;font-size:.68rem;font-weight:800;text-decoration:none;border:1px solid var(--cyan);color:var(--cyan);background:rgba(0,212,255,.08)}
+    .dt-link-btn.ds{border-color:var(--green);color:var(--green);background:rgba(0,255,136,.06)}
+    .header{text-align:center;margin-bottom:24px;padding:24px;background:rgba(39,194,165,.08);border-radius:16px;border:1px solid rgba(39,194,165,.18)}
+    .header h1{font-size:2.4rem;background:linear-gradient(45deg,var(--green),var(--cyan),#7a8cff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:800;margin-bottom:8px}
+    .subtitle{color:#a8b6c8;font-size:1.08rem;margin-bottom:8px}
+    .physics-note{color:var(--green);font-size:.92rem;font-style:italic}
+    .section{background:rgba(17,24,42,.82);backdrop-filter:blur(10px);border:1px solid rgba(0,212,255,.15);border-radius:16px;padding:24px;margin-bottom:22px;box-shadow:0 8px 32px rgba(0,0,0,.25)}
+    .section h2{color:var(--green);margin-bottom:18px;font-size:1.45rem;display:flex;align-items:center;gap:10px}
+    .section-icon{width:24px;height:24px;border-radius:50%;background:linear-gradient(45deg,var(--green),var(--cyan))}
+    .input-grid,.sweep-controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:18px;margin-bottom:20px}
+    .input-group{display:flex;flex-direction:column}
+    .input-group label{color:var(--text);font-weight:700;margin-bottom:8px;font-size:.98rem}
+    .input-hint{font-size:.82rem;color:var(--muted);font-weight:500;margin-left:4px}
+    .input-group select,.input-group input{padding:12px 14px;background:rgba(10,14,26,.8);border:1px solid rgba(0,212,255,.24);border-radius:10px;color:var(--text);font-size:.96rem}
+    .input-group select:focus,.input-group input:focus{outline:none;border-color:var(--cyan);box-shadow:0 0 0 3px rgba(0,212,255,.15)}
+    .button-group{display:flex;gap:12px;flex-wrap:wrap;margin-top:8px}
+    .btn{padding:12px 18px;background:linear-gradient(45deg,var(--green),var(--cyan));border:none;border-radius:10px;color:#081019;font-weight:800;font-size:.95rem;cursor:pointer;letter-spacing:.02em}
+    .btn-secondary{background:linear-gradient(45deg,#667eea,#764ba2);color:#fff}
+    .results-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin:18px 0 22px}
+    .result-card{background:linear-gradient(135deg,rgba(15,24,29,.9),rgba(27,32,39,.9));border:1px solid rgba(39,194,165,.24);border-radius:12px;padding:18px;text-align:center;position:relative;overflow:hidden}
+    .result-card:before{content:'';position:absolute;left:0;right:0;top:0;height:3px;background:linear-gradient(90deg,var(--green),var(--cyan),#7a8cff)}
+    .result-label{font-size:.88rem;color:var(--muted);margin-bottom:8px;font-weight:600}
+    .result-value{font-size:1.6rem;font-weight:800;line-height:1.2}
+    .result-unit{font-size:.68em;color:var(--muted);font-weight:500}
+    .success{color:#4ade80}.warning{color:#fbbf24}.danger{color:#ef4444}.info{color:#60a5fa}
+    .chart-container{width:100%;height:400px;background:rgba(10,14,26,.5);border-radius:12px;padding:14px;border:1px solid rgba(0,212,255,.12);margin-top:16px}
+    .recommendations{background:rgba(10,14,26,.72);border-left:4px solid var(--green);padding:18px;border-radius:10px;margin-top:10px}
+    .recommendations h3{color:var(--green);margin-bottom:12px;font-size:1.2rem}
+    .rec-item{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px;padding:10px;border-radius:8px;font-size:.94rem;line-height:1.45}
+    .rec-item.success{background:rgba(74,222,128,.1);border-left:3px solid #4ade80}
+    .rec-item.warning{background:rgba(251,191,36,.1);border-left:3px solid #fbbf24}
+    .rec-item.danger{background:rgba(239,68,68,.1);border-left:3px solid #ef4444}
+    .rec-icon{font-weight:800;font-size:1.1rem;margin-top:1px}
+    .summary-line{background:rgba(0,212,255,.08);border:1px solid rgba(0,212,255,.22);padding:14px 18px;border-radius:10px;margin:14px 0;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.92rem;line-height:1.45;color:var(--cyan)}
+    .loading{display:none;text-align:center;padding:18px;color:var(--green)}
+    .loading.active{display:block}
+    .status-indicator{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:8px;background:#4ade80}
+    @media(max-width:980px){.dt-body{grid-template-columns:1fr}.dt-col{border-right:none;border-bottom:1px solid var(--line)}.dt-col:last-child{border-bottom:none}}
+    @media(max-width:700px){body{padding:10px}.header h1{font-size:1.9rem}.button-group{justify-content:center}.chart-container{height:320px}}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="top-shell">
+      <div class="dt-hdr">
+        <div class="dt-logo">⚡</div>
+        <div class="dt-ttl">
+          <h2>Ops Tracker: W1 · Deposit Analysis</h2>
+          <p>Ore body characterisation, capture feasibility and resource modelling · /operations/w1</p>
+        </div>
+        <div class="dt-fuse">
+          <a href="#" class="on">W1</a>
+          <a href="#">W2</a>
+          <a href="#">W3</a>
+          <a href="#">W4</a>
+          <a href="#">W5</a>
+          <a href="#">W6</a>
+          <a href="#" class="lib">LIB</a>
+          <a href="#" class="ds">⚡ W1 Dataspace</a>
+        </div>
+      </div>
+      <div class="dt-meta">
+        <span class="dt-pill">● LIVE</span>
+        <span>/operations/w1</span>
+        <span>Backend: /w1/data</span>
+        <span>Römer Industries / EMASSC</span>
+        <span id="dt-utc" style="margin-left:auto"></span>
+      </div>
+      <div class="dt-body">
+        <div class="dt-col">
+          <div class="dt-col-hd">▶ Active Tasks</div>
+          <div class="dt-task"><div class="dt-task-txt">EM sweep — Asteroid 2024 XR3 deposit mapping<div class="dt-task-sub">W1 Dataspace → Luke IV module</div></div><div class="dt-badge prog">IN PROGRESS</div></div>
+          <div class="dt-task"><div class="dt-task-txt">Pareto optimisation of ring/module configurations<div class="dt-task-sub">Variable compound analysis sweep</div></div><div class="dt-badge prog">IN PROGRESS</div></div>
+          <div class="dt-task"><div class="dt-task-txt">B-field surface calibration at GEO altitude<div class="dt-task-sub">Dipole model vs observational set</div></div><div class="dt-badge block">BLOCKED</div></div>
+          <div class="dt-metrics">
+            <div class="dt-metric-row"><span class="dt-metric-lbl">Active simulations</span><span class="dt-metric-val">3</span></div>
+            <div class="dt-metric-row"><span class="dt-metric-lbl">Last sweep</span><span class="dt-metric-val">14 min ago</span></div>
+            <div class="dt-metric-row"><span class="dt-metric-lbl">Dataspace status</span><span class="dt-metric-val" style="color:var(--green)">● LIVE</span></div>
+            <div class="dt-metric-row"><span class="dt-metric-lbl">Pending exports</span><span class="dt-metric-val">2</span></div>
+          </div>
+        </div>
+        <div class="dt-col">
+          <div class="dt-col-hd">✓ Recent Completions</div>
+          <div class="dt-task"><div class="dt-task-txt">Initial deposit characterisation — 16 Psyche preset<div class="dt-task-sub">Archived to W6 Asset Library</div></div><div class="dt-badge done">COMPLETE</div></div>
+          <div class="dt-task"><div class="dt-task-txt">Trajectory arc validation — GEO release scenario<div class="dt-task-sub">Cross-checked with W5 GMAT output</div></div><div class="dt-badge done">COMPLETE</div></div>
+          <div class="dt-task"><div class="dt-task-txt">Iron volume sweep across Ryugu / Bennu presets<div class="dt-task-sub">Pattern simplification tool run</div></div><div class="dt-badge done">COMPLETE</div></div>
+          <div class="dt-col-hd" style="margin-top:.55rem">▶ Queued</div>
+          <div class="dt-task"><div class="dt-task-txt">Large-scale optimisation — ring count 1–8 full sweep<div class="dt-task-sub">Pending W3 EMFF power data</div></div><div class="dt-badge queue">QUEUED</div></div>
+          <div class="dt-task"><div class="dt-task-txt">Widen search — extend target asteroid database<div class="dt-task-sub">Pending W5 orbital windows</div></div><div class="dt-badge queue">QUEUED</div></div>
+        </div>
+        <div class="dt-col">
+          <div class="dt-col-hd">■ Mission Log</div>
+          <div class="dt-log-entry"><span class="dt-log-ts">24 Feb 26</span><span class="dt-log-msg"><span>W1→W2</span> deposit package sent to Luke II</span></div>
+          <div class="dt-log-entry"><span class="dt-log-ts">24 Feb 26</span><span class="dt-log-msg">Dataspace updated — v1.1.0 deployed</span></div>
+          <div class="dt-log-entry"><span class="dt-log-ts">23 Feb 26</span><span class="dt-log-msg"><span>SWEEP</span> variable compound analysis completed — 48 scenarios</span></div>
+          <div class="dt-log-entry"><span class="dt-log-ts">22 Feb 26</span><span class="dt-log-msg"><span>W1→W4</span> resource model forwarded to supply chain</span></div>
+          <div class="dt-log-entry"><span class="dt-log-ts">21 Feb 26</span><span class="dt-log-msg">16 Psyche preset calibration completed</span></div>
+          <div class="dt-log-entry"><span class="dt-log-ts">20 Feb 26</span><span class="dt-log-msg"><span>GMAT</span> orbital window received from W5</span></div>
+          <div class="dt-log-entry"><span class="dt-log-ts">19 Feb 26</span><span class="dt-log-msg">RFS field power config received from W3</span></div>
+          <div class="dt-log-entry"><span class="dt-log-ts">18 Feb 26</span><span class="dt-log-msg"><span>INIT</span> W1 deposit analysis activated</span></div>
+          <div class="dt-col-hd" style="margin-top:.55rem">■ Connections</div>
+          <div style="font-size:.66rem;color:var(--muted);line-height:1.7">Feeds → W2, W4, W6<br/>Consumes ← W3, W5, LIB</div>
+        </div>
+      </div>
+      <div class="dt-footer">
+        <span class="dt-footer-lbl">Workspace Backend:</span>
+        <a href="#" class="dt-link-btn ds">⚡ Open W1 Dataspace</a>
+        <a href="#" class="dt-link-btn">Field + Trajectory Sim</a>
+        <a href="#" class="dt-link-btn">Sweep Analysis</a>
+        <span id="dt-auto" style="margin-left:auto;font-size:.62rem;color:#58627f">● Dataspace beacon active</span>
+      </div>
+    </div>
+
+    <div class="header">
+      <h1>Mag-Lev Orbital Metal Capture Simulator</h1>
+      <div class="subtitle">High-fidelity physics model for electromagnetic capture and orbital metal handling</div>
+      <div class="physics-note">Orbital mechanics · atmospheric profile approximation · eddy-current braking · ROI estimation</div>
+    </div>
+
+    <div class="section">
+      <h2><div class="section-icon"></div>Capture Scenario Configuration</h2>
+      <div class="input-grid">
+        <div class="input-group"><label>Project Name</label><input type="text" id="project" value="Orbital Mining Study" placeholder="Project designation" /></div>
+        <div class="input-group"><label>Metal Type <span class="input-hint">Material properties database</span></label><select id="metal"><option value="gold">Gold - $65k/kg (σ=4.1×10⁷ S/m)</option><option value="platinum">Platinum - $30k/kg (σ=9.4×10⁶ S/m)</option><option value="silver">Silver - $800/kg (σ=6.3×10⁷ S/m)</option><option value="rhodium">Rhodium - $45k/kg (σ=2.4×10⁶ S/m)</option><option value="palladium">Palladium - $25k/kg (σ=9.5×10⁶ S/m)</option><option value="neodymium">Neodymium - $100/kg (σ=1.6×10⁶ S/m)</option><option value="lithium">Lithium - $80/kg (σ=1.1×10⁷ S/m)</option></select></div>
+        <div class="input-group"><label>Mass <span class="input-hint">kg</span></label><input type="number" id="mass" value="1000" min="1" max="100000" step="10" /></div>
+        <div class="input-group"><label>Release Altitude <span class="input-hint">km (GEO=35,786)</span></label><input type="number" id="altitude" value="15000" min="200" max="40000" step="100" /></div>
+        <div class="input-group"><label>Station Configuration</label><select id="station"><option value="small">Research Station (2T, 100m, 50MW)</option><option value="medium-large" selected>Commercial Station (5T, 500m, 300MW)</option><option value="generational">Industrial Station (10T, 1000m, 1000MW)</option></select></div>
+        <div class="input-group"><label>Safety Factor <span class="input-hint">Engineering margin</span></label><input type="number" id="safetyFactor" value="1.5" min="1.1" max="5.0" step="0.1" /></div>
+      </div>
+      <div class="button-group">
+        <button class="btn" onclick="runSimulation()"><span class="status-indicator"></span>Run Simulation</button>
+        <button class="btn btn-secondary" onclick="loadPreset('gold')">Load Gold Standard</button>
+        <button class="btn btn-secondary" onclick="loadPreset('platinum')">Load Platinum Heavy</button>
+        <button class="btn btn-secondary" onclick="loadPreset('rare-earth')">Load Rare Earth</button>
+      </div>
+      <div class="loading" id="loading">⚡ Running high-fidelity physics simulation...</div>
+      <div id="results" style="display:none">
+        <div class="summary-line" id="summary"></div>
+        <div class="results-grid" id="resultsGrid"></div>
+        <div class="recommendations" id="recommendations"></div>
+        <div class="chart-container"><canvas id="timeSeriesChart"></canvas></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2><div class="section-icon"></div>Parameter Sweep Analysis</h2>
+      <div class="sweep-controls">
+        <div class="input-group"><label>Sweep Variable</label><select id="sweepVar"><option value="mass">Mass (kg)</option><option value="altitude">Release Altitude (km)</option><option value="v_factor">Velocity Factor</option></select></div>
+        <div class="input-group"><label>Range Factor Min</label><input type="number" id="sweepMin" value="-0.5" step="0.1" /></div>
+        <div class="input-group"><label>Range Factor Max</label><input type="number" id="sweepMax" value="0.5" step="0.1" /></div>
+        <div class="input-group"><label>Steps</label><input type="number" id="sweepSteps" value="21" min="5" max="50" /></div>
+      </div>
+      <div class="button-group">
+        <button class="btn" onclick="runSweep()">Generate Sweep Analysis</button>
+        <button class="btn btn-secondary" onclick="exportSweepData()">Export Sweep Data</button>
+      </div>
+      <div class="chart-container" id="sweepChartContainer" style="display:none"><canvas id="sweepChart"></canvas></div>
+    </div>
+  </div>
+
+  <script>
+    const CONSTANTS={MU_EARTH:3.986004418e14,R_EARTH:6.371e6,RHO0:1.225,REENTRY_VELOCITY_FACTOR:0.20,EDDY_DRAG_COEFF:0.75,CAPTURE_EFFICIENCY:0.70,NOSE_RADIUS_M:0.5,HEATING_K:1e-4};
+    const METALS={gold:{density:19320,sigma:4.10e7,Tm:1337,value:65000},silver:{density:10490,sigma:6.30e7,Tm:1235,value:800},platinum:{density:21450,sigma:9.43e6,Tm:2041,value:30000},palladium:{density:12023,sigma:9.50e6,Tm:1828,value:25000},rhodium:{density:12410,sigma:2.40e6,Tm:2237,value:45000},neodymium:{density:7010,sigma:1.60e6,Tm:1297,value:100},lithium:{density:534,sigma:1.08e7,Tm:454,value:80}};
+    const STATIONS={small:{A:50,d:100,B_base:2,power:50},'medium-large':{A:300,d:500,B_base:5,power:300},generational:{A:1000,d:1000,B_base:10,power:1000}};
+    const ATMOSPHERE_LAYERS=[{z0:0,z1:12e3,H:8500,rho_fac:1},{z0:12e3,z1:50e3,H:7000,rho_fac:0.1},{z0:50e3,z1:700e3,H:20000,rho_fac:1e-3}];
+    let timeSeriesChart=null,sweepChart=null,lastResults=null,lastSweepRows=[];
+    function fmt(n,d=2){if(!isFinite(n)||isNaN(n))return 'N/A';if(Math.abs(n)>=1e9)return (n/1e9).toFixed(d)+'B';if(Math.abs(n)>=1e6)return (n/1e6).toFixed(d)+'M';if(Math.abs(n)>=1e3)return (n/1e3).toFixed(d)+'k';return Number(n).toFixed(d)}
+    function money(n){return '$'+fmt(n)}
+    function orbitalVelocity(altKm){const r=CONSTANTS.R_EARTH+altKm*1000;return Math.sqrt(CONSTANTS.MU_EARTH/r)}
+    function rhoAtmProfile(zM){for(const layer of ATMOSPHERE_LAYERS){if(zM>=layer.z0&&zM<=layer.z1)return CONSTANTS.RHO0*layer.rho_fac*Math.exp(-(zM-layer.z0)/layer.H)}return CONSTANTS.RHO0*1e-12}
+    function simulateCapture(params){const {metal,massKg,altitudeKm,station,nScalar=0,sweepVar=''}=params;const metalProps=METALS[metal],stationProps=STATIONS[station],safetyFactor=parseFloat(document.getElementById('safetyFactor').value||1.5);let adjustedMass=massKg,adjustedAlt=altitudeKm,vFactor=CONSTANTS.REENTRY_VELOCITY_FACTOR;if(sweepVar==='mass')adjustedMass=Math.max(0.1,massKg*(1+nScalar));else if(sweepVar==='altitude')adjustedAlt=Math.max(100,altitudeKm*(1+nScalar));else if(sweepVar==='v_factor')vFactor=Math.max(0.05,vFactor*(1+nScalar));const volume=adjustedMass/metalProps.density;const radius=Math.cbrt(3*volume/(4*Math.PI));const vCirc=orbitalVelocity(adjustedAlt);const vApp=Math.max(0,vCirc*vFactor);const FNeed=adjustedMass*(vApp*vApp)/(2*stationProps.d);const BReq=metalProps.sigma>0&&stationProps.A>0&&vApp>0?Math.sqrt(Math.max(0,FNeed/(CONSTANTS.EDDY_DRAG_COEFF*metalProps.sigma*stationProps.A*vApp)))*safetyFactor:0;const PMech=FNeed*vApp;const PElec=PMech/Math.max(1e-3,CONSTANTS.CAPTURE_EFFICIENCY);const PeakPowerMW=PElec/1e6;const a=FNeed/adjustedMass;const tTotal=a>0?vApp/a:0;const steps=200;const seriesT=Array.from({length:steps},(_,i)=>(i/(steps-1))*Math.max(tTotal,1));const seriesV=seriesT.map(t=>Math.max(0,vApp*(1-(t/Math.max(tTotal,1e-9)))));const seriesPMW=seriesV.map(v=>(FNeed*v)/1e6);const zProfile=seriesT.map((_,i)=>50000*(1-i/(steps-1)));const rho=zProfile.map(rhoAtmProfile);const seriesQ=seriesV.map((v,i)=>CONSTANTS.HEATING_K*Math.sqrt(Math.max(rho[i],1e-12)/CONSTANTS.NOSE_RADIUS_M)*(v*v*v));const stationBonus={small:.8,'medium-large':.9,generational:.95}[station]||.85;const successProb=Math.min(1,Math.max(0,(1-vApp/1200))*stationBonus);const value=adjustedMass*metalProps.value;const dt=seriesT[1]-seriesT[0];const heatLoad=seriesQ.reduce((s,q)=>s+q*dt,0);const ecoScore=Math.min(10,.1+.4*Math.pow(heatLoad/(adjustedMass+1),.5));const EMJ=seriesPMW.reduce((s,p)=>s+p*dt,0);const EMWh=EMJ/3600;const energyCost=100*EMWh;const efficiency=Math.min(1000,value/Math.max(1,energyCost));return {vApproach:vApp,BRequired:BReq,powerPeakMW:PeakPowerMW,timeS:tTotal,successProb,ecoScore,efficiencyX:efficiency,seriesT,seriesV,seriesPMW,seriesQ,economicValue:value,energyCost,gForces:(vApp*vApp)/(stationProps.d*9.81),maxTemp:300+(heatLoad/(adjustedMass*450)),stationCapMW:stationProps.power,stationCapT:stationProps.B_base,metalTm:metalProps.Tm}};
+    function displayResults(results,params){document.getElementById('summary').textContent=`${params.metal.toUpperCase()} · ${fmt(params.massKg)}kg · ${fmt(params.altitudeKm)}km → v=${fmt(results.vApproach)}m/s · B=${fmt(results.BRequired)}T · P=${fmt(results.powerPeakMW)}MW · Success=${fmt(results.successProb*100)}% · ROI=${fmt(results.efficiencyX)}×`;const powerClass=results.powerPeakMW<=results.stationCapMW?'success':'danger';const fieldClass=results.BRequired<=results.stationCapT?'success':(results.BRequired<=results.stationCapT*1.2?'warning':'danger');document.getElementById('resultsGrid').innerHTML=`<div class='result-card'><div class='result-label'>Approach Velocity</div><div class='result-value info'>${fmt(results.vApproach)} <span class='result-unit'>m/s</span></div></div><div class='result-card'><div class='result-label'>Required Field</div><div class='result-value ${fieldClass}'>${fmt(results.BRequired)} <span class='result-unit'>T</span></div></div><div class='result-card'><div class='result-label'>Peak Power</div><div class='result-value ${powerClass}'>${fmt(results.powerPeakMW)} <span class='result-unit'>MW</span></div></div><div class='result-card'><div class='result-label'>Capture Time</div><div class='result-value info'>${fmt(results.timeS)} <span class='result-unit'>s</span></div></div><div class='result-card'><div class='result-label'>Success Probability</div><div class='result-value ${results.successProb>.8?'success':results.successProb>.5?'warning':'danger'}'>${fmt(results.successProb*100)} <span class='result-unit'>%</span></div></div><div class='result-card'><div class='result-label'>Economic Value</div><div class='result-value ${results.economicValue>results.energyCost?'success':'danger'}'>${money(results.economicValue)}</div></div><div class='result-card'><div class='result-label'>G-Forces</div><div class='result-value ${results.gForces>100?'danger':results.gForces>50?'warning':'success'}'>${fmt(results.gForces)} <span class='result-unit'>g</span></div></div><div class='result-card'><div class='result-label'>Max Temperature</div><div class='result-value ${results.maxTemp>1500?'danger':results.maxTemp>1000?'warning':'info'}'>${fmt(results.maxTemp)} <span class='result-unit'>K</span></div></div><div class='result-card'><div class='result-label'>ROI Efficiency</div><div class='result-value ${results.efficiencyX>10?'success':results.efficiencyX>2?'warning':'danger'}'>${fmt(results.efficiencyX)} <span class='result-unit'>×</span></div></div><div class='result-card'><div class='result-label'>Energy Cost</div><div class='result-value info'>${money(results.energyCost)}</div></div><div class='result-card'><div class='result-label'>Station Power Cap</div><div class='result-value info'>${fmt(results.stationCapMW)} <span class='result-unit'>MW</span></div></div><div class='result-card'><div class='result-label'>Melting Point</div><div class='result-value info'>${fmt(results.metalTm)} <span class='result-unit'>K</span></div></div>`;generateRecommendations(results,params)}
+    function generateRecommendations(results,params){const rec=[];if(results.successProb<.5)rec.push({type:'danger',icon:'⚠',text:'Low success probability. Increase station capacity, reduce payload mass, or lower approach velocity.'});else if(results.successProb<.8)rec.push({type:'warning',icon:'⚡',text:'Moderate mission risk. Keep fallback braking margins and staged capture logic active.'});else rec.push({type:'success',icon:'✓',text:'High capture probability. Scenario is inside preferred operating envelope.'});if(results.economicValue<results.energyCost)rec.push({type:'danger',icon:'💰',text:'Negative operational economics. Use higher value material, lower energy demand, or larger capture batches.'});else if(results.efficiencyX<5)rec.push({type:'warning',icon:'📈',text:'Marginal ROI. Improve throughput or tune trajectory for lower braking burden.'});else rec.push({type:'success',icon:'💎',text:'Strong economic return. Capture value substantially exceeds electrical cost.'});if(results.gForces>100)rec.push({type:'danger',icon:'🔥',text:'Extreme deceleration loading. Payload fragmentation risk is elevated.'});else if(results.gForces>50)rec.push({type:'warning',icon:'⚖',text:'High deceleration environment. Verify structural assumptions for the deposit body.'});if(results.maxTemp>results.metalTm)rec.push({type:'danger',icon:'🌡',text:'Thermal profile exceeds nominal melting point. Extend capture distance or reduce entry energy.'});else if(results.maxTemp>1000)rec.push({type:'warning',icon:'🌡',text:'Elevated thermal loading detected. Cooling or slower capture profile is advised.'});if(results.BRequired>results.stationCapT*1.2)rec.push({type:'danger',icon:'🧲',text:'Required field exceeds station capacity. Infrastructure upgrade or multi-stage field geometry required.'});else if(results.BRequired>results.stationCapT)rec.push({type:'warning',icon:'🧲',text:'Required field sits above nominal station base field. Supplemental coil or timing optimisation is recommended.'});document.getElementById('recommendations').innerHTML='<h3>Engineering Assessment & Recommendations</h3>'+rec.map(r=>`<div class='rec-item ${r.type}'><div class='rec-icon'>${r.icon}</div><div>${r.text}</div></div>`).join('')}
+    function updateChart(results){const ctx=document.getElementById('timeSeriesChart').getContext('2d');if(timeSeriesChart)timeSeriesChart.destroy();timeSeriesChart=new Chart(ctx,{type:'line',data:{labels:results.seriesT.map(t=>t.toFixed(1)),datasets:[{label:'Velocity (m/s)',data:results.seriesV,borderColor:'#27c2a5',backgroundColor:'rgba(39,194,165,.1)',yAxisID:'y',tension:.35},{label:'Power (MW)',data:results.seriesPMW,borderColor:'#667eea',backgroundColor:'rgba(102,126,234,.1)',yAxisID:'y1',tension:.35},{label:'Heating (scaled)',data:results.seriesQ.map(q=>q/1000),borderColor:'#fbbf24',backgroundColor:'rgba(251,191,36,.1)',yAxisID:'y2',tension:.35}]},options:{responsive:true,maintainAspectRatio:false,plugins:{title:{display:true,text:'Capture Sequence Time Series Analysis',color:'#e6eef7',font:{size:16,weight:'bold'}},legend:{labels:{color:'#e6eef7'}}},scales:{x:{title:{display:true,text:'Time (seconds)',color:'#e6eef7'},ticks:{color:'#9fb1c1'},grid:{color:'rgba(159,177,193,.18)'}},y:{type:'linear',display:true,position:'left',title:{display:true,text:'Velocity',color:'#27c2a5'},ticks:{color:'#27c2a5'},grid:{color:'rgba(39,194,165,.16)'}},y1:{type:'linear',display:true,position:'right',title:{display:true,text:'Power',color:'#667eea'},ticks:{color:'#667eea'},grid:{drawOnChartArea:false}},y2:{type:'linear',display:false,position:'right'}}}})}
+    function runSimulation(){document.getElementById('loading').classList.add('active');document.getElementById('results').style.display='none';setTimeout(()=>{const params={project:document.getElementById('project').value,metal:document.getElementById('metal').value,massKg:parseFloat(document.getElementById('mass').value),altitudeKm:parseFloat(document.getElementById('altitude').value),station:document.getElementById('station').value};lastResults=simulateCapture(params);displayResults(lastResults,params);updateChart(lastResults);document.getElementById('loading').classList.remove('active');document.getElementById('results').style.display='block'},250)}
+    function runSweep(){const sweepVar=document.getElementById('sweepVar').value,sweepMin=parseFloat(document.getElementById('sweepMin').value),sweepMax=parseFloat(document.getElementById('sweepMax').value),sweepSteps=parseInt(document.getElementById('sweepSteps').value,10);if(sweepSteps<5||sweepSteps>50)return alert('Steps must be between 5 and 50');const baseParams={project:document.getElementById('project').value,metal:document.getElementById('metal').value,massKg:parseFloat(document.getElementById('mass').value),altitudeKm:parseFloat(document.getElementById('altitude').value),station:document.getElementById('station').value};const rows=[];for(let i=0;i<=sweepSteps;i++){const n=sweepMin+(sweepMax-sweepMin)*(i/sweepSteps);const result=simulateCapture({...baseParams,nScalar:n,sweepVar});rows.push({n,successProb:result.successProb*100,powerPeakMW:result.powerPeakMW,efficiencyX:result.efficiencyX,gForces:result.gForces,BRequired:result.BRequired})}lastSweepRows=rows;updateSweepChart(rows,sweepVar);document.getElementById('sweepChartContainer').style.display='block'}
+    function updateSweepChart(data,sweepVar){const ctx=document.getElementById('sweepChart').getContext('2d');if(sweepChart)sweepChart.destroy();const varNames={mass:'Mass Factor',altitude:'Altitude Factor',v_factor:'Velocity Factor'};sweepChart=new Chart(ctx,{type:'line',data:{labels:data.map(d=>(d.n*100).toFixed(1)+'%'),datasets:[{label:'Success Probability (%)',data:data.map(d=>d.successProb),borderColor:'#4ade80',backgroundColor:'rgba(74,222,128,.1)',yAxisID:'y',tension:.35},{label:'Peak Power (MW)',data:data.map(d=>d.powerPeakMW),borderColor:'#667eea',backgroundColor:'rgba(102,126,234,.1)',yAxisID:'y1',tension:.35},{label:'ROI Efficiency',data:data.map(d=>d.efficiencyX),borderColor:'#fbbf24',backgroundColor:'rgba(251,191,36,.1)',yAxisID:'y2',tension:.35}]},options:{responsive:true,maintainAspectRatio:false,plugins:{title:{display:true,text:`Parameter Sweep Analysis: ${varNames[sweepVar]||sweepVar}`,color:'#e6eef7',font:{size:16,weight:'bold'}},legend:{labels:{color:'#e6eef7'}}},scales:{x:{title:{display:true,text:`${varNames[sweepVar]||sweepVar} variation`,color:'#e6eef7'},ticks:{color:'#9fb1c1'},grid:{color:'rgba(159,177,193,.18)'}},y:{type:'linear',display:true,position:'left',min:0,max:100,title:{display:true,text:'Success Probability (%)',color:'#4ade80'},ticks:{color:'#4ade80'},grid:{color:'rgba(74,222,128,.16)'}},y1:{type:'linear',display:true,position:'right',title:{display:true,text:'Peak Power (MW)',color:'#667eea'},ticks:{color:'#667eea'},grid:{drawOnChartArea:false}},y2:{type:'linear',display:false,position:'right'}}}})}
+    function exportSweepData(){if(!lastSweepRows.length)return alert('Run sweep analysis first');let csv='Factor,Success_Probability_Percent,Peak_Power_MW,ROI_Efficiency,G_Forces,B_Required_T
+';for(const row of lastSweepRows){csv+=`${row.n},${row.successProb},${row.powerPeakMW},${row.efficiencyX},${row.gForces},${row.BRequired}
+`}const blob=new Blob([csv],{type:'text/csv'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='maglev_sweep_analysis.csv';a.click();URL.revokeObjectURL(url)}
+    function loadPreset(type){const presets={gold:{project:'Gold Standard Mission',metal:'gold',mass:1000,altitude:35786,station:'medium-large'},platinum:{project:'Platinum Heavy Lift',metal:'platinum',mass:5000,altitude:2000,station:'generational'},'rare-earth':{project:'Rare Earth Industrial',metal:'neodymium',mass:10000,altitude:400,station:'generational'}};const p=presets[type];if(!p)return;document.getElementById('project').value=p.project;document.getElementById('metal').value=p.metal;document.getElementById('mass').value=p.mass;document.getElementById('altitude').value=p.altitude;document.getElementById('station').value=p.station;runSimulation()}
+    function setUtc(){const e=document.getElementById('dt-utc');if(e)e.textContent=new Date().toUTCString().replace('GMT','UTC')}
+    document.addEventListener('DOMContentLoaded',()=>{setUtc();setInterval(setUtc,1000);document.getElementById('sweepVar').addEventListener('change',function(){const ranges={mass:{min:-0.5,max:2},altitude:{min:-0.8,max:0.5},v_factor:{min:-0.3,max:0.3}};const r=ranges[this.value];if(r){document.getElementById('sweepMin').value=r.min;document.getElementById('sweepMax').value=r.max}});['metal','mass','altitude','station','safetyFactor'].forEach(id=>document.getElementById(id)?.addEventListener('change',()=>{if(lastResults)runSimulation()}));loadPreset('gold')});
+  </script>
+</body>
+</html>
