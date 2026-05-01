@@ -1,0 +1,154 @@
+<style>
+.dt-wrap{font-family:Inter,sans-serif;background:#0a0e1a;color:#e8eaf0;border-bottom:3px solid #7b2cbf;padding:0;margin:0;width:100%}
+.dt-hdr{background:#1a1f2e;padding:.5rem 1rem;display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;border-bottom:2px solid #7b2cbf}
+.dt-logo{font-size:1.1rem;color:#7b2cbf}.dt-ttl{flex:1;min-width:200px}
+.dt-ttl h2{font-size:.9rem;font-weight:700;color:#7b2cbf;letter-spacing:.07em;text-transform:uppercase;margin:0}
+.dt-ttl p{font-size:.65rem;color:#8b92a8;margin:0}
+.dt-fuse{display:flex;gap:.28rem;flex-wrap:wrap}
+.dt-fuse a{padding:.2rem .45rem;border-radius:3px;font-size:.65rem;font-weight:600;text-decoration:none;color:#8b92a8;background:#252b3d;border:1px solid #3a4059}
+.dt-fuse a.on{color:#7b2cbf;border-color:#7b2cbf;background:#7b2cbf1a}
+.dt-fuse a.lib{color:#ff6b9d;border-color:#ff6b9d}
+.dt-fuse a.ds{color:#00ff88;border-color:#00ff88;background:rgba(0,255,136,.08)}
+.dt-meta{background:#252b3d;padding:.22rem 1rem;display:flex;align-items:center;gap:.8rem;font-size:.63rem;color:#8b92a8;flex-wrap:wrap}
+.dt-pill{padding:.06rem .32rem;border-radius:2px;font-size:.6rem;font-weight:700;background:rgba(0,255,136,.15);color:#00ff88}
+.dt-body{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;border-top:1px solid #3a4059}
+@media(max-width:700px){.dt-body{grid-template-columns:1fr}}
+.dt-col{padding:.65rem 1rem;border-right:1px solid #3a4059}.dt-col:last-child{border-right:none}
+.dt-col-hd{font-size:.68rem;font-weight:700;color:#7b2cbf;letter-spacing:.06em;text-transform:uppercase;margin-bottom:.4rem}
+.dt-task{background:#1a1f2e;border:1px solid #3a4059;border-radius:4px;padding:.4rem .6rem;margin-bottom:.35rem;display:flex;align-items:flex-start;gap:.5rem}
+.dt-task-txt{flex:1;font-size:.67rem;color:#e8eaf0;line-height:1.4}
+.dt-task-sub{font-size:.6rem;color:#8b92a8;margin-top:.1rem}
+.dt-badge{padding:.05rem .3rem;border-radius:2px;font-size:.58rem;font-weight:700;white-space:nowrap;flex-shrink:0;margin-top:.1rem}
+.dt-badge.prog{background:rgba(0,212,255,.15);color:#00d4ff}
+.dt-badge.done{background:rgba(0,255,136,.15);color:#00ff88}
+.dt-badge.block{background:rgba(255,51,102,.15);color:#ff3366}
+.dt-badge.queue{background:rgba(255,170,0,.12);color:#ffaa00}
+.dt-metrics{background:#1a1f2e;border:1px solid #3a4059;border-radius:4px;padding:.45rem .65rem;margin-bottom:.35rem}
+.dt-metric-row{display:flex;justify-content:space-between;font-size:.65rem;padding:.1rem 0}
+.dt-metric-lbl{color:#8b92a8}.dt-metric-val{color:#7b2cbf;font-weight:600}
+.dt-log-entry{font-size:.62rem;color:#8b92a8;padding:.18rem 0;border-bottom:1px solid rgba(58,64,89,.4);display:flex;gap:.5rem}
+.dt-log-ts{color:#3a4059;white-space:nowrap;flex-shrink:0}
+.dt-footer{background:#1a1f2e;padding:.35rem 1rem;display:flex;align-items:center;gap:.75rem;border-top:1px solid #3a4059;flex-wrap:wrap}
+.dt-footer-lbl{font-size:.62rem;color:#8b92a8}
+.dt-link-btn{padding:.22rem .6rem;border-radius:3px;font-size:.65rem;font-weight:700;text-decoration:none;border:1px solid #7b2cbf;color:#7b2cbf;background:#7b2cbf14}
+.dt-link-btn.ds{border-color:#00ff88;color:#00ff88;background:rgba(0,255,136,.06)}
+</style>
+<div class="dt-wrap">
+<div class="dt-hdr">
+<div class="dt-logo">&#9889;</div>
+<div class="dt-ttl"><h2>OPS TRACKER: W2 &middot; (Geostationary Orbital Satelite) GOS LUKE II CATCH/HOLD</h2><p>Electromagnetic catch &amp; hold system modelling &middot; /operations/w2</p></div>
+<div class="dt-fuse">
+<a href="/operations/w1">W1</a>
+<a href="/operations/w2" class="on">W2</a>
+<a href="/operations/w3">W3</a>
+<a href="/operations/w4">W4</a>
+<a href="/operations/w5">W5</a>
+<a href="/operations/w6">W6</a>
+<a href="/library" class="lib">LIB</a>
+<a href="/w2/data" class="ds">&#9889; W2 DATASPACE</a>
+</div>
+</div>
+<div class="dt-meta">
+<span class="dt-pill">&#9679; LIVE</span>
+<span>/operations/w2</span>
+<span>Backend: <a href="/w2/data" style="color:#00ff88;text-decoration:none">/w2/data</a></span>
+<span>R&ouml;mer Industries / EMASSC</span>
+<span id="dt-utc-w2" style="margin-left:auto"></span>
+</div>
+<div class="dt-body">
+<div class="dt-col">
+<div class="dt-col-hd">&#9654; ACTIVE TASKS</div>
+<div class="dt-task"><div class="dt-task-txt">EM coil configuration sweep — GEO rendezvous scenario<div class="dt-task-sub">W2 Dataspace &rarr; EMFF catch simulation</div></div><div class="dt-badge prog">IN PROGRESS</div></div>
+<div class="dt-task"><div class="dt-task-txt">Hold force envelope validation at 850A coil current<div class="dt-task-sub">Cross-ref W3 EMFF field power data</div></div><div class="dt-badge prog">IN PROGRESS</div></div>
+<div class="dt-task"><div class="dt-task-txt">Approach velocity constraint — 0.5 m/s rendezvous corridor<div class="dt-task-sub">Awaiting W5 GMAT trajectory output</div></div><div class="dt-badge block">BLOCKED</div></div>
+<div class="dt-metrics">
+<div class="dt-metric-row"><span class="dt-metric-lbl">Catch Radius</span><span class="dt-metric-val">50m</span></div>
+<div class="dt-metric-row"><span class="dt-metric-lbl">Hold Force</span><span class="dt-metric-val">120N</span></div>
+<div class="dt-metric-row"><span class="dt-metric-lbl">Coil Current</span><span class="dt-metric-val">850A</span></div>
+<div class="dt-metric-row"><span class="dt-metric-lbl">Dataspace Status</span><span class="dt-metric-val" style="color:#00ff88">&#9679; LIVE</span></div>
+</div>
+</div>
+<div class="dt-col">
+<div class="dt-col-hd">&#10003; RECENT COMPLETIONS</div>
+<div class="dt-task"><div class="dt-task-txt">B_coil baseline measurement — rendezvous mode<div class="dt-task-sub">Archived to W6 Asset Library</div></div><div class="dt-badge done">COMPLETE</div></div>
+<div class="dt-task"><div class="dt-task-txt">Station-keep hold duration — 24hr test run<div class="dt-task-sub">Results fed to W4 Supply Chain</div></div><div class="dt-badge done">COMPLETE</div></div>
+<div class="dt-col-hd" style="margin-top:.5rem">&#9654; QUEUED</div>
+<div class="dt-task"><div class="dt-task-txt">Multi-body capture sequence — 3 asteroid approach<div class="dt-task-sub">Awaiting W1 deposit target list</div></div><div class="dt-badge queue">QUEUED</div></div>
+</div>
+<div class="dt-col">
+<div class="dt-col-hd">&#9632; MISSION LOG</div>
+<div class="dt-log-entry"><span class="dt-log-ts">24 Feb 26</span><span>W2&rarr;W4 hold data forwarded</span></div>
+<div class="dt-log-entry"><span class="dt-log-ts">23 Feb 26</span><span>Coil config v3 validated</span></div>
+<div class="dt-log-entry"><span class="dt-log-ts">22 Feb 26</span><span>W3 EMFF field config received</span></div>
+<div class="dt-log-entry"><span class="dt-log-ts">21 Feb 26</span><span>W1 deposit target data ingested</span></div>
+<div class="dt-log-entry"><span class="dt-log-ts">20 Feb 26</span><span>GMAT trajectory request sent to W5</span></div>
+<div class="dt-log-entry"><span class="dt-log-ts">18 Feb 26</span><span>INIT W2 Luke II workspace activated</span></div>
+<div class="dt-col-hd" style="margin-top:.5rem">&#9632; CONNECTIONS</div>
+<div style="font-size:.63rem;color:#8b92a8;line-height:1.7">
+Feeds &rarr; <a href="/w4/data" style="color:#ffaa00;text-decoration:none">W4</a>, <a href="/w6/data" style="color:#ff6b9d;text-decoration:none">W6</a><br>Consumes &larr; <a href="/w1/data" style="color:#00d4ff;text-decoration:none">W1</a>, <a href="/w3/data" style="color:#ff3366;text-decoration:none">W3</a>, <a href="/w5/data" style="color:#00ff88;text-decoration:none">W5</a>
+</div>
+</div>
+</div>
+<div class="dt-footer">
+<span class="dt-footer-lbl">Workspace Backend:</span>
+<a href="/w2/data" class="dt-link-btn ds">&#9889; OPEN W2 DATASPACE</a>
+<span id="dt-bcn-w2" style="margin-left:auto;font-size:.6rem;color:#3a4059">&#9679; Dataspace beacon active</span>
+</div>
+</div>
+<script>
+setInterval(function(){var e=document.getElementById('dt-utc-w2');if(e)e.textContent=new Date().toUTCString().replace('GMT','UTC');},1000);
+(function(){try{fetch('/w2/data',{method:'HEAD',mode:'no-cors',cache:'no-cache'}).catch(function(){});}catch(e){}})();
+</script>
+
+<!-- FLOW MAP (AI position + pipeline) -->
+<div id="flowmap" style="width:100%;max-width:1100px;margin:10px auto"></div>
+<script>
+(function(){
+  const el = document.getElementById("flowmap");
+  const nodes = [
+    {id:"/w1", label:"W1"}, {id:"/data/w1", label:"/data/w1"},
+    {id:"/w2", label:"W2"}, {id:"/data/w2", label:"/data/w2"},
+    {id:"/w3", label:"W3"}, {id:"/data/w3", label:"/data/w3"},
+    {id:"/w4", label:"W4"}, {id:"/data/w4", label:"/data/w4"},
+    {id:"/w5", label:"W5"}, {id:"/data/w5", label:"/data/w5"},
+    {id:"/data/w6", label:"/data/w6"}
+  ];
+  const edges = [
+    ["/w1","/data/w1"],["/w2","/data/w2"],["/w3","/data/w3"],["/w4","/data/w4"],["/w5","/data/w5"],
+    ["/data/w1","/data/w6"],["/data/w2","/data/w6"],["/data/w3","/data/w6"],["/data/w4","/data/w6"],["/data/w5","/data/w6"]
+  ];
+  function render(){
+    const s = Linker.get();
+    const where = s.achilles?.current || "/dash";
+    const svg = [`<svg viewBox="0 0 1100 280" style="width:100%">`];
+    const xy = {}; // layout grid
+    const cols = [["/w1","/w2","/w3","/w4","/w5"], ["/data/w1","/data/w2","/data/w3","/data/w4","/data/w5"], ["/data/w6"]];
+    const xcol = [150, 450, 850], ystep = 45, y0 = 40;
+    cols.forEach((col,ci)=>col.forEach((id,ri)=>{ xy[id] = {x:xcol[ci], y:y0+ri*ystep}; }));
+    // nodes
+    nodes.forEach(n=>{
+      if(!xy[n.id]) return;
+      const {x,y} = xy[n.id];
+      const active = (n.id===where);
+      svg.push(`<rect x="${x-50}" y="${y-18}" rx="10" ry="10" width="100" height="36" 
+        fill="${active?'#00e5ff':'#1f2733'}" stroke="#3a4557" />
+        <text x="${x}" y="${y+5}" fill="#fff" font-family="Inter" font-size="12" text-anchor="middle">${n.label}</text>`);
+      if(active){
+        svg.push(`<circle cx="${x+60}" cy="${y}" r="6" fill="#00e5ff"><title>Achilles here</title></circle>`);
+      }
+    });
+    // edges
+    edges.forEach(([a,b])=>{
+      if(!xy[a]||!xy[b]) return;
+      const A=xy[a],B=xy[b];
+      svg.push(`<line x1="${A.x+50}" y1="${A.y}" x2="${B.x-50}" y2="${B.y}" stroke="#5c6b80" stroke-width="2" marker-end="url(#arrow)"/>`);
+    });
+    svg.splice(1,0,`<defs><marker id="arrow" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#5c6b80"/></marker></defs>`);
+    svg.push(`</svg>`);
+    el.innerHTML = svg.join("");
+  }
+  window.addEventListener("message", (e)=> (e.data?.source==="linker" && e.data.type==="sync") && render());
+  if(window.Linker) render();
+})();
+</script>
