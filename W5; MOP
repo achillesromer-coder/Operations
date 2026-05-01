@@ -1,0 +1,152 @@
+<style>
+.ach-dt{font-family:'Courier New',monospace;background:#0a0e1a;color:#c8d6e5;border:2px solid #00ff88;border-radius:8px;overflow:hidden;margin:0 0 24px 0;}
+.ach-dt-hdr{background:#0d1221;border-bottom:2px solid #00ff88;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+.ach-dt-logo{font-size:22px;color:#00ff88;}
+.ach-dt-title{font-size:15px;font-weight:700;color:#00ff88;letter-spacing:2px;text-transform:uppercase;}
+.ach-dt-sub{font-size:10px;color:#7a8aaa;margin-top:2px;}
+.ach-dt-fuse{display:flex;gap:4px;flex-wrap:wrap;align-items:center;}
+.ach-dt-meta{background:#080c18;border-bottom:1px solid #1a2540;padding:6px 16px;display:flex;align-items:center;gap:16px;font-size:10px;flex-wrap:wrap;}
+.ach-live{background:#00ff88;color:#000;padding:2px 6px;border-radius:2px;font-weight:700;font-size:9px;animation:ach-blink 2s infinite;}
+@keyframes ach-blink{0%,100%{opacity:1}50%{opacity:.4}}
+.ach-dt-body{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;}
+.ach-dt-col{padding:14px;border-right:1px solid #1a2540;}
+.ach-dt-col:last-child{border-right:none;}
+.ach-col-hdr{font-size:9px;font-weight:700;color:#00ff88;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid #1a2540;}
+.ach-task{background:#0d1221;border:1px solid #1a2540;border-left:3px solid #00ff88;border-radius:4px;padding:8px;margin-bottom:8px;}
+.ach-task-name{font-size:11px;color:#e0e8f0;margin-bottom:3px;}
+.ach-task-src{font-size:9px;color:#4a5a7a;}
+.ach-badge{display:inline-block;padding:1px 5px;border-radius:2px;font-size:8px;font-weight:700;float:right;}
+.ach-inprog{background:#00aa44;color:#000;}
+.ach-blocked{background:#cc2233;color:#fff;}
+.ach-done{background:#1a3a1a;color:#00cc44;border:1px solid #00cc44;}
+.ach-queued{background:#1a1a3a;color:#6677ff;border:1px solid #6677ff;}
+.ach-metric{display:flex;justify-content:space-between;font-size:10px;padding:3px 0;border-bottom:1px solid #1a2540;}
+.ach-metric-lbl{color:#5a6a8a;}
+.ach-metric-val{color:#00ff88;font-weight:700;}
+.ach-log-entry{font-size:10px;padding:4px 0;border-bottom:1px solid #0d1221;display:flex;gap:8px;}
+.ach-log-date{color:#3a4a6a;min-width:42px;}
+.ach-log-txt{color:#a0b0c8;}
+.ach-conn-row{display:flex;gap:6px;align-items:center;margin-bottom:6px;flex-wrap:wrap;}
+.ach-conn-lbl{font-size:9px;color:#5a6a8a;min-width:70px;}
+.ach-conn-link{font-size:9px;padding:2px 6px;border-radius:2px;text-decoration:none;background:#1a2540;color:#00ff88;border:1px solid #2a3550;}
+.ach-dt-ftr{background:#080c18;border-top:1px solid #1a2540;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+.ach-ds-btn{background:#00ff88;color:#000;padding:6px 14px;border-radius:4px;font-size:10px;font-weight:700;text-decoration:none;letter-spacing:1px;}
+.ach-beacon{font-size:9px;color:#3a4a6a;}
+</style>
+<div class="ach-dt">
+ <div class="ach-dt-hdr">
+  <div>
+   <div style="display:flex;align-items:center;gap:10px;">
+    <span class="ach-dt-logo">&#9889;</span>
+    <div>
+     <div class="ach-dt-title">OPS TRACKER: W5 &middot; MISSION PLANNING GMAT</div>
+     <div class="ach-dt-sub">Mission templates &amp; GMAT integration &middot; /operations/w5</div>
+    </div>
+   </div>
+  </div>
+  <div class="ach-dt-fuse"><a href="/operations/w1" style="padding:4px 8px;border-radius:3px;font-size:10px;font-weight:700;text-decoration:none;background:#1a1f2e;color:#00ff88;border:1px solid #00ff88;">W1</a> <a href="/operations/w2" style="padding:4px 8px;border-radius:3px;font-size:10px;font-weight:700;text-decoration:none;background:#1a1f2e;color:#00ff88;border:1px solid #00ff88;">W2</a> <a href="/operations/w3" style="padding:4px 8px;border-radius:3px;font-size:10px;font-weight:700;text-decoration:none;background:#1a1f2e;color:#00ff88;border:1px solid #00ff88;">W3</a> <a href="/operations/w4" style="padding:4px 8px;border-radius:3px;font-size:10px;font-weight:700;text-decoration:none;background:#1a1f2e;color:#00ff88;border:1px solid #00ff88;">W4</a> <a href="/operations/w5" style="padding:4px 8px;border-radius:3px;font-size:10px;font-weight:700;text-decoration:none;background:#00ff88;color:#000;border:1px solid #00ff88;">W5</a> <a href="/operations/w6" style="padding:4px 8px;border-radius:3px;font-size:10px;font-weight:700;text-decoration:none;background:#1a1f2e;color:#00ff88;border:1px solid #00ff88;">W6</a> <a href="/library" style="padding:4px 8px;border-radius:3px;font-size:10px;font-weight:700;text-decoration:none;background:#1a1f2e;color:#00ff88;border:1px solid #00ff88;">LIB</a> <a href="/w5/data" style="padding:4px 10px;border-radius:3px;font-size:10px;font-weight:700;text-decoration:none;background:#00ff88;color:#000;">&#9889; W5 DATASPACE</a></div>
+ </div>
+ <div class="ach-dt-meta">
+  <span class="ach-live">&#11044; LIVE</span>
+  <span style="color:#3a4a6a;">/operations/w5</span>
+  <span>Backend: <a href="/w5/data" style="color:#00ff88;text-decoration:none;">/w5/data</a></span>
+  <span style="color:#5a6a8a;">Römer Industries / EMASSC</span>
+  <span id="ach-clk-W5" style="margin-left:auto;color:#5a6a8a;font-size:9px;"></span>
+ </div>
+ <div class="ach-dt-body">
+  <div class="ach-dt-col">
+   <div class="ach-col-hdr">&#9654; Active Tasks</div>
+   <div class="ach-task"><span class="ach-badge ach-inprog">IN PROGRESS</span><div class="ach-task-name">Mark III template calibration — GMAT orbital sequence</div><div class="ach-task-src">W5 Dataspace — trajectory solver</div></div>
+   <div class="ach-task"><span class="ach-badge ach-inprog">IN PROGRESS</span><div class="ach-task-name">Luke chain auto-log — mission run validation</div><div class="ach-task-src">Cross-ref W2 GEO insertion</div></div>
+   <div class="ach-task"><span class="ach-badge ach-blocked">BLOCKED</span><div class="ach-task-name">Mark V deep-mission template — awaiting fuel manifest</div><div class="ach-task-src">Pending W4 mass closure</div></div>
+   <div class="ach-metric"><span class="ach-metric-lbl">Templates Active</span><span class="ach-metric-val">3</span></div>
+   <div class="ach-metric"><span class="ach-metric-lbl">GMAT Runs</span><span class="ach-metric-val">14</span></div>
+   <div class="ach-metric"><span class="ach-metric-lbl">ΔV Budget</span><span class="ach-metric-val">6.1 km/s</span></div>
+   <div class="ach-metric"><span class="ach-metric-lbl">Mission Arc</span><span class="ach-metric-val">820 days</span></div>
+  </div>
+  <div class="ach-dt-col">
+   <div class="ach-col-hdr">&#10003; Completions</div>
+   <div class="ach-task"><span class="ach-badge ach-done">COMPLETE</span><div class="ach-task-name">Mark I/II baseline templates — archived</div><div class="ach-task-src">Archived to W6</div></div>
+   <div class="ach-task"><span class="ach-badge ach-done">COMPLETE</span><div class="ach-task-name">GMAT solver integration — v1 pipeline</div><div class="ach-task-src">From W1 deposit coordinates</div></div>
+   <div class="ach-col-hdr" style="margin-top:12px;">&#9654; Queued</div>
+   <div class="ach-task"><span class="ach-badge ach-queued">QUEUED</span><div class="ach-task-name">Inter-mission transit optimiser — W4 handoff</div><div class="ach-task-src">Awaiting supply chain closure</div></div>
+  </div>
+  <div class="ach-dt-col">
+   <div class="ach-col-hdr">&#9632; Mission Log</div>
+   <div class="ach-log-entry"><span class="ach-log-date">25 Feb</span><span class="ach-log-txt">W5 — Mark III GMAT sequence initiated</span></div>
+   <div class="ach-log-entry"><span class="ach-log-date">24 Feb</span><span class="ach-log-txt">Luke chain auto-log v2 deployed</span></div>
+   <div class="ach-log-entry"><span class="ach-log-date">23 Feb</span><span class="ach-log-txt">W4 fuel manifest requested</span></div>
+   <div class="ach-log-entry"><span class="ach-log-date">20 Feb</span><span class="ach-log-txt">INIT W5 Mission Mapping activated</span></div>
+   <div class="ach-col-hdr" style="margin-top:12px;">&#9632; Connections</div>
+   <div class="ach-conn-row"><span class="ach-conn-lbl">Feeds &#8594;</span><a href="/operations/w4" class="ach-conn-link">W4</a> <a href="/operations/w6" class="ach-conn-link">W6</a></div>
+   <div class="ach-conn-row"><span class="ach-conn-lbl">Consumes &#8592;</span><a href="/operations/w1" class="ach-conn-link">W1</a> <a href="/operations/w2" class="ach-conn-link">W2</a> <a href="/operations/w4" class="ach-conn-link">W4</a></div>
+  </div>
+ </div>
+ <div class="ach-dt-ftr">
+  <span style="font-size:9px;color:#3a4a6a;">Workspace Backend:</span>
+  <a href="/w5/data" class="ach-ds-btn">&#9889; OPEN W5 DATASPACE</a>
+  <span class="ach-beacon" id="ach-bcn-W5">&#9679; Pinging dataspace...</span>
+ </div>
+</div>
+<script>
+(function(){
+ var clk=document.getElementById('ach-clk-W5');
+ var bcn=document.getElementById('ach-bcn-W5');
+ function tick(){if(clk)clk.textContent=new Date().toUTCString().replace('GMT','UTC');}
+ tick();setInterval(tick,1000);
+ try{fetch('/w5/data',{method:'HEAD',mode:'no-cors',cache:'no-cache'}).then(function(){if(bcn){bcn.textContent='&#9679; Dataspace beacon active';bcn.style.color='#00aa44';}}).catch(function(){if(bcn){bcn.textContent='&#9679; Beacon offline';bcn.style.color='#cc2233';}});}catch(e){}
+})();
+</script>
+
+<!-- FLOW MAP (AI position + pipeline) -->
+<div id="flowmap" style="width:100%;max-width:1100px;margin:10px auto"></div>
+<script>
+(function(){
+  const el = document.getElementById("flowmap");
+  const nodes = [
+    {id:"/w1", label:"W1"}, {id:"/data/w1", label:"/data/w1"},
+    {id:"/w2", label:"W2"}, {id:"/data/w2", label:"/data/w2"},
+    {id:"/w3", label:"W3"}, {id:"/data/w3", label:"/data/w3"},
+    {id:"/w4", label:"W4"}, {id:"/data/w4", label:"/data/w4"},
+    {id:"/w5", label:"W5"}, {id:"/data/w5", label:"/data/w5"},
+    {id:"/data/w6", label:"/data/w6"}
+  ];
+  const edges = [
+    ["/w1","/data/w1"],["/w2","/data/w2"],["/w3","/data/w3"],["/w4","/data/w4"],["/w5","/data/w5"],
+    ["/data/w1","/data/w6"],["/data/w2","/data/w6"],["/data/w3","/data/w6"],["/data/w4","/data/w6"],["/data/w5","/data/w6"]
+  ];
+  function render(){
+    const s = Linker.get();
+    const where = s.achilles?.current || "/dash";
+    const svg = [`<svg viewBox="0 0 1100 280" style="width:100%">`];
+    const xy = {}; // layout grid
+    const cols = [["/w1","/w2","/w3","/w4","/w5"], ["/data/w1","/data/w2","/data/w3","/data/w4","/data/w5"], ["/data/w6"]];
+    const xcol = [150, 450, 850], ystep = 45, y0 = 40;
+    cols.forEach((col,ci)=>col.forEach((id,ri)=>{ xy[id] = {x:xcol[ci], y:y0+ri*ystep}; }));
+    // nodes
+    nodes.forEach(n=>{
+      if(!xy[n.id]) return;
+      const {x,y} = xy[n.id];
+      const active = (n.id===where);
+      svg.push(`<rect x="${x-50}" y="${y-18}" rx="10" ry="10" width="100" height="36" 
+        fill="${active?'#00e5ff':'#1f2733'}" stroke="#3a4557" />
+        <text x="${x}" y="${y+5}" fill="#fff" font-family="Inter" font-size="12" text-anchor="middle">${n.label}</text>`);
+      if(active){
+        svg.push(`<circle cx="${x+60}" cy="${y}" r="6" fill="#00e5ff"><title>Achilles here</title></circle>`);
+      }
+    });
+    // edges
+    edges.forEach(([a,b])=>{
+      if(!xy[a]||!xy[b]) return;
+      const A=xy[a],B=xy[b];
+      svg.push(`<line x1="${A.x+50}" y1="${A.y}" x2="${B.x-50}" y2="${B.y}" stroke="#5c6b80" stroke-width="2" marker-end="url(#arrow)"/>`);
+    });
+    svg.splice(1,0,`<defs><marker id="arrow" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#5c6b80"/></marker></defs>`);
+    svg.push(`</svg>`);
+    el.innerHTML = svg.join("");
+  }
+  window.addEventListener("message", (e)=> (e.data?.source==="linker" && e.data.type==="sync") && render());
+  if(window.Linker) render();
+})();
+</script>
