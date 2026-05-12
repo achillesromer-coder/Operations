@@ -1,0 +1,79 @@
+{
+  "$schema": "https://raw.githubusercontent.com/achillesromer-coder/LightSpeed/main/shared-contracts/page-manifest.schema.json",
+  "manifestId": "operations-pages",
+  "version": "0.1.0",
+  "protocol": "ACHILLES_PROTOCOL_v1.1",
+  "owner": "Romer Industries / EMASSC",
+  "repository": "achillesromer-coder/Operations",
+  "branch": "feature/lightspeed-wrapper-alignment",
+  "baseCdn": "https://cdn.jsdelivr.net/gh/achillesromer-coder/Operations@feature/lightspeed-wrapper-alignment",
+  "pages": [
+    {
+      "pageId": "operations-w1",
+      "workspaceId": "W1",
+      "route": "/operations/w1",
+      "dataRoute": "/w1/data",
+      "title": "W1 Integrated Deposit Analysis",
+      "modulePath": "apps/w1/index.js",
+      "mountExport": "mountOperationsW1",
+      "dependencies": ["W2", "W3", "W5", "Data"],
+      "status": "extracted"
+    },
+    {
+      "pageId": "operations-w2",
+      "workspaceId": "W2",
+      "route": "/operations/w2",
+      "dataRoute": "/w2/data",
+      "title": "W2 Guidance / Object Stabilisation",
+      "modulePath": "apps/w2/index.js",
+      "mountExport": "mountOperationsW2",
+      "dependencies": ["W1", "W3", "W5"],
+      "status": "extracted"
+    },
+    {
+      "pageId": "operations-w3",
+      "workspaceId": "W3",
+      "route": "/operations/w3",
+      "dataRoute": "/w3/data",
+      "title": "W3 Resonance / Magnetic Systems",
+      "modulePath": "apps/w3/index.js",
+      "mountExport": "mountOperationsW3",
+      "dependencies": ["W1", "W5", "W6"],
+      "status": "extracted"
+    },
+    {
+      "pageId": "operations-w4",
+      "workspaceId": "W4",
+      "route": "/operations/w4",
+      "dataRoute": "/w4/data",
+      "title": "W4 Supply Chain & Trajectory",
+      "modulePath": "apps/w4/index.js",
+      "mountExport": "mountOperationsW4",
+      "dependencies": ["W1", "W5", "W6"],
+      "status": "extracted"
+    },
+    {
+      "pageId": "operations-w5",
+      "workspaceId": "W5",
+      "route": "/operations/w5",
+      "dataRoute": "/w5/data",
+      "title": "W5 Mission Planning GMAT",
+      "modulePath": "apps/w5/index.js",
+      "mountExport": "mountOperationsW5",
+      "dependencies": ["W1", "W2", "W4", "W6", "GMAT"],
+      "status": "extracted"
+    },
+    {
+      "pageId": "operations-w6",
+      "workspaceId": "W6",
+      "route": "/operations/w6",
+      "dataRoute": "/w6/data",
+      "title": "W6 Platform Asset Library",
+      "modulePath": "apps/w6/index.js",
+      "mountExport": "mountOperationsW6",
+      "dependencies": ["W3", "W4", "W5", "MPL", "Data"],
+      "status": "extracted"
+    }
+  ],
+  "createdAt": "2026-05-10T00:00:00.000Z"
+}
