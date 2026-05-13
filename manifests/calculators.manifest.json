@@ -1,0 +1,67 @@
+{
+  "schemaVersion": "1.0.0",
+  "kind": "romer.operations.calculators.manifest",
+  "protocol": "ACHILLES_PROTOCOL_v1.1",
+  "namespace": "RomerOperationsCalculators",
+  "baseRoute": "/operations/calculators",
+  "repository": {
+    "fullName": "achillesromer-coder/Operations",
+    "branch": "feature/lightspeed-wrapper-alignment"
+  },
+  "cdnBase": "https://cdn.jsdelivr.net/gh/achillesromer-coder/Operations@feature/lightspeed-wrapper-alignment",
+  "calculators": [
+    {
+      "id": "calculator-orbital",
+      "route": "/operations/calculators/orbital",
+      "title": "Orbital Calculator",
+      "entry": "calculators/orbital/index.js",
+      "mount": "mountOrbitalCalculator",
+      "inputUnits": ["km", "km/s", "deg", "kg"],
+      "produces": ["orbital-elements-record", "delta-v-estimate-record"],
+      "gmatAlignment": "Keplerian/Cartesian state preprocessing only; browser output is not a GMAT truth run."
+    },
+    {
+      "id": "calculator-launch",
+      "route": "/operations/calculators/launch",
+      "title": "Launch Window Calculator",
+      "entry": "calculators/launch/index.js",
+      "mount": "mountLaunchCalculator",
+      "inputUnits": ["deg", "km", "s", "kg"],
+      "produces": ["launch-geometry-record", "window-screen-record"]
+    },
+    {
+      "id": "calculator-magnetostatics",
+      "route": "/operations/calculators/magnetostatics",
+      "title": "Magnetostatics Calculator",
+      "entry": "calculators/magnetostatics/index.js",
+      "mount": "mountMagnetostaticsCalculator",
+      "inputUnits": ["A", "m", "T", "N"],
+      "produces": ["field-strength-record", "coil-screen-record"]
+    },
+    {
+      "id": "calculator-energy",
+      "route": "/operations/calculators/energy",
+      "title": "Energy Calculator",
+      "entry": "calculators/energy/index.js",
+      "mount": "mountEnergyCalculator",
+      "inputUnits": ["W", "Wh", "kW", "kWh", "kg"],
+      "produces": ["power-budget-record", "storage-endurance-record"]
+    },
+    {
+      "id": "calculator-fluids",
+      "route": "/operations/calculators/fluids",
+      "title": "Fluids Calculator",
+      "entry": "calculators/fluids/index.js",
+      "mount": "mountFluidsCalculator",
+      "inputUnits": ["Pa", "m3/s", "kg/m3", "m/s"],
+      "produces": ["flow-screen-record", "pressure-drop-record"]
+    }
+  ],
+  "validation": {
+    "numericPolicy": "Deterministic browser calculators are screening tools. Records that feed mission execution must be validated by Data/Achilles and, where orbital, by GMAT or equivalent verified dynamics stack.",
+    "references": [
+      "GMATMathSpec R2025a spacecraft state and dynamics sections",
+      "GMAT API User Guide R2025a for API-backed execution boundary"
+    ]
+  }
+}
