@@ -1,0 +1,49 @@
+{
+  "version": "0.1",
+  "status": "scaffold",
+  "rule": "Operations owns operator-facing /operations/wn workspaces. Each workspace pairs with a Data repo /wn/data dataspace.",
+  "workspaces": [
+    {
+      "id": "W1",
+      "name": "Incoming Deposit Analysis",
+      "workspace_route": "/operations/w1",
+      "dataspace_route": "/w1/data",
+      "function": "Deposit proxy, target body, material disposition, field handoff and source readiness."
+    },
+    {
+      "id": "W2",
+      "name": "Luke II Catch / Hold",
+      "workspace_route": "/operations/w2",
+      "dataspace_route": "/w2/data",
+      "function": "Catch/hold logic, electromagnetic capture state, Luke handoff and station envelope."
+    },
+    {
+      "id": "W3",
+      "name": "RFS & EMFF",
+      "workspace_route": "/operations/w3",
+      "dataspace_route": "/w3/data",
+      "function": "RFS/EMFF field configurations, sweep testing, demonstrator lineage and power envelope."
+    },
+    {
+      "id": "W4",
+      "name": "Interplanetary Supply Chain",
+      "workspace_route": "/operations/w4",
+      "dataspace_route": "/w4/data",
+      "function": "Supply-chain topology, return-chain logic, payload movement and route burden."
+    },
+    {
+      "id": "W5",
+      "name": "Mission Planning / GMAT / MPL",
+      "workspace_route": "/operations/w5",
+      "dataspace_route": "/w5/data",
+      "function": "GMAT/export planning, Maximum Probable Loss, range/disposition compaction and mission summaries."
+    },
+    {
+      "id": "W6",
+      "name": "Asset Library / Publication",
+      "workspace_route": "/operations/w6",
+      "dataspace_route": "/w6/data",
+      "function": "Asset library, final source-pack staging, publication readiness and evidence index."
+    }
+  ]
+}
