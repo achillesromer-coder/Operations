@@ -51,3 +51,28 @@ Neo readiness checklist before dispatch:
 7. Completion ledger migration remains blocked until proof exists.
 
 Blocked actions: delete, restructure, deploy, publish, launch backends, wallet/token/mint/payment/custody, secondary Z activation.
+
+### 2026-07-01 12:54 Neo pre-pass delta
+
+Selected next operator: Morpheus.
+Cycle position: 2 of 5 for the next floor rotation.
+Action taken: readiness note only; no divvy execution.
+
+Reason: ACH-0001 / CORE-0001 remains incomplete/not verified. Neo must not dispatch Morpheus work until CORE-linked provenance and Achilles oversight status are present.
+
+Morpheus readiness boundary:
+
+- Allowed before CORE stabilization: knowledge/review/retrieval/docs/code-analysis landing notes, source-map preparation, blocker recording and divvy-readiness checks.
+- Not allowed before CORE stabilization: documentation publication, code implementation, repository restructuring, dashboard mutation beyond additive notes, or completed-ledger migration.
+
+Morpheus dispatch prerequisites:
+
+1. CORE ID exists for the task.
+2. Source carrier and provenance are recorded.
+3. Achilles oversight state is present.
+4. Neo route decision is explicit.
+5. Target ledger is identified.
+6. Dependencies, blockers and owner-decision flags are recorded.
+7. Completion evidence path is defined but not populated until execution proof exists.
+
+No deletion, restructure, deploy, publish, backend launch, wallet/token/mint/payment/custody action or secondary Z activation is authorized by this pre-pass.
