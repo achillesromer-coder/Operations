@@ -2,33 +2,53 @@
 
 Status: ACTIVE
 Updated: 2026-07-03
-Authority: Operations control / Achilles audit
+Authority: Drive CORE workbook / Operations control / Achilles audit
 
-## ACH-0001 — Drive carrier extraction and Git operations alignment
+## ACH-0001 — CORE-B01 extraction and continuity audit
 
 Status: ACTIVE / EXTRACTION-FIRST
 Priority: P0
+CORE workbook link: `CORE-B01`
 
 ### Current authority clarification
 
-Drive remains context and evidence carrier. GitHub Operations is the current Git control surface. Local LightSpeed is the operating/build surface. LightSpeed Go is the operator app lane.
+Drive contains the canonical CORE workbook carrier. GitHub Operations is the execution/control surface for bridge files and agent Markdown ledgers. Local LightSpeed/Codex is the operating/build proof surface. LightSpeed Go is the operator app lane.
 
-CORE was useful as the Drive consolidation target. In GitHub, do not create extra task systems just to mirror Drive copies.
+Do not create extra task systems to mirror Drive copies. Use this file as the Achilles execution-facing ledger pointing back to Drive CORE authority.
 
-### Current evidence base
+### Current CORE evidence base
 
-- `CORE/Drive_GitHub_Bridge.md` records the current Operations bridge.
-- `CORE/GITHUB_ALIGNMENT_HANDOFF_2026_07_03.md` records the first GitHub mapping pass.
-- Operations root contains W1-W6 route widgets, calculators and simulator surfaces.
-- Codex local inventory is still running and must remain the source for local build readiness.
+Drive CORE records:
+
+- `CORE-B01` — Task transcription from old sources into CORE; Owner Agent: Achilles; Status: Active; Next Action: extract one batch per run.
+- `CORE-B02` — Project-function divvy; Owner Agent: Neo; Status: Active; Next Action: assign bracket + floor owner.
+- `T-086` — EML#F external boundary confirmation; blocked/high; keep external until source proof.
+- `T-087` — Raphael Lite package boundary; blocked/high; keep deferred until approved.
+- `T-088` — Neo queue reconciliation; open/high; bounded queue only, no secondary Z activation.
+- `T-089` / `T-090` — Architect/Morpheus landing-outline expansions.
 
 ### Required extraction targets
 
-1. Operations control files for Git-facing authority and handoffs.
-2. Operations route/widget files for public-safe route proof candidates.
-3. Data repo for schema/catalogue outputs after review.
-4. Local Codex result packets for build, storage, route and secrets proof.
-5. Completed ledgers only after proof is recorded.
+1. Legacy `OPEN_TASKS`, old logs and previous task sheets.
+2. ACR3 Next Stage Consolidation Register.
+3. ACR3 Chat Closure Handoff to Neo and Achilles.
+4. Drive Alignment Map and TEMP -> ACHILLES assimilation logs.
+5. LightSpeed Web Shell Builder and LS GO source logs.
+6. ZIP Check / ACR/archive extraction registers.
+7. Google Earth Investor scaffold.
+8. Confirmed agent files and upload queues.
+9. Operations control files for Git-facing authority and handoffs.
+10. Operations route/widget files for public-safe route proof candidates.
+11. Data repo schema/catalogue outputs after source review.
+12. Local Codex result packets for build, storage, route and secrets proof.
+
+### Current extraction order
+
+1. Extract one task batch into CORE per Achilles audit pass.
+2. Preserve original source carrier and original ID where present.
+3. Assign six-domain bracket and support lane only when evidence supports it.
+4. Flag owner/source ambiguity instead of forcing placement.
+5. Keep completed ledgers empty or blocked until active direction is stable.
 
 ### Hard gates
 
@@ -37,19 +57,25 @@ CORE was useful as the Drive consolidation target. In GitHub, do not create extr
 - Do not merge or close PRs before a complete internal pass.
 - Do not treat old task files as final truth without source review.
 - Keep DeSporte on hold.
+- Keep EML#F external and Raphael Lite deferred.
+- Keep N^3 as GeoMatrices unless superseded by explicit owner/source authority.
+- Keep Google Earth Investor-scoped.
+- No deletion, restructure, deployment, publication, backend launch, wallet/token/mint/payment/custody action, unsupported public claim or secondary Z activation.
 
 ### Current blocker register
 
+- CORE population is active but not yet complete.
+- Completed-ledger migration remains blocked until CORE direction stabilises.
 - Codex C-drive inventory/migration is still in progress.
 - LightSpeed repo authority needs reconciliation between local `NCNBOUWER/LightSpeed` and connector-visible `achillesromer-coder/LightSpeed`.
 - Operations route widgets contain route/status labels that need proof against local/web route checks.
-- Root README dashboards are waiting.
+- Root README dashboards wait on local proof.
 
 ### Safe next Achilles action
 
-Continue the Operations internal pass:
+Continue CORE-B01 extraction:
 
-1. Review remaining W, calculator and simulator files.
-2. Record placeholders, route mismatches and status labels.
-3. Wait for Codex local proof before public/build/launch decisions.
-4. Keep commits limited to existing control-file updates unless a complete pass justifies more.
+1. Review one current source-carrier batch.
+2. Convert actionable rows into Drive CORE tasks.
+3. Record provenance, source carrier, bracket, owner lane, blocker state and owner-decision requirement.
+4. Update existing GitHub bridge/agent files only when they need alignment.
