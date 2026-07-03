@@ -1,59 +1,55 @@
 # Achilles Tasks
 
 Status: ACTIVE
-Date: 2026-07-01
-Authority: CORE / Achilles continuity audit
+Updated: 2026-07-03
+Authority: Operations control / Achilles audit
 
-## ACH-0001 — Extract OPEN_TASKS and prior carriers into CORE
+## ACH-0001 — Drive carrier extraction and Git operations alignment
 
-CORE link: CORE-0001
 Status: ACTIVE / EXTRACTION-FIRST
 Priority: P0
 
-### Purpose
+### Current authority clarification
 
-Assimilate actionable tasks, stale rows, blockers, continuation logic, source-carrier references and owner-decision requirements from legacy OPEN_TASKS files, prior logs, handoff registers, ZIP/package registers, Drive registers and older task files into CORE before any downstream divvy or completed-ledger migration.
+Drive remains context and evidence carrier. GitHub Operations is the current Git control surface. Local LightSpeed is the operating/build surface. LightSpeed Go is the operator app lane.
+
+CORE was useful as the Drive consolidation target. In GitHub, do not create extra task systems just to mirror Drive copies.
 
 ### Current evidence base
 
-- GitHub bridge confirms CORE replaces OPEN_TASKS as canonical task/index authority.
-- GitHub bridge confirms Drive remains source-carrier/canonical storage while GitHub is execution bridge.
-- Google Drive search finds active OPEN_TASKS workbook carriers and ACR3 consolidation/handoff registers.
-- Neo task ledger is branch-visible and correctly blocked until CORE-0001 is complete.
+- `CORE/Drive_GitHub_Bridge.md` records the current Operations bridge.
+- `CORE/GITHUB_ALIGNMENT_HANDOFF_2026_07_03.md` records the first GitHub mapping pass.
+- Operations root contains W1-W6 route widgets, calculators and simulator surfaces.
+- Codex local inventory is still running and must remain the source for local build readiness.
 
 ### Required extraction targets
 
-1. CORE.xlsx / CORE Entries.md as active intake and dependency index.
-2. Achilles Oversight.xlsx for governance, blockers, owner-decision flags and deletion/publication gates.
-3. Neo Oversight.xlsx for post-CORE divvy readiness only.
-4. Relevant agent Tasks.md ledgers only after CORE provenance and route assignment exist.
-5. Completed ledgers only after extraction proof, route proof and completion proof exist.
+1. Operations control files for Git-facing authority and handoffs.
+2. Operations route/widget files for public-safe route proof candidates.
+3. Data repo for schema/catalogue outputs after review.
+4. Local Codex result packets for build, storage, route and secrets proof.
+5. Completed ledgers only after proof is recorded.
 
 ### Hard gates
 
-- Do not treat OPEN_TASKS as master.
-- Do not move rows to completed until CORE population and direction are stable.
-- Do not delete or archive-finalize without extraction proof, checksum/classification where applicable, canonical placement comparison and owner approval.
-- Preserve six-domain brackets separately from floor-agent operators.
-- Z/floor ambiguity escalates to Neo; Neo/Athene ambiguity escalates to Achilles; Achilles ambiguity escalates to owner.
+- Read internal files before editing.
+- Prefer updating existing files over adding new files.
+- Do not merge or close PRs before a complete internal pass.
+- Do not treat old task files as final truth without source review.
+- Keep DeSporte on hold.
 
 ### Current blocker register
 
-- CORE_Entries.md is not yet branch-visible at the expected path during this audit.
-- Achilles_Tasks.md was missing at the expected path before this additive creation.
-- Legacy OPEN_TASKS workbook(s), CL3 open task queue, ACR3 consolidation register, ACR3 handoff and Drive Alignment Map require row-level extraction into CORE.
-- Completion-ledger migration remains blocked until CORE population is verified.
+- Codex C-drive inventory/migration is still in progress.
+- LightSpeed repo authority needs reconciliation between local `NCNBOUWER/LightSpeed` and connector-visible `achillesromer-coder/LightSpeed`.
+- Operations route widgets contain route/status labels that need proof against local/web route checks.
+- Root README dashboards are waiting.
 
 ### Safe next Achilles action
 
-Continue source-carrier-first extraction pass in this order:
+Continue the Operations internal pass:
 
-1. ACR3 consolidation register.
-2. ACR3 chat closure handoff.
-3. Drive Alignment Map.
-4. OPEN_TASKS workbook duplicates.
-5. CL3 build/open task queue.
-6. ZIP/check/archive registers.
-7. Agent landing files and oversight workbooks.
-
-Record every imported item with source title, source URL/ID where available, destination lane, owner-decision flag, blocker state and completed-ledger eligibility.
+1. Review remaining W, calculator and simulator files.
+2. Record placeholders, route mismatches and status labels.
+3. Wait for Codex local proof before public/build/launch decisions.
+4. Keep commits limited to existing control-file updates unless a complete pass justifies more.
