@@ -1,7 +1,7 @@
 # Neo Tasks
 
 Status: ACTIVE
-Updated: 2026-07-03
+Updated: 2026-07-05
 Authority: Drive CORE workbook / Operations control / Achilles oversight
 
 ## NEO-0001 — CORE-B02 project-function divvy
@@ -17,6 +17,18 @@ Drive CORE is canonical. GitHub Operations is the current Git execution/control 
 Achilles owns `CORE-B01` extraction. Neo owns `CORE-B02` divvy after each extracted CORE batch is stable enough to route.
 
 Neo may route audit, source-map, blocker and landing-outline work. Build, release, public status, route labels and dashboard claims wait for Codex local proof and Achilles/owner gate as applicable.
+
+### Latest Achilles extraction batch read by Neo — 2026-07-05
+
+Source carrier: `LightSpeed Operations Current Task Register`.
+
+| Source ID | Proposed CORE / lane treatment | Proposed floor support |
+|---|---|---|
+| `LSO-ACT-024` | `CORE-B01` / CORE assimilation of previous OPEN_TASKS and task deltas | Achilles primary; Morpheus source review; Smith queue state after CORE acceptance |
+| `LSO-ACT-025` | `CORE-B02` / Operations and Römer Git alignment | Neo routing; Merovingian connector/permission diagnostics; Smith executable Git queue only after proof |
+| `LSO-ACT-026` | Scope-control item for interplanetary supply-chain systems, LightSpeed operations and Römer Industries operations | Achilles scope gate; Neo no-bleed enforcement; Oracle provenance/source boundary support |
+
+Status: divvy-readiness only until workbook-level CORE population is stable and each row has provenance/blocker state recorded.
 
 ### Divvy rules
 
@@ -48,6 +60,7 @@ Reason: Drive CORE has current workbook authority, but legacy task material is s
 ### Current blockers
 
 - CORE population active but incomplete.
+- Direct connector spreadsheet edit path is unavailable for the active CORE `.xlsx` Office carrier.
 - No executable divvy where source carrier/provenance is unresolved.
 - Codex local proof still required for build/route/public status labels.
 - LightSpeed repo authority needs reconciliation between local `NCNBOUWER/LightSpeed` and connector-visible `achillesromer-coder/LightSpeed`.
