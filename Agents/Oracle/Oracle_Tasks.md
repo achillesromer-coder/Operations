@@ -1,8 +1,9 @@
 # Oracle Tasks
 
 Status: ACTIVE — readiness / provenance mode only
+Updated: 2026-07-05
 Owner: Neo oversight; Achilles audit
-Canonical authority: CORE
+Canonical authority: Drive CORE workbook
 
 ## Current gate
 
@@ -17,7 +18,19 @@ Oracle must not execute archive, provenance, IP/reference-vault, classification,
 
 ## Current blocker
 
-ACH-0001 / CORE-0001 remains incomplete / not verified complete. Until CORE population is stable, Oracle is limited to safe additive landing-outline, source-map, provenance-readiness, classification-readiness, blocker and divvy-readiness notes.
+CORE population is active but incomplete. Until CORE population is stable, Oracle is limited to safe additive landing-outline, source-map, provenance-readiness, classification-readiness, blocker and divvy-readiness notes.
+
+The active blocker is not "CORE missing"; Drive CORE carriers exist. The blocker is incomplete population and unresolved workbook-level edit/proof path for the `.xlsx` carrier.
+
+## Latest provenance-readiness intake — 2026-07-05
+
+Source carrier: `LightSpeed Operations Current Task Register`.
+
+| Source ID | Oracle relevance | Current mode |
+|---|---|---|
+| `LSO-ACT-024` | Prior OPEN_TASKS/task-delta provenance must be preserved during CORE assimilation. | Source-map readiness only. |
+| `LSO-ACT-025` | Git alignment needs repo-permission/source-status provenance and connector-access blockers. | Provenance/blocker readiness only. |
+| `LSO-ACT-026` | Interplanetary supply-chain systems scope boundary must remain no-bleed and evidence-gated. | Boundary/source-classification readiness only. |
 
 ## Oracle scope boundary
 
@@ -53,7 +66,6 @@ Blocked without explicit owner/Achilles authority:
 
 ## Current pass note
 
-Selected operator: Oracle.
-Cycle index: 3 of 5.
-Mode: readiness only.
-Delta: establish branch-visible Oracle landing ledger for future CORE-linked provenance/archive/classification tasks.
+Selected operator state: Oracle readiness.
+Mode: provenance/source-map/classification readiness only.
+Delta: align Oracle landing ledger to visible Drive CORE carriers and latest extracted LightSpeed task-register batch without executing archive movement or classification finalisation.
