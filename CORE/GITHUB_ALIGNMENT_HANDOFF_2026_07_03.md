@@ -1,7 +1,7 @@
 # GitHub Alignment Handoff — 2026-07-03
 
 Status: active Operations pass.
-Updated: 2026-07-05 extraction-ledger push
+Updated: 2026-07-05 final cleanup pass
 
 ## Decisions recorded
 
@@ -47,23 +47,14 @@ Expanded CORE rows still active include `T-086` EML#F external boundary, `T-087`
 | `achillesromer-coder/Data` | Public-safe data and schema lane. |
 | `achillesromer-coder/Romer-MPL` | MPL and GMAT side lane. |
 
-## Open issues observed previously
+## Open GitHub control items observed previously
 
 - `NCNBOUWER/Raphael#2` — ACR3 cross-agent closure handoff.
 - `achillesromer-coder/Operations#2` — operations route integration.
 - `achillesromer-coder/Data#2` — public-safe schema subset.
+- Scaffold PRs remain review-only until local inventory, route/status proof and owner gate are complete.
 
-## Open PRs observed previously
-
-- `NCNBOUWER/Raphael#1` — connector retry note.
-- `achillesromer-coder/Operations#3` — operations workspace shell.
-- `achillesromer-coder/Data#3` — source-status scaffold.
-- `achillesromer-coder/LightSpeed#1` — LightSpeed scaffold.
-- `achillesromer-coder/Data#1` — Data scaffold.
-- `achillesromer-coder/Romer-MPL#1` — Romer-MPL scaffold.
-- `achillesromer-coder/Operations#1` — Operations scaffold.
-
-## Operations files inspected / aligned in this pass
+## Operations files inspected / aligned
 
 - `CORE/Drive_GitHub_Bridge.md`
 - `CORE/GITHUB_ALIGNMENT_HANDOFF_2026_07_03.md`
@@ -73,21 +64,21 @@ Expanded CORE rows still active include `T-086` EML#F external boundary, `T-087`
 - Existing agent ledgers where present
 - W1-W6 route widgets, calculators and simulator surfaces remain route-proof candidates
 
-## Finding
+## Current finding
 
-Drive CORE now supersedes the earlier blocker that no CORE carrier was visible. The active blocker is no longer "CORE missing"; it is "CORE population active but incomplete".
+Drive CORE carriers are visible and active. The active blocker is incomplete CORE population plus unresolved workbook-level edit/proof path for the active `.xlsx` carrier.
 
 Operations contains root-level static route widgets and calculators. Several contain status labels, route links and dataspace references. Treat those as route-proof candidates until Codex local proof confirms them.
 
-The active CORE workbook is an `.xlsx` Office carrier. Direct Sheets metadata/editing through the connector is blocked for that file type. Until a workbook-level edit path is available, connector-side extraction deltas are recorded in existing GitHub control/agent files and Slack, while Drive CORE remains the canonical target.
+Until a workbook-level edit path is available, connector-side extraction deltas are recorded in existing GitHub control/agent files and Slack, while Drive CORE remains the canonical target.
 
-## Latest connector push delta — 2026-07-05
+## Connector push deltas — 2026-07-05
 
 - Re-read Drive CORE / automation carriers before Git edits.
 - Reconfirmed `AUTOMATION_PUSH_MANIFEST_2026_07_02.md` as automation continuity carrier.
 - Confirmed OpenAI Platform availability only at organization/project level; no OpenAI mutation performed.
 - Updated this existing handoff rather than creating another file.
-- Slack should receive compact sync only, not broad planning.
+- Slack receives compact sync only, not broad planning.
 
 ## Extraction-ledger push — 2026-07-05
 
@@ -106,6 +97,13 @@ Commits from this extraction-ledger push:
 - `Agents/Achilles/Achilles_Tasks.md` — `2fe7992a61d91c67f1b58c4210609df1205a8761`
 - `Agents/Neo/Neo_Tasks.md` — `b4d34cf2fd3a98fc42a1fcdc14fdf1bef7659431`
 - `Agents/Oracle/Oracle_Tasks.md` — `c30a4f092da99a54ba74d36b699ae17caea8267f`
+
+## Final cleanup pass — 2026-07-05
+
+- Removed stale placeholder/blocker language from this handoff and replaced it with the current blocker state.
+- Searched Operations, LightSpeed and Data for explicit placeholder/TODO/FIXME text through connector search; no additional connector-visible matches returned in this pass.
+- Searched Drive for explicit placeholder/Core-missing/COR-canonical strings through connector search; no additional connector-visible matches returned in this pass.
+- Preserved historical provenance without expanding new files or deleting prior evidence.
 
 ## Next action
 
