@@ -1,7 +1,7 @@
 # Achilles Tasks
 
 Status: ACTIVE
-Updated: 2026-07-03
+Updated: 2026-07-05
 Authority: Drive CORE workbook / Operations control / Achilles audit
 
 ## ACH-0001 — CORE-B01 extraction and continuity audit
@@ -26,6 +26,18 @@ Drive CORE records:
 - `T-087` — Raphael Lite package boundary; blocked/high; keep deferred until approved.
 - `T-088` — Neo queue reconciliation; open/high; bounded queue only, no secondary Z activation.
 - `T-089` / `T-090` — Architect/Morpheus landing-outline expansions.
+
+### Latest extracted Drive task-register batch — 2026-07-05
+
+Source carrier: `LightSpeed Operations Current Task Register`.
+
+Batch status: extracted into GitHub execution-facing Achilles ledger for CORE-B01 follow-through; Drive CORE remains the canonical workbook target.
+
+| Source ID | Task | Achilles treatment |
+|---|---|---|
+| `LSO-ACT-024` | CORE assimilation of previous OPEN_TASKS | Keep as Critical CORE-B01 extraction item; transcribe prior OPEN_TASKS/task-delta rows into CORE and classify each row COMPLETE, PENDING, HOLD or BLOCKED inside CORE. |
+| `LSO-ACT-025` | Operations and Römer Git alignment | Keep as High Git alignment item; prioritise writable Operations, LightSpeed, Romer-MPL and Data repos; record missing connector access as blocker. |
+| `LSO-ACT-026` | Interplanetary supply-chain systems operations focus | Keep as High scope-control item; restrict this consolidation pass to interplanetary supply-chain systems, LightSpeed operations, Römer Industries operations, web/go/desktop surfaces, source maps, archive extraction and deletion-readiness proof. |
 
 ### Required extraction targets
 
@@ -66,6 +78,7 @@ Drive CORE records:
 
 - CORE population is active but not yet complete.
 - Completed-ledger migration remains blocked until CORE direction stabilises.
+- Direct Sheets metadata/editing is blocked for the active CORE `.xlsx` Office carrier; use Drive CORE as canonical target and record connector-side extraction deltas in Git/Slack until workbook-level edit path is available.
 - Codex C-drive inventory/migration is still in progress.
 - LightSpeed repo authority needs reconciliation between local `NCNBOUWER/LightSpeed` and connector-visible `achillesromer-coder/LightSpeed`.
 - Operations route widgets contain route/status labels that need proof against local/web route checks.
@@ -75,7 +88,7 @@ Drive CORE records:
 
 Continue CORE-B01 extraction:
 
-1. Review one current source-carrier batch.
-2. Convert actionable rows into Drive CORE tasks.
+1. Review the next current source-carrier batch.
+2. Convert actionable rows into Drive CORE tasks when workbook edit path is available.
 3. Record provenance, source carrier, bracket, owner lane, blocker state and owner-decision requirement.
 4. Update existing GitHub bridge/agent files only when they need alignment.
