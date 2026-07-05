@@ -1,7 +1,7 @@
 # GitHub Alignment Handoff — 2026-07-03
 
 Status: active Operations pass.
-Updated: 2026-07-05 connector alignment push
+Updated: 2026-07-05 extraction-ledger push
 
 ## Decisions recorded
 
@@ -69,6 +69,7 @@ Expanded CORE rows still active include `T-086` EML#F external boundary, `T-087`
 - `CORE/GITHUB_ALIGNMENT_HANDOFF_2026_07_03.md`
 - `Agents/Achilles/Achilles_Tasks.md`
 - `Agents/Neo/Neo_Tasks.md`
+- `Agents/Oracle/Oracle_Tasks.md`
 - Existing agent ledgers where present
 - W1-W6 route widgets, calculators and simulator surfaces remain route-proof candidates
 
@@ -78,6 +79,8 @@ Drive CORE now supersedes the earlier blocker that no CORE carrier was visible. 
 
 Operations contains root-level static route widgets and calculators. Several contain status labels, route links and dataspace references. Treat those as route-proof candidates until Codex local proof confirms them.
 
+The active CORE workbook is an `.xlsx` Office carrier. Direct Sheets metadata/editing through the connector is blocked for that file type. Until a workbook-level edit path is available, connector-side extraction deltas are recorded in existing GitHub control/agent files and Slack, while Drive CORE remains the canonical target.
+
 ## Latest connector push delta — 2026-07-05
 
 - Re-read Drive CORE / automation carriers before Git edits.
@@ -85,6 +88,24 @@ Operations contains root-level static route widgets and calculators. Several con
 - Confirmed OpenAI Platform availability only at organization/project level; no OpenAI mutation performed.
 - Updated this existing handoff rather than creating another file.
 - Slack should receive compact sync only, not broad planning.
+
+## Extraction-ledger push — 2026-07-05
+
+Source carrier: `LightSpeed Operations Current Task Register`.
+
+Rows reflected into existing GitHub ledgers:
+
+| Source ID | Task | GitHub ledger handling |
+|---|---|---|
+| `LSO-ACT-024` | CORE assimilation of previous OPEN_TASKS | Added to Achilles as Critical CORE-B01 extraction item; added to Neo as divvy-readiness item; added to Oracle as provenance-readiness item. |
+| `LSO-ACT-025` | Operations and Römer Git alignment | Added to Achilles as High Git-alignment item; added to Neo as routing/diagnostic readiness item; added to Oracle as repo-permission/source-status provenance item. |
+| `LSO-ACT-026` | Interplanetary supply-chain systems operations focus | Added to Achilles as High scope-control item; added to Neo as no-bleed/scope divvy-readiness item; added to Oracle as boundary/source-classification readiness item. |
+
+Commits from this extraction-ledger push:
+
+- `Agents/Achilles/Achilles_Tasks.md` — `2fe7992a61d91c67f1b58c4210609df1205a8761`
+- `Agents/Neo/Neo_Tasks.md` — `b4d34cf2fd3a98fc42a1fcdc14fdf1bef7659431`
+- `Agents/Oracle/Oracle_Tasks.md` — `c30a4f092da99a54ba74d36b699ae17caea8267f`
 
 ## Next action
 
