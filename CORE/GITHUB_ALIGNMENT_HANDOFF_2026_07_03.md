@@ -1,7 +1,7 @@
 # GitHub Alignment Handoff — 2026-07-03
 
 Status: active Operations pass.
-Updated: 2026-07-06 destructive-queue audit
+Updated: 2026-07-06 manual automation execution
 
 ## Decisions recorded
 
@@ -131,6 +131,45 @@ Required proof bundle for future destructive execution:
 5. Checksum/classification where relevant.
 6. CORE/completed-ledger state.
 7. Owner approval linked to the exact target.
+
+## Manual execution of active automation sequence — 2026-07-06
+
+Owner requested manual execution of the automation-created/side-chat passes in order. Active sequence executed as:
+
+1. `CORE Daily Orchestration`.
+2. `CORE Deletion Review`.
+3. `CORE Publish Review`.
+
+### 1. CORE Daily Orchestration — manual pass
+
+Selected bounded action: consolidate smart-floor persistence standards into the existing LightSpeed smart-floor ledger instead of creating multiple additional agent files.
+
+Sources inspected:
+
+- `CORE_EXTRACTION_ROLLUP_2026_07_02`.
+- `CORE_AGENT_LEDGER_ROUTING_2026_07_02`.
+- `DRIVE_PERMISSION_QUEUE_2026_07_02`.
+- `AUTOMATION_LIMITS_AND_MANUAL_PUSH_PROTOCOL_2026_07_02`.
+- `DRIVE_COUNT_STATUS_2026_07_02`.
+- `achillesromer-coder/LightSpeed/docs/core/LIGHTSPEED_SMART_FLOOR_PERSISTENCE_2026_07_03.md`.
+
+GitHub delta:
+
+- Updated existing LightSpeed smart-floor persistence ledger.
+- Commit: `f7631dd526b1b9ba9bea760b291f9548b5f875d4`.
+- Converted broad "awaiting persistence" wording into consolidated existing-ledger persistence plus deferred dedicated file expansion until CORE workbook transcription and proof gates are stable.
+
+### 2. CORE Deletion Review — manual pass
+
+Result: no deletion candidate promoted.
+
+Reason: deletion remains downstream/deferred; no exact deletion target has source analysis, extraction proof, current target mapping, checksum/classification where relevant, CORE/completed-ledger state and exact owner approval attached.
+
+### 3. CORE Publish Review — manual pass
+
+Result: no public publish, print, deploy, merge or public-status update promoted.
+
+Reason: visible route/public candidates remain review-only until canonical fileset selection, source boundary, claim boundary, route proof, owner approval and Athene review are represented as completed CORE/agent-ledger states.
 
 ## Next action
 
