@@ -1,13 +1,14 @@
 # GitHub Alignment Handoff — 2026-07-03
 
-Status: active Operations pass.
-Updated: 2026-07-06 manual automation execution
+Status: FINAL MASTER PUSH / ACTIVE TRANSFER-PREP
+Updated: 2026-07-06 final master push addendum
 
 ## Decisions recorded
 
 - Drive CORE workbook is the canonical task/index authority.
 - GitHub Operations is the current Git execution/control surface.
 - Drive remains context, source evidence, workbook carrier and backup/cross-platform library.
+- Temporary Drives is the transfer-preparation root for Operations continuity under `achilles.romer@gmail.com`.
 - Local LightSpeed/Codex is the build and runtime proof surface.
 - LightSpeed Go is the operator app lane.
 - README dashboards wait until Codex completes local inventory and route/status proof.
@@ -29,6 +30,33 @@ Current CORE build rows:
 
 Expanded CORE rows still active include `T-086` EML#F external boundary, `T-087` Raphael Lite deferred boundary, `T-088` Neo queue reconciliation, and landing-outline expansion rows beginning at `T-089`.
 
+## Temporary Drives transfer addendum — 2026-07-06
+
+Primary Drive carriers reviewed:
+
+- `ACR3_Hotdogg3211_Drive_Alignment_Map_TEMP_TO_ACHILLES_2026_06_24`.
+- `ACR3_TEMP_TO_ACHILLES_Final_Assimilation_Execution_Log_2026_06_24`.
+- `ACR3_COMP1_Drive_Orchestration_Execution_Register_2026_06_09`.
+- `Temporary Drives Organization Register CL3`.
+- `TEMPORARY_DRIVES_ORG_EXECUTION_PACKET__B02__MANUAL_DRIVE_ACTIONS__2026-06-02`.
+
+Confirmed transfer-prep facts:
+
+- Source account context: `hotdogg3211@gmail.com`.
+- Destination account context: `achilles.romer@gmail.com`.
+- Temporary Drives root ID: `1nma8t8pNW7YD8FttBCnoc_0IVsifYMjM`.
+- Canonical root set: `CYC`, `Agents`, `Logs`, `Library`, `ZIP Check`.
+- `EML#F / EM#F` and `N^3` remain excluded from this Operations assimilation pass.
+- ZIP/package materials route to `ZIP Check` for preservation, checksum and later authoritative-copy selection.
+- Google Earth material follows the latest investor/geospatial placement correction recorded in Drive, not a public deployment lane.
+
+Execution status:
+
+- GitHub master-state consolidation was applied to existing control files.
+- Physical Drive moves and account-level relinquishment require manual Drive UI, Drive for Desktop/Codex, or a move-capable connector.
+- No old/redundant item was removed because no exact deletion-ready target bundle was present.
+- No public publish, deploy, merge, backend, OpenAI key/secret, wallet/token/payment/custody or secondary-Z action was executed.
+
 ## Automation and connector carriers observed
 
 - `AUTOMATION_PUSH_MANIFEST_2026_07_02.md` confirms CORE is canonical and legacy OPEN_TASKS, old logs, ACR/Achilles material, forecasts, timelines, duplicate notes and secondary task files are extraction inputs only until represented in CORE and agent ledgers.
@@ -47,23 +75,6 @@ Expanded CORE rows still active include `T-086` EML#F external boundary, `T-087`
 | `achillesromer-coder/Data` | Public-safe data and schema lane. |
 | `achillesromer-coder/Romer-MPL` | MPL and GMAT side lane. |
 
-## Open GitHub control items observed previously
-
-- `NCNBOUWER/Raphael#2` — ACR3 cross-agent closure handoff.
-- `achillesromer-coder/Operations#2` — operations route integration.
-- `achillesromer-coder/Data#2` — public-safe schema subset.
-- Scaffold PRs remain review-only until local inventory, route/status proof and owner gate are complete.
-
-## Operations files inspected / aligned
-
-- `CORE/Drive_GitHub_Bridge.md`
-- `CORE/GITHUB_ALIGNMENT_HANDOFF_2026_07_03.md`
-- `Agents/Achilles/Achilles_Tasks.md`
-- `Agents/Neo/Neo_Tasks.md`
-- `Agents/Oracle/Oracle_Tasks.md`
-- Existing agent ledgers where present
-- W1-W6 route widgets, calculators and simulator surfaces remain route-proof candidates
-
 ## Current finding
 
 Drive CORE carriers are visible and active. The active blocker is incomplete CORE population plus unresolved workbook-level edit/proof path for the active `.xlsx` carrier.
@@ -72,113 +83,22 @@ Operations contains root-level static route widgets and calculators. Several con
 
 Until a workbook-level edit path is available, connector-side extraction deltas are recorded in existing GitHub control/agent files and Slack, while Drive CORE remains the canonical target.
 
-## Connector push deltas — 2026-07-05
+## Prior deltas retained
 
-- Re-read Drive CORE / automation carriers before Git edits.
-- Reconfirmed `AUTOMATION_PUSH_MANIFEST_2026_07_02.md` as automation continuity carrier.
-- Confirmed OpenAI Platform availability only at organization/project level; no OpenAI mutation performed.
-- Updated this existing handoff rather than creating another file.
-- Slack receives compact sync only, not broad planning.
-
-## Extraction-ledger push — 2026-07-05
-
-Source carrier: `LightSpeed Operations Current Task Register`.
-
-Rows reflected into existing GitHub ledgers:
-
-| Source ID | Task | GitHub ledger handling |
-|---|---|---|
-| `LSO-ACT-024` | CORE assimilation of previous OPEN_TASKS | Added to Achilles as Critical CORE-B01 extraction item; added to Neo as divvy-readiness item; added to Oracle as provenance-readiness item. |
-| `LSO-ACT-025` | Operations and Römer Git alignment | Added to Achilles as High Git-alignment item; added to Neo as routing/diagnostic readiness item; added to Oracle as repo-permission/source-status provenance item. |
-| `LSO-ACT-026` | Interplanetary supply-chain systems operations focus | Added to Achilles as High scope-control item; added to Neo as no-bleed/scope divvy-readiness item; added to Oracle as boundary/source-classification readiness item. |
-
-Commits from this extraction-ledger push:
-
-- `Agents/Achilles/Achilles_Tasks.md` — `2fe7992a61d91c67f1b58c4210609df1205a8761`
-- `Agents/Neo/Neo_Tasks.md` — `b4d34cf2fd3a98fc42a1fcdc14fdf1bef7659431`
-- `Agents/Oracle/Oracle_Tasks.md` — `c30a4f092da99a54ba74d36b699ae17caea8267f`
-
-## Final cleanup pass — 2026-07-05
-
-- Removed stale placeholder/blocker language from this handoff and replaced it with the current blocker state.
-- Searched Operations, LightSpeed and Data for explicit placeholder/TODO/FIXME text through connector search; no additional connector-visible matches returned in this pass.
-- Searched Drive for explicit placeholder/Core-missing/COR-canonical strings through connector search; no additional connector-visible matches returned in this pass.
-- Preserved historical provenance without expanding new files or deleting prior evidence.
-
-## Destructive / queued execution audit — 2026-07-06
-
-Owner requested execution of destructive and queued tasks approved/ready for execution. Connector audit found no deletion/destructive item that met the recorded execution gates.
-
-Evidence checked:
-
-- Drive search for deletion-ready / approved destructive candidates returned no connector-visible approved deletion target.
-- GitHub search across Operations, LightSpeed, Data, Raphael and Romer-MPL returned no connector-visible approved deletion target.
-- `LightSpeed Operations Current Task Register` records `LSO-ACT-010` as delete candidate register maintenance with action: keep empty until extraction is complete, current target recorded and owner approval exists.
-- Active deletion-review automation remains approval-dossier only and states that deletion is downstream/deferred unless source analysis, extraction proof, current target mapping, checksum/classification where relevant, CORE/completed-ledger status and owner approval are present.
-
-Execution result:
-
-- No destructive delete, archive-finalise, restructure, merge, publish, deploy, backend, OpenAI key/secret, wallet/token/payment/custody or secondary-Z action was executed.
-- The queued destructive lane remains blocked pending exact target list plus proof bundle.
-- This audit entry records the owner request and the gate failure without fabricating readiness or deleting unmatched targets.
-
-Required proof bundle for future destructive execution:
-
-1. Exact file/repo/path/object target.
-2. Source carrier and provenance.
-3. Extracted replacement/current target mapping.
-4. Duplicate/deletion-ready classification.
-5. Checksum/classification where relevant.
-6. CORE/completed-ledger state.
-7. Owner approval linked to the exact target.
-
-## Manual execution of active automation sequence — 2026-07-06
-
-Owner requested manual execution of the automation-created/side-chat passes in order. Active sequence executed as:
-
-1. `CORE Daily Orchestration`.
-2. `CORE Deletion Review`.
-3. `CORE Publish Review`.
-
-### 1. CORE Daily Orchestration — manual pass
-
-Selected bounded action: consolidate smart-floor persistence standards into the existing LightSpeed smart-floor ledger instead of creating multiple additional agent files.
-
-Sources inspected:
-
-- `CORE_EXTRACTION_ROLLUP_2026_07_02`.
-- `CORE_AGENT_LEDGER_ROUTING_2026_07_02`.
-- `DRIVE_PERMISSION_QUEUE_2026_07_02`.
-- `AUTOMATION_LIMITS_AND_MANUAL_PUSH_PROTOCOL_2026_07_02`.
-- `DRIVE_COUNT_STATUS_2026_07_02`.
-- `achillesromer-coder/LightSpeed/docs/core/LIGHTSPEED_SMART_FLOOR_PERSISTENCE_2026_07_03.md`.
-
-GitHub delta:
-
-- Updated existing LightSpeed smart-floor persistence ledger.
-- Commit: `f7631dd526b1b9ba9bea760b291f9548b5f875d4`.
-- Converted broad "awaiting persistence" wording into consolidated existing-ledger persistence plus deferred dedicated file expansion until CORE workbook transcription and proof gates are stable.
-
-### 2. CORE Deletion Review — manual pass
-
-Result: no deletion candidate promoted.
-
-Reason: deletion remains downstream/deferred; no exact deletion target has source analysis, extraction proof, current target mapping, checksum/classification where relevant, CORE/completed-ledger state and exact owner approval attached.
-
-### 3. CORE Publish Review — manual pass
-
-Result: no public publish, print, deploy, merge or public-status update promoted.
-
-Reason: visible route/public candidates remain review-only until canonical fileset selection, source boundary, claim boundary, route proof, owner approval and Athene review are represented as completed CORE/agent-ledger states.
+- Extraction-ledger push reflected `LSO-ACT-024`, `LSO-ACT-025` and `LSO-ACT-026` into Achilles, Neo and Oracle ledgers.
+- Final cleanup pass removed stale blocker language and preserved provenance.
+- Manual automation execution pass ran CORE Daily, CORE Deletion Review and CORE Publish Review in order.
+- Deletion and publish lanes remain blocked until target-level proof and approvals are attached.
 
 ## Next action
 
-1. Achilles continues `CORE-B01` extraction from legacy OPEN_TASKS, old logs, ACR3, ZIP/check/archive and source-carrier rows into Drive CORE.
-2. Neo uses `CORE-B02` to divvy stable extracted batches into Z01-Z06 brackets, support lanes and floor-agent ledgers.
-3. GitHub updates stay limited to existing control/bridge/agent files unless a completed internal pass justifies new files.
-4. Wait on README dashboards, merges, route-status changes and public/build claims until local inventory and proof are complete.
-5. Continue using Slack for compact cross-platform sync notes only.
+1. Manual Drive UI / Drive for Desktop / move-capable connector performs the physical Temporary Drives placement and account transition using the confirmed map.
+2. Return one of: `TEMP_TO_ACHILLES_PLACEMENT_PASS`, `TEMP_TO_ACHILLES_PLACEMENT_PASS_WITH_NOTES`, or `TEMP_TO_ACHILLES_PLACEMENT_HOLD`.
+3. Achilles continues `CORE-B01` extraction from legacy source carriers into Drive CORE.
+4. Neo uses `CORE-B02` to divvy stable extracted batches into Z01-Z06 brackets, support lanes and floor-agent ledgers.
+5. GitHub updates remain limited to existing bridge/control/agent files unless a completed pass justifies a single consolidated new file.
+6. Continue using Slack for compact cross-platform sync notes only.
 
 ## Hard gates
 
-No delete, restructure, deploy, public publish, backend launch, OpenAI key/secret mutation, wallet/token/mint/payment/custody activation, unsupported public claims, or secondary Z activation without exact target proof and owner approval.
+No delete, destructive restructure, public publish, deploy, backend launch, OpenAI key/secret mutation, wallet/token/mint/payment/custody activation, unsupported public claim, or secondary Z activation without exact target proof and owner approval.
