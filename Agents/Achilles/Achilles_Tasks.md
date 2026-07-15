@@ -1,7 +1,7 @@
 # Achilles Tasks
 
 Status: ACTIVE
-Updated: 2026-07-15
+Updated: 2026-07-16
 Authority: Drive CORE workbook / Operations control / Achilles audit
 
 ## ACH-0001 — CORE-B01 extraction and continuity audit
@@ -84,6 +84,14 @@ Batch status: extracted into GitHub execution-facing Achilles ledger for CORE-B0
 - Operations route widgets contain route/status labels that need proof against local/web route checks.
 - Root README dashboards wait on local proof.
 
+### Operations Git sandbox proof - 2026-07-15
+
+- Draft PR `achillesromer-coder/Operations#4` carries the bounded Operations maturation work; merge and publication remain owner decisions.
+- All 16 tracked Operations home, W1-W6, calculator and simulator artifacts are registered in one Git release contract with static/read-only delivery and claim boundaries.
+- Local route review observed HTTP 200 for W1-W7 and all tracked calculator/simulator routes. Protected W1-W6 dataspaces and Achilles status returned HTTP 401 as expected.
+- `/operations/home` returned HTTP 404 in the 2026-07-15 live audit. A registry-driven home is now a Git review candidate only; it remains unlaunched until owner-approved publication and a fresh route check.
+- CI builds a deterministic manifest and ZIP review artifact only. A passing build does not approve `LIVE` labels, deploy LS Web, mutate Drive or authorize backend access.
+
 ### Safe next Achilles action
 
 Continue CORE-B01 extraction:
@@ -93,26 +101,29 @@ Continue CORE-B01 extraction:
 3. Record provenance, source carrier, bracket, owner lane, blocker state and owner-decision requirement.
 4. Update existing GitHub bridge/agent files only when they need alignment.
 
-## ACH-0002 — NW-005 completion and workbook-creation gate
+## ACH-0002 — NW-011 owner-controlled workbook-creation gate
 
-Status: `COMPLETE PACKET / ACTIVE REVIEW GATE`
+Status: `TECHNICAL PACKET COMPLETE / OWNER DECISION REQUIRED`
 Priority: P0
 Freeze parent: `CGX-FREEZE-001`
-Workbook surface: `Next Workstream Launch Map!A1:T118`
+Workbook surface: `Next Workstream Launch Map!A1:T194`
 
 ### Completed evidence packet
 
 - 11 source-authority records and 8 extracted interface records.
 - 26 proposed Interplanetary Supply Chain fields.
 - 26 proposed Cognigrex Node Control fields.
+- 18 canonical nodes, 7 controlled-vocabulary groups and 19 relation contracts.
+- 26 minimum interface fields and 16 blocking validators.
 - Unique matrix IDs and unique field-name sets.
 - 0 `#REF!` and 0 `#N/A` in the audited range.
-- `NW-005` is mapped and review-ready.
-- `NW-006` is the active source/claim review lane.
+- `NW-006` through `NW-010` are complete in the Drive control plane.
+- Creation readiness is 88.1%; `CRA-012` is the sole hard blocker.
+- `NW-011` is ready for an explicit owner decision.
 
 ### Achilles gate state
 
-`NW-004` and `RG-013` remain closed. Do not create the separate Supply Chain or Cognigrex Node Control workbooks until all of the following are accepted:
+`NW-004` and `RG-013` remain gated. Do not create the separate Supply Chain or Cognigrex Node Control workbooks until the owner records `PASS` or `PASS WITH NOTES` against `CRA-012` and confirms template scope, owners, routes and limitations.
 
 1. source authority and revision identity;
 2. interface and node identity;
@@ -125,4 +136,4 @@ Old collaborator references remain proposed or unconfirmed. Historical performan
 
 ### Current Achilles action
 
-Audit `NW-006` with Morpheus and Oracle. Preserve unknown/proposed states, keep the no-selection freeze intact, and release no workbook-creation decision until the source and schema packet passes review.
+Prepare the bounded `NW-011` decision packet without making the decision. Preserve unknown/proposed states, keep the no-selection freeze intact, and route residual `CRA-001`, `CRA-004` and `CRA-009` review notes without treating them as deployed capability or public proof.

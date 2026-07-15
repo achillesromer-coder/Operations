@@ -1,7 +1,7 @@
 # Operations Bridge
 
-Status: ACTIVE / FINAL MASTER PUSH PREPARED
-Updated: 2026-07-06
+Status: ACTIVE / GIT MATURATION ROUTED
+Updated: 2026-07-16
 
 ## Current authority split
 
@@ -13,7 +13,7 @@ Updated: 2026-07-06
 | GitHub LightSpeed | LightSpeed implementation/mirror candidate; do not deploy or alter public status without proof. |
 | GitHub Data | Public-safe schema, catalogue and extracted data lane after source review. |
 | GitHub Raphael | Raphael / N^3 / GeoMatrices boundary lane. |
-| GitHub Romer-MPL | MPL and GMAT side lane. |
+| GitHub Romer-MPL | Repository name is broader than its currently indexed contents; present material is N^3/Raphael-adjacent and remains excluded until a separable MPL/GMAT surface is evidenced. |
 | Local LightSpeed / Codex | Build/runtime proof surface; required for local route, status and inventory certification. |
 | LightSpeed Go | Operator-facing app lane. |
 
@@ -52,9 +52,45 @@ Read internal repo files before writing. Prefer editing and expanding existing c
 1. Preserve the final Temporary Drives transfer map for achilles.romer@gmail.com.
 2. Keep CORE-B01 extraction active and CORE-B02 divvy gated by stable extraction batches.
 3. Reflect only the current control state in existing GitHub bridge/agent files.
-4. Inspect W1-W6, calculators and simulators for route/status mismatches only after local proof.
-5. Wait on root README dashboards until Codex finishes the local C-drive inventory pass.
-6. Keep DeSporte on hold.
+4. Mature the least-developed eligible Git repositories using branches, pull requests and executable validation; use asteroid/Data work only as a reference implementation.
+5. Inspect W1-W6, calculators and simulators for route/status mismatches only after local proof.
+6. Wait on root README dashboards until Codex finishes the local C-drive inventory pass.
+7. Keep DeSporte on hold.
+
+## Git maturity routing — 2026-07-15
+
+| Repository | Observed state | Current treatment |
+|---|---|---|
+| `Operations` | Governance-rich, execution-poor; bridge and agent ledgers existed without machine-enforced checks. | Active maturation target. Added a non-destructive control validator and read-only CI workflow. Future changes should use `ops/*` branches and draft PRs. |
+| `LightSpeed` | Active implementation and handoff surface with recent code/route activity. | Audit interfaces, build proof, duplication and cross-repository contracts after Operations controls stabilise. Do not treat asteroid content as the main maturation target. |
+| `Data` | Most mature active data pipeline, including scheduled capture and provenance. | Reference implementation only. Draft maturation PR remains unmerged; workbooks remain untouched. |
+| `Romer-MPL` | Indexed content is concentrated in `N3_Trinity_Probability_Well_v1_1` and Raphael equation-audit material; no separable GMAT/general MPL implementation was evidenced in the current audit. | Hold from writes under the excluded N^3/Raphael boundary. Reopen only when a clearly separable eligible surface is evidenced or the owner explicitly reopens that lane. |
+| `Raphael` | Explicitly excluded lane. | Untouched. |
+
+### Operations executable controls
+
+- `scripts/validate_operations_control.py` checks required bridge/ledger presence, authority wording, CORE identifiers, legacy canonical conflicts, cross-platform Git paths and the static W1-W6 route markers.
+- The Windows-invalid `W6: PAL` path is normalised to `W6; PAL` without changing its content so the repository can be checked out by LS Desktop and other Windows operators.
+- `.github/workflows/operations-control.yml` compiles and tests the validator, then runs it with read-only permissions when control, route, calculator or simulator surfaces change.
+- Static route-marker validation proves repository wiring only. It does not prove that a backend is live, authorize a deployment or validate the user-facing `LIVE` labels.
+- `registry/operations_registry.json` is the Git review contract for all tracked Operations home, W1-W6, calculator and simulator artifacts. It fixes LS Web delivery to approved static/read-only exports and records claim boundaries without replacing the Desktop database/workbook authority.
+- `scripts/operations_release.py` validates complete artifact registration and builds a deterministic manifest plus ZIP review bundle. CI retains the bundle for 14 days as a review artifact; it does not publish it to LS Web.
+- Route review on 2026-07-15 observed public HTTP 200 responses for W1-W7, all tracked calculator/simulator routes, `/library`, `/gmat` and `/contact-us`; W1-W6 data routes and `/data/achilles` remained protected with HTTP 401; `/operations/home` returned HTTP 404. The registry now carries a static/read-only home review candidate, but that artifact is not live-route proof and cannot be represented as published before owner approval and a fresh audit.
+- The connector endpoint used in this pass exposes pull-request-triggered workflow runs only; absence of a returned run for direct pushes is not treated as proof of failure or success.
+
+### Drive NW-011 alignment - 2026-07-16
+
+- `Type1_Asteroid_Operating_Workbook / Next Workstream Launch Map!A1:T194` is ahead of the earlier Git handoff summary: 27 controls are present, with 17 mapped, 7 source-review, 2 gated and 1 ready.
+- `NW-006:NW-010` are complete in the Drive control plane. The packet contains 11 source authorities, 8 interfaces, 26 + 26 proposed fields, 18 canonical nodes, 7 vocabulary groups, 19 relations, 26 minimum interface fields and 16 blocking validators.
+- Creation readiness is 88.1%. `CRA-012` is the only hard blocker; `NW-004` and `RG-013` remain gated pending an explicit owner `PASS`, `PASS WITH NOTES` or `HOLD` decision.
+- Broad continuation language is not workbook-creation approval. No new workbook, public publication, mission selection, Drive mutation or deployment is authorised by this alignment.
+
+### Git review discipline
+
+- Direct writes to `main` are no longer the intended maturation path.
+- Additive control changes should be prepared on bounded `ops/*`, `data/*` or `fix/*` branches.
+- Draft pull requests should expose scope, boundaries, validation result and owner decision before merge.
+- No branch merge, deployment or public release is implied by a successful validation check.
 
 ## Master Push status — 2026-07-06
 
@@ -83,6 +119,7 @@ Blocked outside current connector capability:
 - Open scaffold PRs need internal review before merge or closure.
 - Public/build/launch claims remain blocked until route proof, source status, Athene/owner review and approval are recorded.
 - Deletion of old/redundant files remains blocked unless exact deletion-ready proof exists.
+- Repository branch-protection settings are not exposed through the current connector actions and remain an owner/admin configuration task.
 
 ## Current no-go actions
 

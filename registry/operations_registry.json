@@ -1,0 +1,208 @@
+{
+  "schema_version": "1.0",
+  "registry_id": "ROMER-OPERATIONS-WEB-REVIEW",
+  "updated": "2026-07-16",
+  "authority": {
+    "canonical_operations": "LS Desktop database and canonical workbook",
+    "git_control": "GitHub Operations draft review branch",
+    "web_delivery": "LS Web approved static exports only"
+  },
+  "release_policy": {
+    "delivery": "static_readonly",
+    "publish_gate": "manual_publish_gate",
+    "data_access": "protected_read",
+    "direct_desktop_mutation": false
+  },
+  "surfaces": [
+    {
+      "surface_id": "LS-W1-MAGLEV",
+      "kind": "workspace",
+      "title": "Incoming Deposit Analysis",
+      "route": "/operations/w1",
+      "data_route": "/w1/data",
+      "artifact": "W1; IDA",
+      "release_state": "review_candidate",
+      "claim_boundary": "candidate_screening_only"
+    },
+    {
+      "surface_id": "LS-W2-LUKE2",
+      "kind": "workspace",
+      "title": "Geostationary Luke II",
+      "route": "/operations/w2",
+      "data_route": "/w2/data",
+      "artifact": "W2; GOS",
+      "release_state": "review_candidate",
+      "claim_boundary": "engineering_prototype_only"
+    },
+    {
+      "surface_id": "LS-W3-RFS-EMFF",
+      "kind": "workspace",
+      "title": "RFS and EMFF Field Projections",
+      "route": "/operations/w3",
+      "data_route": "/w3/data",
+      "artifact": "W3; RMS",
+      "release_state": "review_candidate",
+      "claim_boundary": "hypothesis_test_design_only"
+    },
+    {
+      "surface_id": "LS-W4-SUPPLY",
+      "kind": "workspace",
+      "title": "Inter-planetary Supply Chain Network",
+      "route": "/operations/w4",
+      "data_route": "/w4/data",
+      "artifact": "W4; SCS",
+      "release_state": "review_candidate",
+      "claim_boundary": "planning_prototype_only"
+    },
+    {
+      "surface_id": "LS-W5-MISSION",
+      "kind": "workspace",
+      "title": "Mission Planning",
+      "route": "/operations/w5",
+      "data_route": "/w5/data",
+      "artifact": "W5; MOP",
+      "release_state": "review_candidate",
+      "claim_boundary": "planning_prototype_only"
+    },
+    {
+      "surface_id": "LS-W6-ASSETS",
+      "kind": "workspace",
+      "title": "Asset Library",
+      "route": "/operations/w6",
+      "data_route": "/w6/data",
+      "artifact": "W6; PAL",
+      "release_state": "review_candidate",
+      "claim_boundary": "source_candidate_inventory_only"
+    },
+    {
+      "surface_id": "LS-CALC-ENERGY",
+      "kind": "calculator",
+      "title": "Energy and Power Calculator",
+      "route": "/calc/energy",
+      "artifact": "Calc; EP",
+      "release_state": "review_candidate",
+      "claim_boundary": "engineering_analysis_prototype"
+    },
+    {
+      "surface_id": "LS-CALC-FLUIDS",
+      "kind": "calculator",
+      "title": "Fluid Dynamics Calculator",
+      "route": "/calc/fluids",
+      "artifact": "Calc; FD",
+      "release_state": "review_candidate",
+      "claim_boundary": "engineering_analysis_prototype"
+    },
+    {
+      "surface_id": "LS-CALC-LAUNCH",
+      "kind": "calculator",
+      "title": "Launch Windows Calculator",
+      "route": "/calc/launch",
+      "artifact": "Calc; LW",
+      "release_state": "review_candidate",
+      "claim_boundary": "engineering_analysis_prototype"
+    },
+    {
+      "surface_id": "LS-CALC-MAGNETOSTATICS",
+      "kind": "calculator",
+      "title": "Magnetostatics Calculator",
+      "route": "/calc/magnetostatics",
+      "artifact": "Calc; M",
+      "release_state": "review_candidate",
+      "claim_boundary": "engineering_analysis_prototype"
+    },
+    {
+      "surface_id": "LS-CALC-ORBITAL",
+      "kind": "calculator",
+      "title": "Orbital Mechanics Calculator",
+      "route": "/calc/orbital",
+      "artifact": "Calc; OM",
+      "release_state": "review_candidate",
+      "claim_boundary": "engineering_analysis_prototype"
+    },
+    {
+      "surface_id": "LS-SIM-REENTRY",
+      "kind": "simulator",
+      "title": "Re-entry Atmospheric Entry Simulator",
+      "route": "/sim/re-entry",
+      "artifact": "Sim; AES",
+      "release_state": "review_candidate",
+      "claim_boundary": "engineering_analysis_prototype"
+    },
+    {
+      "surface_id": "LS-SIM-FIELDS",
+      "kind": "simulator",
+      "title": "Electromagnetic Field Simulator",
+      "route": "/sim/fields",
+      "artifact": "Sim; EMF",
+      "release_state": "review_candidate",
+      "claim_boundary": "hypothesis_test_design_only"
+    },
+    {
+      "surface_id": "LS-SIM-NODE",
+      "kind": "simulator",
+      "title": "Electromagnetic Formation Flight",
+      "route": "/sim/node",
+      "artifact": "Sim; ENS",
+      "release_state": "review_candidate",
+      "claim_boundary": "hypothesis_test_design_only"
+    },
+    {
+      "surface_id": "LS-SIM-RFS-EXTRACTION",
+      "kind": "simulator",
+      "title": "RFS Extraction Rendezvous and Flight Simulator",
+      "route": "/sims/rfs-extraction",
+      "artifact": "Sim; OFS",
+      "release_state": "review_candidate",
+      "claim_boundary": "hypothesis_test_design_only"
+    },
+    {
+      "surface_id": "LS-W7-DECENTRALIZED",
+      "kind": "gated_reference",
+      "title": "Decentralized",
+      "route": "/operations/w7",
+      "release_state": "gated_live_route",
+      "claim_boundary": "coming_soon"
+    },
+    {
+      "surface_id": "LS-ACHILLES",
+      "kind": "protected_reference",
+      "title": "Achilles Status",
+      "route": "/data/achilles",
+      "release_state": "protected_route",
+      "claim_boundary": "authenticated_operator_only"
+    },
+    {
+      "surface_id": "LS-OPS-HOME",
+      "kind": "operations_home",
+      "title": "Operations Home",
+      "route": "/operations/home",
+      "artifact": "Home; OPS",
+      "release_state": "review_candidate",
+      "claim_boundary": "public_operations_index_only"
+    },
+    {
+      "surface_id": "LS-LIBRARY",
+      "kind": "external_reference",
+      "title": "Library",
+      "route": "/library",
+      "release_state": "published_reference",
+      "claim_boundary": "reference_only"
+    },
+    {
+      "surface_id": "LS-OPS-GMAT",
+      "kind": "external_reference",
+      "title": "GMAT",
+      "route": "/gmat",
+      "release_state": "published_reference",
+      "claim_boundary": "separate_license_and_release_surface"
+    },
+    {
+      "surface_id": "LS-OPS-CONTACT",
+      "kind": "external_reference",
+      "title": "Contact and Support Intake",
+      "route": "/contact-us",
+      "release_state": "published_reference",
+      "claim_boundary": "separate_form_surface"
+    }
+  ]
+}
