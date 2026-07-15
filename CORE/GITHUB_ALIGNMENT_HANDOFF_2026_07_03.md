@@ -1,7 +1,7 @@
 # GitHub Alignment Handoff — 2026-07-03
 
 Status: FINAL MASTER PUSH / ACTIVE TRANSFER-PREP
-Updated: 2026-07-06 final master push addendum
+Updated: 2026-07-15 asteroid/Type 1 freeze and next-lane memory addendum
 
 ## Decisions recorded
 
@@ -90,15 +90,67 @@ Until a workbook-level edit path is available, connector-side extraction deltas 
 - Manual automation execution pass ran CORE Daily, CORE Deletion Review and CORE Publish Review in order.
 - Deletion and publish lanes remain blocked until target-level proof and approvals are attached.
 
+## Asteroid and Type 1 operations memory addendum — 2026-07-15
+
+The asteroid evidence and Type 1 operations lane is stable under `CGX-FREEZE-001`.
+
+Canonical workbooks:
+
+- Asteroid evidence: `Asteroid_Strategic_Mapping_Base_withRocks`, Drive ID `148UObDgK_YsqHDbIkJo89yDvyDcgySTE4wQMEVGwga8`.
+- Type 1 operations: `Type1_Asteroid_Operating_Workbook`, Drive ID `1Uy04F5gtf2mXf9tDmAyIvNrsCn1kn4Csa2oc-skSZxY`.
+
+Canonical Git heads:
+
+- Data reconciliation: `fc02db1c387f8021d6999f1f0dce92291386a85a`.
+- LightSpeed comparison and validation: `34687b36c62b4bcc6805a85c1d4a6d85f55201ce`.
+
+Validated state:
+
+- Data integrity and LightSpeed surface-validation layers are on `main`.
+- Open Data and LightSpeed pull requests: zero.
+- Final scanned workbook surfaces: zero `#REF!` and zero `#N/A`.
+- Current hardware: Mark III + Mark V only.
+- Mark IV: post-mission successor, not current capacity input.
+- M1/M2/M3 active interface allocation: 3/7/11 m3.
+- Apophis: tag/support, not mine-first.
+- Selected or preferred sequence: none.
+- Remaining density/composition enrichment: deferred and non-blocking.
+
+Codex must treat this lane as `COMPLETE / FROZEN / RESTART ON MATERIAL CHANGE ONLY`. A later restart verifies current Git heads, runs the Data and LightSpeed validators, runs workbook drift/formula checks, identifies material changes and reruns only affected tests.
+
+## Next accepted Z01 workstream
+
+The next bounded pass is not another asteroid-ranking pass. It is a source-and-interface launch map for two future separate canonical workbooks:
+
+1. **Interplanetary Supply Chain Systems** — logistics, transfer, capture/return, infrastructure, hardware/data interfaces, mission-to-network continuity and later M1-M35 operational linkage.
+2. **Cognigrex Node Control** — node identities, roles, permissions, data flows, health/state, audit, reviewed recommendation outputs and human approval gates.
+
+Source-first rule:
+
+- Reconcile the Type 1 operations workbook, asteroid evidence workbook, `Interface Control Document Master`, National Commitments/LinkDrive carriers, innovation register and current LightSpeed/Operations controls before creating either workbook.
+- Use Type 1 operations only as launch-control and cross-workbook interface authority.
+- Preserve future workbook separation: asteroid = evidence; Type 1 operations = mission control/interface; supply chain = logistics/network continuity; Cognigrex control = nodes/control/audit.
+- Do not create small duplicate handoff files. Update CORE, Neo/Achilles, this Operations handoff and the existing LightSpeed persistence ledger.
+- Keep Raphael/N3-adjacent work outside this pass.
+
+Agent sequence:
+
+- Architect: dependency and workbook-boundary map.
+- Morpheus and Oracle: source identity, interface evidence and claim-state reconciliation.
+- Neo: bounded launch map and cross-platform routing.
+- Smith: accepted execution queue only after CORE classification.
+- Trinity: interface work only after the data model stabilises.
+- Achilles: governance, separation, creation and release gate.
+
 ## Next action
 
-1. Manual Drive UI / Drive for Desktop / move-capable connector performs the physical Temporary Drives placement and account transition using the confirmed map.
-2. Return one of: `TEMP_TO_ACHILLES_PLACEMENT_PASS`, `TEMP_TO_ACHILLES_PLACEMENT_PASS_WITH_NOTES`, or `TEMP_TO_ACHILLES_PLACEMENT_HOLD`.
-3. Achilles continues `CORE-B01` extraction from legacy source carriers into Drive CORE.
-4. Neo uses `CORE-B02` to divvy stable extracted batches into Z01-Z06 brackets, support lanes and floor-agent ledgers.
-5. GitHub updates remain limited to existing bridge/control/agent files unless a completed pass justifies a single consolidated new file.
+1. Continue `CORE-B01` extraction for the source set needed by the supply-chain/node-control launch map.
+2. Use `CORE-B02` to assign the extracted interfaces across Z01 and support floors.
+3. Produce one bounded source/interface matrix before creating new workbooks.
+4. Record unresolved fields as unknown or deferred; do not infer interfaces, partners, capability or operational readiness.
+5. Create the two separate workbooks only after their source models, ownership boundaries and cross-workbook keys are stable.
 6. Continue using Slack for compact cross-platform sync notes only.
 
 ## Hard gates
 
-No delete, destructive restructure, public publish, deploy, backend launch, OpenAI key/secret mutation, wallet/token/mint/payment/custody activation, unsupported public claim, or secondary Z activation without exact target proof and owner approval.
+No delete, destructive restructure, public publish, deploy, backend launch, OpenAI key/secret mutation, wallet/token/mint/payment/custody activation, unsupported public claim, autonomous mission selection or secondary Z activation without exact target proof and owner approval.
