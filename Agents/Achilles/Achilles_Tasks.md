@@ -1,7 +1,7 @@
 # Achilles Tasks
 
 Status: ACTIVE
-Updated: 2026-07-05
+Updated: 2026-07-15
 Authority: Drive CORE workbook / Operations control / Achilles audit
 
 ## ACH-0001 — CORE-B01 extraction and continuity audit
@@ -83,6 +83,14 @@ Batch status: extracted into GitHub execution-facing Achilles ledger for CORE-B0
 - LightSpeed repo authority needs reconciliation between local `NCNBOUWER/LightSpeed` and connector-visible `achillesromer-coder/LightSpeed`.
 - Operations route widgets contain route/status labels that need proof against local/web route checks.
 - Root README dashboards wait on local proof.
+
+### Operations Git sandbox proof - 2026-07-15
+
+- Draft PR `achillesromer-coder/Operations#4` carries the bounded Operations maturation work; merge and publication remain owner decisions.
+- All 15 tracked W1-W6, calculator and simulator artifacts are registered in one Git release contract with static/read-only delivery and claim boundaries.
+- Local route review observed HTTP 200 for W1-W7 and all tracked calculator/simulator routes. Protected W1-W6 dataspaces and Achilles status returned HTTP 401 as expected.
+- `/operations/home` returned HTTP 404 and remains blocked. The review bundle must not represent that route as launched.
+- CI builds a deterministic manifest and ZIP review artifact only. A passing build does not approve `LIVE` labels, deploy LS Web, mutate Drive or authorize backend access.
 
 ### Safe next Achilles action
 

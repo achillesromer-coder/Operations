@@ -12,6 +12,7 @@ on:
       - "Sim*"
       - "scripts/**"
       - "tests/**"
+      - "registry/**"
       - ".github/workflows/operations-control.yml"
   push:
     branches:
@@ -24,6 +25,7 @@ on:
       - "Sim*"
       - "scripts/**"
       - "tests/**"
+      - "registry/**"
       - ".github/workflows/operations-control.yml"
   workflow_dispatch:
 
@@ -36,7 +38,7 @@ concurrency:
 
 jobs:
   validate:
-    name: Validate CORE bridge and agent ledgers
+    name: Validate Operations release controls
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
@@ -50,10 +52,23 @@ jobs:
           python-version: "3.12"
 
       - name: Compile validator
-        run: python -m py_compile scripts/validate_operations_control.py
+        run: python -m py_compile scripts/validate_operations_control.py scripts/operations_release.py
 
       - name: Test validator
         run: python -m unittest discover -s tests -v
 
       - name: Validate Operations control surface
         run: python scripts/validate_operations_control.py
+
+      - name: Build LS Web review bundle
+        run: python scripts/operations_release.py build --output-dir dist
+
+      - name: Upload LS Web review bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: operations-web-review-${{ github.sha }}
+          path: |
+            dist/operations-release-manifest.json
+            dist/operations-web-review-bundle.zip
+          if-no-files-found: error
+          retention-days: 14

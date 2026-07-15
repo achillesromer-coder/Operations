@@ -1,7 +1,7 @@
 # Neo Tasks
 
 Status: ACTIVE
-Updated: 2026-07-05
+Updated: 2026-07-15
 Authority: Drive CORE workbook / Operations control / Achilles oversight
 
 ## NEO-0001 — CORE-B02 project-function divvy
@@ -48,6 +48,14 @@ Status: divvy-readiness only until workbook-level CORE population is stable and 
 Selected operating stance: bounded Morpheus/Oracle/Smith/Merovingian readiness until CORE extraction stabilises.
 
 Reason: Drive CORE has current workbook authority, but legacy task material is still being assimilated. Operations contains static route widgets and calculators with route/status labels that need local proof before status changes.
+
+### Current Git execution delta - 2026-07-15
+
+- Operations route discovery is complete for the bounded Git facet: 15 tracked UI artifacts and 6 gated/reference routes are represented by one release registry.
+- The Git build now emits a deterministic LS Web review manifest and ZIP without publishing either artifact.
+- W1-W7 and tracked calculator/simulator routes were reachable during the review; protected data routes remained HTTP 401 and `/operations/home` remained HTTP 404.
+- Neo should treat repository route wiring as evidenced, backend availability as protected/unproven, and visible `LIVE` or completion labels as presentation text pending claim review.
+- Next routing action is review of the PR bundle and blocked-route/status delta, not a new dashboard, task system or public deployment.
 
 ### Next Neo action
 

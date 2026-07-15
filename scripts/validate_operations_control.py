@@ -10,6 +10,11 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 
+try:
+    from scripts.operations_release import load_registry, validate_registry
+except ModuleNotFoundError:
+    from operations_release import load_registry, validate_registry
+
 REQUIRED_FILES = [
     Path("CORE/Drive_GitHub_Bridge.md"),
     Path("CORE/GITHUB_ALIGNMENT_HANDOFF_2026_07_03.md"),
@@ -38,7 +43,7 @@ REQUIRED_OPERATION_SURFACES = {
     Path("W3; RMS"): ("/operations/w3", "/w3/data"),
     Path("W4; SCS"): ("/operations/w4", "/w4/data"),
     Path("W5; MOP"): ("/operations/w5", "/w5/data"),
-    Path("W6; PAL"): ("W6", "Google Drive source"),
+    Path("W6; PAL"): ("/operations/w6", "/w6/data"),
 }
 
 WINDOWS_INVALID_CHARS = set('<>:"\\|?*')
@@ -144,6 +149,9 @@ def main() -> int:
 
     errors.extend(validate_operation_surfaces(ROOT))
 
+    registry = load_registry()
+    errors.extend(validate_registry(ROOT, registry))
+
     ledger_count = 0
     linked_core_ids: set[str] = set()
     agents_root = ROOT / "Agents"
@@ -162,7 +170,8 @@ def main() -> int:
         f"Validated {len(REQUIRED_FILES)} required controls, "
         f"{ledger_count} agent ledgers, {len(linked_core_ids)} CORE links, "
         f"{len(tracked_paths)} tracked paths, and "
-        f"{len(REQUIRED_OPERATION_SURFACES)} Operations surfaces."
+        f"{len(REQUIRED_OPERATION_SURFACES)} Operations surfaces; "
+        f"release registry has {len(registry['surfaces'])} surfaces."
     )
     for warning in warnings:
         print(f"WARNING: {warning}", file=sys.stderr)
