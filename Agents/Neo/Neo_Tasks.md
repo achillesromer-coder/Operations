@@ -1,7 +1,7 @@
 # Neo Tasks
 
 Status: ACTIVE
-Updated: 2026-07-05
+Updated: 2026-07-15
 Authority: Drive CORE workbook / Operations control / Achilles oversight
 
 ## NEO-0001 — CORE-B02 project-function divvy
@@ -69,3 +69,35 @@ Reason: Drive CORE has current workbook authority, but legacy task material is s
 ### No-go actions
 
 No deletion, restructure, deployment, public publish, backend launch, wallet/token/mint/payment/custody activation, unsupported public claim, or secondary Z activation.
+
+## NEO-0002 — Z01 supply-chain and Cognigrex source/interface launch
+
+Status: `NW-005 COMPLETE / NW-006 READY`
+Priority: P0
+Workbook: `Type1_Asteroid_Operating_Workbook`
+Surface: `Next Workstream Launch Map!A1:T118`
+Freeze parent: `CGX-FREEZE-001`
+
+### Completed routed packet
+
+- 22 launch controls: 12 mapped, 7 source review, 2 gated and 1 ready.
+- 11 deduplicated source-authority rows.
+- 8 extracted mechanical, electrical, data, thermal, mission, capacity, governance and platform interfaces.
+- 26 proposed Interplanetary Supply Chain fields.
+- 26 proposed Cognigrex Node Control fields.
+- Matrix IDs and both field-name sets are unique.
+- Formula scan: 0 `#REF!`, 0 `#N/A`.
+- Separate workbook creation remains blocked by `NW-004` and `RG-013`.
+
+### Neo routing
+
+- Architect: dependency, interface and workbook-boundary review.
+- Morpheus: historical design and claim review.
+- Oracle: source identity, node identity and provenance reconciliation.
+- Smith: queue only accepted review actions and persistence updates.
+- Trinity: remain deferred until field models pass review.
+- Achilles: retain source, creation and release gates.
+
+### Active next action
+
+Execute `NW-006`: close source and claim ambiguities without promoting historical design assertions, external-party references, performance figures or digital-twin scaffolds into current operational facts. Preserve unknown/proposed states and keep the two future workbooks uncreated until the schema and key review is accepted.
