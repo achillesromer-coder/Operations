@@ -1,7 +1,7 @@
 # GitHub Alignment Handoff — 2026-07-03
 
 Status: FINAL MASTER PUSH / ACTIVE TRANSFER-PREP
-Updated: 2026-07-15 asteroid/Type 1 freeze and next-lane memory addendum
+Updated: 2026-07-15 next-workstream launch map executed
 
 ## Decisions recorded
 
@@ -142,14 +142,49 @@ Agent sequence:
 - Trinity: interface work only after the data model stabilises.
 - Achilles: governance, separation, creation and release gate.
 
+## Launch-map execution — 2026-07-15
+
+The first bounded next-workstream control surface has now been executed inside the existing Type 1 operations workbook rather than creating either future workbook prematurely.
+
+Surface:
+
+```text
+Workbook: Type1_Asteroid_Operating_Workbook
+Sheet: Next Workstream Launch Map
+Sheet ID: 301000023
+Canonical range: A1:T29
+```
+
+Control set:
+
+```text
+21 total controls
+11 MAPPED
+7 SOURCE REVIEW
+2 GATED
+1 READY
+Formula errors: 0 #REF! / 0 #N/A
+```
+
+The control set comprises:
+
+- `NW-001:NW-005` for freeze, source model, workbook separation, creation gate and first executable output;
+- `SUP-001:SUP-008` for supply-chain authority, mission continuity, interfaces, topology, material flow, capacity, window/path dependencies and platform routes;
+- `CGX-001:CGX-008` for Cognigrex authority, node identities, permissions, handoffs, state/health, recommendation boundaries, audit and human gates.
+
+Creation remains gated by `NW-004`. The separate Interplanetary Supply Chain Systems and Cognigrex Node Control workbooks must not be created until the source models, field dictionaries, ownership boundaries and cross-workbook keys are stable.
+
+The current executable row is `NW-005`: build one deduplicated source/interface matrix and proposed field dictionaries in the existing control plane. Trinity/UI work remains deferred until that data model is stable.
+
 ## Next action
 
-1. Continue `CORE-B01` extraction for the source set needed by the supply-chain/node-control launch map.
+1. Continue `CORE-B01` extraction for the source/interface matrix.
 2. Use `CORE-B02` to assign the extracted interfaces across Z01 and support floors.
-3. Produce one bounded source/interface matrix before creating new workbooks.
+3. Populate the source/interface matrix from the identified source carriers.
 4. Record unresolved fields as unknown or deferred; do not infer interfaces, partners, capability or operational readiness.
-5. Create the two separate workbooks only after their source models, ownership boundaries and cross-workbook keys are stable.
-6. Continue using Slack for compact cross-platform sync notes only.
+5. Close `NW-004` only after proposed field dictionaries, ownership and cross-workbook keys pass review.
+6. Create the two separate workbooks only after the creation gate passes.
+7. Continue using Slack for compact cross-platform sync notes only.
 
 ## Hard gates
 
