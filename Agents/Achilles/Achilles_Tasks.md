@@ -1,7 +1,7 @@
 # Achilles Tasks
 
 Status: ACTIVE
-Updated: 2026-07-05
+Updated: 2026-07-15
 Authority: Drive CORE workbook / Operations control / Achilles audit
 
 ## ACH-0001 — CORE-B01 extraction and continuity audit
@@ -92,3 +92,37 @@ Continue CORE-B01 extraction:
 2. Convert actionable rows into Drive CORE tasks when workbook edit path is available.
 3. Record provenance, source carrier, bracket, owner lane, blocker state and owner-decision requirement.
 4. Update existing GitHub bridge/agent files only when they need alignment.
+
+## ACH-0002 — NW-005 completion and workbook-creation gate
+
+Status: `COMPLETE PACKET / ACTIVE REVIEW GATE`
+Priority: P0
+Freeze parent: `CGX-FREEZE-001`
+Workbook surface: `Next Workstream Launch Map!A1:T118`
+
+### Completed evidence packet
+
+- 11 source-authority records and 8 extracted interface records.
+- 26 proposed Interplanetary Supply Chain fields.
+- 26 proposed Cognigrex Node Control fields.
+- Unique matrix IDs and unique field-name sets.
+- 0 `#REF!` and 0 `#N/A` in the audited range.
+- `NW-005` is mapped and review-ready.
+- `NW-006` is the active source/claim review lane.
+
+### Achilles gate state
+
+`NW-004` and `RG-013` remain closed. Do not create the separate Supply Chain or Cognigrex Node Control workbooks until all of the following are accepted:
+
+1. source authority and revision identity;
+2. interface and node identity;
+3. proposed field definitions and controlled vocabularies;
+4. ownership and human-review responsibilities;
+5. cross-workbook keys and prohibited duplication;
+6. historical design and public-claim downgrades.
+
+Old collaborator references remain proposed or unconfirmed. Historical performance, compatibility and operational-readiness assertions remain unverified. Digital-twin and innovation-register entries are inventory or scaffold evidence, not proof of deployed or tested capability.
+
+### Current Achilles action
+
+Audit `NW-006` with Morpheus and Oracle. Preserve unknown/proposed states, keep the no-selection freeze intact, and release no workbook-creation decision until the source and schema packet passes review.
