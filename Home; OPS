@@ -1,0 +1,1392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="dark">
+  <title>Operations Control Plane | Romer Industries</title>
+  <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js" defer></script>
+  <style>
+    :root {
+      --bg: #080a0d;
+      --surface: #101419;
+      --surface-raised: #171c22;
+      --surface-soft: #1c2229;
+      --line: #2d353e;
+      --line-strong: #46515d;
+      --text: #edf1f4;
+      --muted: #9aa5af;
+      --quiet: #6f7a84;
+      --copper: #c07a3d;
+      --cyan: #36bfd2;
+      --green: #38c98b;
+      --amber: #e1a23b;
+      --rose: #d9657d;
+      --danger: #df6962;
+      --focus: #f1bd70;
+      --sidebar: 248px;
+      --topbar: 58px;
+    }
+
+    * {
+      box-sizing: border-box;
+      letter-spacing: 0;
+    }
+
+    html {
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, "Segoe UI", Arial, sans-serif;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      min-height: 100vh;
+      background: var(--bg);
+    }
+
+    button,
+    input,
+    a {
+      font: inherit;
+    }
+
+    button,
+    a {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    button:focus-visible,
+    input:focus-visible,
+    a:focus-visible {
+      outline: 2px solid var(--focus);
+      outline-offset: 2px;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .app-shell {
+      display: grid;
+      grid-template-columns: var(--sidebar) minmax(0, 1fr);
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background: #0c0f13;
+      border-right: 1px solid var(--line);
+      overflow: hidden;
+      z-index: 20;
+    }
+
+    .brand {
+      min-height: 78px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--line);
+      text-decoration: none;
+    }
+
+    .brand-mark {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--copper);
+      color: var(--copper);
+      font-weight: 800;
+      font-size: 14px;
+      flex: 0 0 auto;
+    }
+
+    .brand-name {
+      min-width: 0;
+    }
+
+    .brand-name strong {
+      display: block;
+      font-size: 13px;
+      line-height: 1.2;
+    }
+
+    .brand-name span {
+      display: block;
+      color: var(--muted);
+      font-size: 11px;
+      margin-top: 3px;
+    }
+
+    .side-state {
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .state-line {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 8px;
+      font-size: 11px;
+    }
+
+    .state-line:last-child {
+      margin-bottom: 0;
+    }
+
+    .state-line span:first-child {
+      color: var(--muted);
+    }
+
+    .state-value {
+      color: var(--text);
+      font-weight: 700;
+      text-align: right;
+    }
+
+    .state-value.review {
+      color: var(--amber);
+    }
+
+    .side-nav {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px 10px;
+    }
+
+    .nav-label {
+      color: var(--quiet);
+      font-size: 10px;
+      font-weight: 700;
+      padding: 10px 10px 7px;
+      text-transform: uppercase;
+    }
+
+    .nav-button,
+    .nav-link {
+      width: 100%;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 10px;
+      border: 1px solid transparent;
+      border-radius: 5px;
+      background: transparent;
+      color: var(--muted);
+      text-decoration: none;
+      cursor: pointer;
+      font-size: 12px;
+      text-align: left;
+    }
+
+    .nav-button:hover,
+    .nav-link:hover {
+      color: var(--text);
+      background: var(--surface);
+    }
+
+    .nav-button.active {
+      color: var(--text);
+      border-color: var(--line-strong);
+      background: var(--surface-raised);
+    }
+
+    .nav-button svg,
+    .nav-link svg {
+      width: 16px;
+      height: 16px;
+      flex: 0 0 auto;
+    }
+
+    .side-footer {
+      padding: 14px 18px;
+      border-top: 1px solid var(--line);
+      color: var(--quiet);
+      font-size: 10px;
+      line-height: 1.5;
+    }
+
+    .main {
+      min-width: 0;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      height: var(--topbar);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 0 24px;
+      background: rgba(8, 10, 13, 0.96);
+      border-bottom: 1px solid var(--line);
+      z-index: 15;
+      backdrop-filter: blur(10px);
+    }
+
+    .topbar-title {
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .topbar-title span {
+      color: var(--quiet);
+      font-weight: 500;
+    }
+
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .utc {
+      color: var(--muted);
+      font-variant-numeric: tabular-nums;
+      font-size: 11px;
+      white-space: nowrap;
+    }
+
+    .icon-button {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--line);
+      border-radius: 5px;
+      background: var(--surface);
+      color: var(--muted);
+      cursor: pointer;
+    }
+
+    .icon-button:hover {
+      color: var(--text);
+      border-color: var(--line-strong);
+    }
+
+    .icon-button svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .content-header {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 24px;
+      align-items: end;
+      padding: 30px 32px 24px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .eyebrow {
+      color: var(--copper);
+      font-size: 11px;
+      font-weight: 800;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 32px;
+      line-height: 1.12;
+      font-weight: 760;
+    }
+
+    .header-subtitle {
+      max-width: 720px;
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .review-badge {
+      min-width: 176px;
+      padding: 11px 13px;
+      border: 1px solid rgba(225, 162, 59, 0.6);
+      border-radius: 5px;
+      background: rgba(225, 162, 59, 0.08);
+    }
+
+    .review-badge span {
+      display: block;
+      color: var(--muted);
+      font-size: 10px;
+      margin-bottom: 4px;
+    }
+
+    .review-badge strong {
+      color: var(--amber);
+      font-size: 12px;
+    }
+
+    .metric-band {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      border-bottom: 1px solid var(--line);
+    }
+
+    .metric {
+      min-height: 104px;
+      padding: 18px 22px;
+      border-right: 1px solid var(--line);
+      background: var(--surface);
+    }
+
+    .metric:last-child {
+      border-right: 0;
+    }
+
+    .metric-label {
+      color: var(--muted);
+      font-size: 10px;
+      margin-bottom: 9px;
+      text-transform: uppercase;
+    }
+
+    .metric-value {
+      font-size: 22px;
+      line-height: 1;
+      font-weight: 760;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .metric-value.green { color: var(--green); }
+    .metric-value.cyan { color: var(--cyan); }
+    .metric-value.amber { color: var(--amber); }
+    .metric-value.copper { color: var(--copper); }
+
+    .metric-note {
+      color: var(--quiet);
+      font-size: 10px;
+      margin-top: 8px;
+    }
+
+    .topology-band {
+      display: grid;
+      grid-template-columns: minmax(0, 1.65fr) minmax(300px, 0.75fr);
+      min-height: 350px;
+      border-bottom: 1px solid var(--line);
+      background: #0a0d10;
+    }
+
+    .topology-visual {
+      position: relative;
+      min-width: 0;
+      min-height: 350px;
+      border-right: 1px solid var(--line);
+      overflow: hidden;
+    }
+
+    .band-heading {
+      position: absolute;
+      top: 18px;
+      left: 22px;
+      z-index: 2;
+    }
+
+    .band-heading strong {
+      display: block;
+      font-size: 13px;
+    }
+
+    .band-heading span {
+      display: block;
+      color: var(--muted);
+      font-size: 10px;
+      margin-top: 4px;
+    }
+
+    #topologyCanvas {
+      width: 100%;
+      height: 350px;
+      display: block;
+      cursor: pointer;
+    }
+
+    .workstream-panel {
+      padding: 22px;
+      background: var(--surface);
+    }
+
+    .panel-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .panel-title h2,
+    .section-heading h2 {
+      margin: 0;
+      font-size: 15px;
+      line-height: 1.25;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--amber);
+      box-shadow: 0 0 0 4px rgba(225, 162, 59, 0.12);
+      flex: 0 0 auto;
+    }
+
+    .lane-row {
+      display: grid;
+      grid-template-columns: 76px minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: center;
+      min-height: 42px;
+      border-bottom: 1px solid var(--line);
+      font-size: 11px;
+    }
+
+    .lane-code {
+      color: var(--cyan);
+      font-weight: 800;
+    }
+
+    .lane-name {
+      min-width: 0;
+      color: var(--text);
+    }
+
+    .lane-state {
+      color: var(--muted);
+      font-size: 10px;
+      text-align: right;
+    }
+
+    .lane-state.ready { color: var(--green); }
+    .lane-state.active { color: var(--amber); }
+    .lane-state.closed { color: var(--rose); }
+
+    .packet-stats {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1px;
+      margin-top: 18px;
+      background: var(--line);
+      border: 1px solid var(--line);
+    }
+
+    .packet-stat {
+      min-height: 62px;
+      padding: 11px;
+      background: var(--surface-raised);
+    }
+
+    .packet-stat strong {
+      display: block;
+      color: var(--text);
+      font-size: 17px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .packet-stat span {
+      display: block;
+      color: var(--muted);
+      font-size: 9px;
+      margin-top: 5px;
+      text-transform: uppercase;
+    }
+
+    .section-band {
+      padding: 26px 32px 32px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .section-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 20px;
+      margin-bottom: 18px;
+    }
+
+    .section-heading p {
+      margin: 5px 0 0;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .surface-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .search-wrap {
+      position: relative;
+      width: 230px;
+    }
+
+    .search-wrap svg {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      width: 15px;
+      height: 15px;
+      color: var(--quiet);
+      transform: translateY(-50%);
+      pointer-events: none;
+    }
+
+    .search-input {
+      width: 100%;
+      height: 36px;
+      padding: 0 10px 0 34px;
+      border: 1px solid var(--line);
+      border-radius: 5px;
+      background: var(--surface);
+      color: var(--text);
+      font-size: 11px;
+    }
+
+    .search-input::placeholder {
+      color: var(--quiet);
+    }
+
+    .segments {
+      display: flex;
+      min-height: 36px;
+      border: 1px solid var(--line);
+      border-radius: 5px;
+      overflow: hidden;
+    }
+
+    .segment {
+      min-width: 62px;
+      padding: 0 12px;
+      border: 0;
+      border-right: 1px solid var(--line);
+      background: var(--surface);
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 10px;
+    }
+
+    .segment:last-child {
+      border-right: 0;
+    }
+
+    .segment:hover {
+      color: var(--text);
+    }
+
+    .segment.active {
+      background: var(--surface-soft);
+      color: var(--text);
+      box-shadow: inset 0 -2px 0 var(--copper);
+    }
+
+    .surface-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .surface-card {
+      min-width: 0;
+      min-height: 152px;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: var(--surface);
+      overflow: hidden;
+      transition: border-color 150ms ease, transform 150ms ease;
+    }
+
+    .surface-card:hover {
+      border-color: var(--line-strong);
+      transform: translateY(-1px);
+    }
+
+    .card-accent {
+      height: 3px;
+      background: var(--card-accent, var(--copper));
+    }
+
+    .card-body {
+      flex: 1;
+      padding: 14px 15px 12px;
+    }
+
+    .card-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .card-kind {
+      color: var(--quiet);
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .state-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 22px;
+      padding: 0 7px;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      color: var(--muted);
+      background: var(--surface-raised);
+      font-size: 9px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .state-badge::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    .state-badge.review { color: var(--amber); }
+    .state-badge.protected { color: var(--cyan); }
+    .state-badge.gated { color: var(--rose); }
+    .state-badge.reference { color: var(--green); }
+
+    .surface-card h3 {
+      margin: 0;
+      min-height: 38px;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .card-boundary {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 10px;
+      line-height: 1.4;
+      overflow-wrap: anywhere;
+    }
+
+    .card-footer {
+      min-height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 8px 10px 8px 15px;
+      border-top: 1px solid var(--line);
+    }
+
+    .card-route {
+      min-width: 0;
+      overflow: hidden;
+      color: var(--quiet);
+      font-family: Consolas, "SFMono-Regular", monospace;
+      font-size: 9px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .open-link {
+      height: 28px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0 9px;
+      border: 1px solid var(--line-strong);
+      border-radius: 4px;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 9px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .open-link:hover {
+      border-color: var(--copper);
+      color: var(--copper);
+    }
+
+    .open-link svg {
+      width: 12px;
+      height: 12px;
+    }
+
+    .empty-state {
+      grid-column: 1 / -1;
+      min-height: 150px;
+      display: grid;
+      place-items: center;
+      border: 1px dashed var(--line);
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .boundary-band {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      background: var(--surface);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .boundary-item {
+      min-height: 112px;
+      padding: 20px 22px;
+      border-right: 1px solid var(--line);
+    }
+
+    .boundary-item:last-child {
+      border-right: 0;
+    }
+
+    .boundary-icon {
+      width: 28px;
+      height: 28px;
+      display: grid;
+      place-items: center;
+      margin-bottom: 11px;
+      color: var(--boundary-color, var(--cyan));
+    }
+
+    .boundary-icon svg {
+      width: 22px;
+      height: 22px;
+    }
+
+    .boundary-item strong {
+      display: block;
+      font-size: 12px;
+      margin-bottom: 5px;
+    }
+
+    .boundary-item span {
+      color: var(--muted);
+      font-size: 10px;
+      line-height: 1.5;
+    }
+
+    .page-footer {
+      min-height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 18px 32px;
+      color: var(--quiet);
+      font-size: 10px;
+    }
+
+    .footer-links {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      color: var(--muted);
+      text-decoration: none;
+    }
+
+    .footer-links a:hover {
+      color: var(--text);
+    }
+
+    .mobile-menu {
+      display: none;
+    }
+
+    @media (max-width: 1120px) {
+      .surface-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .topology-band {
+        grid-template-columns: minmax(0, 1.35fr) minmax(290px, 0.8fr);
+      }
+    }
+
+    @media (max-width: 860px) {
+      .app-shell {
+        display: block;
+      }
+
+      .sidebar {
+        position: fixed;
+        left: 0;
+        width: min(286px, 86vw);
+        transform: translateX(-100%);
+        transition: transform 180ms ease;
+        box-shadow: 12px 0 32px rgba(0, 0, 0, 0.4);
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .mobile-menu {
+        display: grid;
+      }
+
+      .content-header {
+        padding: 25px 22px 20px;
+      }
+
+      .metric-band {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .metric:nth-child(2) {
+        border-right: 0;
+      }
+
+      .metric:nth-child(-n+2) {
+        border-bottom: 1px solid var(--line);
+      }
+
+      .topology-band {
+        grid-template-columns: 1fr;
+      }
+
+      .topology-visual {
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .section-band {
+        padding: 24px 22px 28px;
+      }
+
+      .section-heading {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .surface-controls {
+        width: 100%;
+      }
+
+      .search-wrap {
+        flex: 1;
+        min-width: 180px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .topbar {
+        padding: 0 14px;
+      }
+
+      .topbar-title span,
+      .utc {
+        display: none;
+      }
+
+      .content-header {
+        grid-template-columns: 1fr;
+        gap: 18px;
+      }
+
+      h1 {
+        font-size: 27px;
+      }
+
+      .review-badge {
+        min-width: 0;
+        width: 100%;
+      }
+
+      .metric {
+        min-height: 96px;
+        padding: 16px;
+      }
+
+      .metric-value {
+        font-size: 19px;
+      }
+
+      .surface-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .segments {
+        width: 100%;
+        overflow-x: auto;
+      }
+
+      .segment {
+        flex: 1 0 auto;
+      }
+
+      .search-wrap {
+        flex-basis: 100%;
+        width: 100%;
+      }
+
+      .boundary-band {
+        grid-template-columns: 1fr;
+      }
+
+      .boundary-item {
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .boundary-item:last-child {
+        border-bottom: 0;
+      }
+
+      .page-footer {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 18px 22px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        transition: none !important;
+      }
+    }
+  </style>
+</head>
+<body data-surface-id="LS-OPS-HOME" data-workspace-route="/operations/home" data-delivery="static_readonly">
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar" aria-label="Operations navigation">
+      <a class="brand" href="https://romer.industries" aria-label="Romer Industries home">
+        <span class="brand-mark">RI</span>
+        <span class="brand-name">
+          <strong>Romer Industries</strong>
+          <span>Operations Control Plane</span>
+        </span>
+      </a>
+
+      <div class="side-state">
+        <div class="state-line"><span>Control plane</span><span class="state-value review">Review gated</span></div>
+        <div class="state-line"><span>Delivery</span><span class="state-value">Static read-only</span></div>
+        <div class="state-line"><span>Selection</span><span class="state-value">None</span></div>
+      </div>
+
+      <nav class="side-nav">
+        <div class="nav-label">Operations</div>
+        <button class="nav-button active" data-filter="all" type="button">
+          <i data-lucide="layout-dashboard"></i><span>Control overview</span>
+        </button>
+        <button class="nav-button" data-filter="workspace" type="button">
+          <i data-lucide="blocks"></i><span>Workspaces</span>
+        </button>
+        <button class="nav-button" data-filter="calculator" type="button">
+          <i data-lucide="calculator"></i><span>Calculators</span>
+        </button>
+        <button class="nav-button" data-filter="simulator" type="button">
+          <i data-lucide="orbit"></i><span>Simulators</span>
+        </button>
+        <button class="nav-button" data-filter="reference" type="button">
+          <i data-lucide="library"></i><span>References</span>
+        </button>
+
+        <div class="nav-label">Protected</div>
+        <a class="nav-link" href="/data/achilles">
+          <i data-lucide="shield-check"></i><span>Achilles status</span>
+        </a>
+        <a class="nav-link" href="/library">
+          <i data-lucide="book-open"></i><span>Source library</span>
+        </a>
+      </nav>
+
+      <div class="side-footer">
+        Registry: ROMER-OPERATIONS-WEB-REVIEW<br>
+        Direct desktop mutation: disabled
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="topbar-title">
+          <button class="icon-button mobile-menu" id="menuButton" type="button" title="Open navigation" aria-label="Open navigation">
+            <i data-lucide="menu"></i>
+          </button>
+          <span>LS WEB</span> OPERATIONS / HOME
+        </div>
+        <div class="topbar-actions">
+          <span class="utc" id="utcClock">UTC --:--:--</span>
+          <a class="icon-button" href="/contact-us" title="Contact" aria-label="Contact">
+            <i data-lucide="mail"></i>
+          </a>
+          <a class="icon-button" href="/library" title="Library" aria-label="Library">
+            <i data-lucide="library"></i>
+          </a>
+        </div>
+      </header>
+
+      <section class="content-header">
+        <div>
+          <div class="eyebrow">Romer Industries / Z01</div>
+          <h1>Operations Control Plane</h1>
+          <p class="header-subtitle">Source and interface review across supply-chain systems, Cognigrex node control, mission workspaces and public-safe analysis tools.</p>
+        </div>
+        <div class="review-badge">
+          <span>Release state</span>
+          <strong>OWNER REVIEW REQUIRED</strong>
+        </div>
+      </section>
+
+      <section class="metric-band" aria-label="Operations metrics">
+        <div class="metric">
+          <div class="metric-label">Launch controls</div>
+          <div class="metric-value copper">22</div>
+          <div class="metric-note">12 mapped / 7 source review</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Source authorities</div>
+          <div class="metric-value cyan">11</div>
+          <div class="metric-note">Deduplicated carrier records</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Interface records</div>
+          <div class="metric-value green">8</div>
+          <div class="metric-note">Physical to governance classes</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Formula errors</div>
+          <div class="metric-value green">0</div>
+          <div class="metric-note">0 #REF! / 0 #N/A</div>
+        </div>
+      </section>
+
+      <section class="topology-band">
+        <div class="topology-visual">
+          <div class="band-heading">
+            <strong>Operational Surface Topology</strong>
+            <span>Public workspaces, protected data and analysis routes</span>
+          </div>
+          <canvas id="topologyCanvas" aria-label="Operations surface topology"></canvas>
+        </div>
+
+        <div class="workstream-panel">
+          <div class="panel-title">
+            <h2>Current Workstream</h2>
+            <span class="status-dot" title="Active review"></span>
+          </div>
+          <div class="lane-row">
+            <span class="lane-code">NW-005</span>
+            <span class="lane-name">Source/interface matrix</span>
+            <span class="lane-state ready">COMPLETE</span>
+          </div>
+          <div class="lane-row">
+            <span class="lane-code">NW-006</span>
+            <span class="lane-name">Provenance and claim review</span>
+            <span class="lane-state active">ACTIVE</span>
+          </div>
+          <div class="lane-row">
+            <span class="lane-code">NW-004</span>
+            <span class="lane-name">Workbook creation gate</span>
+            <span class="lane-state closed">CLOSED</span>
+          </div>
+          <div class="lane-row">
+            <span class="lane-code">RG-013</span>
+            <span class="lane-name">Release gate</span>
+            <span class="lane-state closed">CLOSED</span>
+          </div>
+
+          <div class="packet-stats">
+            <div class="packet-stat"><strong>26</strong><span>Supply-chain fields</span></div>
+            <div class="packet-stat"><strong>26</strong><span>Node-control fields</span></div>
+            <div class="packet-stat"><strong>3 / 7 / 11</strong><span>M1 / M2 / M3 m3</span></div>
+            <div class="packet-stat"><strong>None</strong><span>Mission selection</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section-band" id="surfaces">
+        <div class="section-heading">
+          <div>
+            <h2>Operations Surfaces</h2>
+            <p id="surfaceCount">21 registry surfaces</p>
+          </div>
+          <div class="surface-controls">
+            <label class="search-wrap">
+              <i data-lucide="search"></i>
+              <input class="search-input" id="surfaceSearch" type="search" placeholder="Find a surface" aria-label="Find a surface">
+            </label>
+            <div class="segments" aria-label="Surface category">
+              <button class="segment active" data-filter="all" type="button">All</button>
+              <button class="segment" data-filter="workspace" type="button">W1-W7</button>
+              <button class="segment" data-filter="calculator" type="button">Calc</button>
+              <button class="segment" data-filter="simulator" type="button">Sim</button>
+              <button class="segment" data-filter="reference" type="button">Ref</button>
+            </div>
+          </div>
+        </div>
+        <div class="surface-grid" id="surfaceGrid"></div>
+      </section>
+
+      <section class="boundary-band" aria-label="Release boundaries">
+        <div class="boundary-item">
+          <div class="boundary-icon" style="--boundary-color: var(--cyan)"><i data-lucide="database"></i></div>
+          <strong>Protected data</strong>
+          <span>W1-W6 dataspaces and Achilles status remain authenticated routes.</span>
+        </div>
+        <div class="boundary-item">
+          <div class="boundary-icon" style="--boundary-color: var(--amber)"><i data-lucide="badge-check"></i></div>
+          <strong>Reviewed claims only</strong>
+          <span>Historical, scaffold and hypothesis records retain their controlled states.</span>
+        </div>
+        <div class="boundary-item">
+          <div class="boundary-icon" style="--boundary-color: var(--green)"><i data-lucide="user-check"></i></div>
+          <strong>Human approval</strong>
+          <span>Workbook creation, merge and publication remain owner-gated decisions.</span>
+        </div>
+      </section>
+
+      <footer class="page-footer">
+        <span>Romer Industries / LightSpeed Cognigrex / Static review candidate</span>
+        <span class="footer-links">
+          <a href="/operations/w1">W1</a>
+          <a href="/operations/w4">W4</a>
+          <a href="/operations/w6">W6</a>
+          <a href="/gmat">GMAT</a>
+          <a href="/contact-us">Contact</a>
+        </span>
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    const surfaces = [
+      { id:'LS-OPS-HOME', kind:'control', title:'Operations Home', route:'/operations/home', state:'review', label:'Review', boundary:'Public operations index only', accent:'#c07a3d' },
+      { id:'LS-W1-MAGLEV', kind:'workspace', title:'Incoming Deposit Analysis', route:'/operations/w1', state:'review', label:'Review', boundary:'Candidate screening only', accent:'#36bfd2' },
+      { id:'LS-W2-LUKE2', kind:'workspace', title:'Geostationary Luke II', route:'/operations/w2', state:'review', label:'Review', boundary:'Engineering prototype only', accent:'#38c98b' },
+      { id:'LS-W3-RFS-EMFF', kind:'workspace', title:'RFS and EMFF Field Projections', route:'/operations/w3', state:'review', label:'Review', boundary:'Hypothesis and test design only', accent:'#d9657d' },
+      { id:'LS-W4-SUPPLY', kind:'workspace', title:'Inter-planetary Supply Chain Network', route:'/operations/w4', state:'review', label:'Review', boundary:'Planning prototype only', accent:'#e1a23b' },
+      { id:'LS-W5-MISSION', kind:'workspace', title:'Mission Planning', route:'/operations/w5', state:'review', label:'Review', boundary:'Planning prototype only', accent:'#38c98b' },
+      { id:'LS-W6-ASSETS', kind:'workspace', title:'Asset Library', route:'/operations/w6', state:'review', label:'Review', boundary:'Source-candidate inventory only', accent:'#d9657d' },
+      { id:'LS-W7-DECENTRALIZED', kind:'workspace', title:'Decentralized', route:'/operations/w7', state:'gated', label:'Gated', boundary:'Coming soon', accent:'#d9657d' },
+      { id:'LS-CALC-ENERGY', kind:'calculator', title:'Energy and Power Calculator', route:'/calc/energy', state:'review', label:'Review', boundary:'Engineering analysis prototype', accent:'#e1a23b' },
+      { id:'LS-CALC-FLUIDS', kind:'calculator', title:'Fluid Dynamics Calculator', route:'/calc/fluids', state:'review', label:'Review', boundary:'Engineering analysis prototype', accent:'#36bfd2' },
+      { id:'LS-CALC-LAUNCH', kind:'calculator', title:'Launch Windows Calculator', route:'/calc/launch', state:'review', label:'Review', boundary:'Engineering analysis prototype', accent:'#c07a3d' },
+      { id:'LS-CALC-MAGNETOSTATICS', kind:'calculator', title:'Magnetostatics Calculator', route:'/calc/magnetostatics', state:'review', label:'Review', boundary:'Engineering analysis prototype', accent:'#d9657d' },
+      { id:'LS-CALC-ORBITAL', kind:'calculator', title:'Orbital Mechanics Calculator', route:'/calc/orbital', state:'review', label:'Review', boundary:'Engineering analysis prototype', accent:'#38c98b' },
+      { id:'LS-SIM-REENTRY', kind:'simulator', title:'Re-entry Atmospheric Entry Simulator', route:'/sim/re-entry', state:'review', label:'Review', boundary:'Engineering analysis prototype', accent:'#e1a23b' },
+      { id:'LS-SIM-FIELDS', kind:'simulator', title:'Electromagnetic Field Simulator', route:'/sim/fields', state:'review', label:'Review', boundary:'Hypothesis and test design only', accent:'#d9657d' },
+      { id:'LS-SIM-NODE', kind:'simulator', title:'Electromagnetic Formation Flight', route:'/sim/node', state:'review', label:'Review', boundary:'Hypothesis and test design only', accent:'#36bfd2' },
+      { id:'LS-SIM-RFS-EXTRACTION', kind:'simulator', title:'RFS Extraction Rendezvous and Flight', route:'/sims/rfs-extraction', state:'review', label:'Review', boundary:'Hypothesis and test design only', accent:'#c07a3d' },
+      { id:'LS-ACHILLES', kind:'reference', title:'Achilles Status', route:'/data/achilles', state:'protected', label:'Protected', boundary:'Authenticated operator only', accent:'#36bfd2' },
+      { id:'LS-LIBRARY', kind:'reference', title:'Source Library', route:'/library', state:'reference', label:'Reference', boundary:'Reference only', accent:'#38c98b' },
+      { id:'LS-OPS-GMAT', kind:'reference', title:'GMAT', route:'/gmat', state:'reference', label:'Reference', boundary:'Separate license and release surface', accent:'#c07a3d' },
+      { id:'LS-OPS-CONTACT', kind:'reference', title:'Contact and Support Intake', route:'/contact-us', state:'reference', label:'Reference', boundary:'Separate form surface', accent:'#38c98b' }
+    ];
+
+    const grid = document.getElementById('surfaceGrid');
+    const count = document.getElementById('surfaceCount');
+    const search = document.getElementById('surfaceSearch');
+    const sidebar = document.getElementById('sidebar');
+    const menuButton = document.getElementById('menuButton');
+    let activeFilter = 'all';
+
+    function kindLabel(kind) {
+      return ({ control:'Control', workspace:'Workspace', calculator:'Calculator', simulator:'Simulator', reference:'Reference' })[kind] || kind;
+    }
+
+    function renderSurfaces() {
+      const query = search.value.trim().toLowerCase();
+      const filtered = surfaces.filter(surface => {
+        const categoryMatch = activeFilter === 'all' || surface.kind === activeFilter || (activeFilter === 'workspace' && surface.kind === 'control');
+        const queryMatch = !query || `${surface.id} ${surface.title} ${surface.route} ${surface.boundary}`.toLowerCase().includes(query);
+        return categoryMatch && queryMatch;
+      });
+
+      count.textContent = `${filtered.length} of ${surfaces.length} registry surfaces`;
+      if (!filtered.length) {
+        grid.innerHTML = '<div class="empty-state">No matching surface</div>';
+        return;
+      }
+
+      grid.innerHTML = filtered.map(surface => `
+        <article class="surface-card" style="--card-accent:${surface.accent}" data-surface="${surface.id}">
+          <div class="card-accent"></div>
+          <div class="card-body">
+            <div class="card-meta">
+              <span class="card-kind">${kindLabel(surface.kind)}</span>
+              <span class="state-badge ${surface.state}">${surface.label}</span>
+            </div>
+            <h3>${surface.title}</h3>
+            <div class="card-boundary">${surface.boundary}</div>
+          </div>
+          <div class="card-footer">
+            <span class="card-route">${surface.route}</span>
+            <a class="open-link" href="${surface.route}">Open <i data-lucide="arrow-up-right"></i></a>
+          </div>
+        </article>
+      `).join('');
+      if (window.lucide) window.lucide.createIcons();
+    }
+
+    function setFilter(filter) {
+      activeFilter = filter;
+      document.querySelectorAll('[data-filter]').forEach(button => {
+        button.classList.toggle('active', button.dataset.filter === filter);
+      });
+      renderSurfaces();
+      document.getElementById('surfaces').scrollIntoView({ block: 'start' });
+      sidebar.classList.remove('open');
+    }
+
+    document.querySelectorAll('[data-filter]').forEach(button => {
+      button.addEventListener('click', () => setFilter(button.dataset.filter));
+    });
+    search.addEventListener('input', renderSurfaces);
+    menuButton.addEventListener('click', () => sidebar.classList.toggle('open'));
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape') sidebar.classList.remove('open');
+    });
+
+    const clock = document.getElementById('utcClock');
+    function updateClock() {
+      const value = new Date().toISOString().slice(11, 19);
+      clock.textContent = `UTC ${value}`;
+    }
+    updateClock();
+    setInterval(updateClock, 1000);
+
+    const canvas = document.getElementById('topologyCanvas');
+    const ctx = canvas.getContext('2d');
+    let nodes = [];
+    let motionFrame = 0;
+
+    const topology = [
+      { id:'LS-OPS-HOME', label:'OPS', x:0.50, y:0.50, color:'#c07a3d', r:22 },
+      { id:'LS-W1-MAGLEV', label:'W1', x:0.17, y:0.28, color:'#36bfd2', r:16 },
+      { id:'LS-W2-LUKE2', label:'W2', x:0.34, y:0.18, color:'#38c98b', r:16 },
+      { id:'LS-W3-RFS-EMFF', label:'W3', x:0.66, y:0.18, color:'#d9657d', r:16 },
+      { id:'LS-W4-SUPPLY', label:'W4', x:0.83, y:0.31, color:'#e1a23b', r:16 },
+      { id:'LS-W5-MISSION', label:'W5', x:0.76, y:0.72, color:'#38c98b', r:16 },
+      { id:'LS-W6-ASSETS', label:'W6', x:0.24, y:0.74, color:'#d9657d', r:16 },
+      { id:'LS-W7-DECENTRALIZED', label:'W7', x:0.50, y:0.84, color:'#6f7a84', r:13 },
+      { id:'TOOLS', label:'TOOLS', x:0.89, y:0.62, color:'#36bfd2', r:12 },
+      { id:'DATA', label:'DATA', x:0.10, y:0.56, color:'#46515d', r:12 }
+    ];
+
+    const links = [
+      ['LS-OPS-HOME','LS-W1-MAGLEV'], ['LS-OPS-HOME','LS-W2-LUKE2'], ['LS-OPS-HOME','LS-W3-RFS-EMFF'],
+      ['LS-OPS-HOME','LS-W4-SUPPLY'], ['LS-OPS-HOME','LS-W5-MISSION'], ['LS-OPS-HOME','LS-W6-ASSETS'],
+      ['LS-OPS-HOME','LS-W7-DECENTRALIZED'], ['LS-OPS-HOME','TOOLS'], ['LS-OPS-HOME','DATA'],
+      ['LS-W1-MAGLEV','LS-W2-LUKE2'], ['LS-W2-LUKE2','LS-W3-RFS-EMFF'], ['LS-W3-RFS-EMFF','LS-W4-SUPPLY'],
+      ['LS-W4-SUPPLY','LS-W5-MISSION'], ['LS-W5-MISSION','LS-W6-ASSETS'], ['LS-W6-ASSETS','LS-W1-MAGLEV']
+    ];
+
+    function resizeCanvas() {
+      const ratio = Math.min(window.devicePixelRatio || 1, 2);
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = Math.max(1, Math.floor(rect.width * ratio));
+      canvas.height = Math.max(1, Math.floor(rect.height * ratio));
+      ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+      nodes = topology.map(node => ({ ...node, px: node.x * rect.width, py: node.y * rect.height }));
+      drawTopology();
+    }
+
+    function drawTopology() {
+      const rect = canvas.getBoundingClientRect();
+      ctx.clearRect(0, 0, rect.width, rect.height);
+      ctx.fillStyle = '#0a0d10';
+      ctx.fillRect(0, 0, rect.width, rect.height);
+
+      ctx.strokeStyle = '#182028';
+      ctx.lineWidth = 1;
+      for (let x = 0; x < rect.width; x += 40) {
+        ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, rect.height); ctx.stroke();
+      }
+      for (let y = 0; y < rect.height; y += 40) {
+        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(rect.width, y); ctx.stroke();
+      }
+
+      links.forEach(([fromId, toId]) => {
+        const from = nodes.find(node => node.id === fromId);
+        const to = nodes.find(node => node.id === toId);
+        if (!from || !to) return;
+        ctx.beginPath();
+        ctx.moveTo(from.px, from.py);
+        ctx.lineTo(to.px, to.py);
+        ctx.strokeStyle = fromId === 'LS-OPS-HOME' ? 'rgba(192,122,61,0.34)' : 'rgba(70,81,93,0.38)';
+        ctx.lineWidth = fromId === 'LS-OPS-HOME' ? 1.4 : 1;
+        ctx.stroke();
+      });
+
+      nodes.forEach((node, index) => {
+        const pulse = node.id === 'LS-OPS-HOME' ? 3 + Math.sin((motionFrame + index * 8) / 28) * 2 : 0;
+        if (pulse) {
+          ctx.beginPath();
+          ctx.arc(node.px, node.py, node.r + pulse + 5, 0, Math.PI * 2);
+          ctx.strokeStyle = 'rgba(192,122,61,0.22)';
+          ctx.lineWidth = 1;
+          ctx.stroke();
+        }
+        ctx.beginPath();
+        ctx.arc(node.px, node.py, node.r, 0, Math.PI * 2);
+        ctx.fillStyle = '#11161b';
+        ctx.fill();
+        ctx.strokeStyle = node.color;
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+        ctx.fillStyle = node.color;
+        ctx.font = '700 10px Inter, Segoe UI, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(node.label, node.px, node.py);
+      });
+    }
+
+    function animateTopology() {
+      motionFrame += 1;
+      drawTopology();
+      requestAnimationFrame(animateTopology);
+    }
+
+    canvas.addEventListener('click', event => {
+      const rect = canvas.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+      const hit = nodes.find(node => Math.hypot(node.px - x, node.py - y) <= node.r + 8);
+      if (!hit || hit.id === 'TOOLS' || hit.id === 'DATA') return;
+      const surface = surfaces.find(item => item.id === hit.id);
+      if (surface) window.location.href = surface.route;
+    });
+
+    window.addEventListener('resize', resizeCanvas);
+    window.addEventListener('load', () => {
+      if (window.lucide) window.lucide.createIcons();
+      renderSurfaces();
+      resizeCanvas();
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) drawTopology();
+      else animateTopology();
+    });
+  </script>
+</body>
+</html>

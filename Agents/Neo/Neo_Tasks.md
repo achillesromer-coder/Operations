@@ -51,11 +51,11 @@ Reason: Drive CORE has current workbook authority, but legacy task material is s
 
 ### Current Git execution delta - 2026-07-15
 
-- Operations route discovery is complete for the bounded Git facet: 15 tracked UI artifacts and 6 gated/reference routes are represented by one release registry.
+- Operations route discovery is complete for the bounded Git facet: 16 tracked UI artifacts and 5 gated/reference routes are represented by one release registry.
 - The Git build now emits a deterministic LS Web review manifest and ZIP without publishing either artifact.
-- W1-W7 and tracked calculator/simulator routes were reachable during the review; protected data routes remained HTTP 401 and `/operations/home` remained HTTP 404.
+- W1-W7 and tracked calculator/simulator routes were reachable during the 2026-07-15 review; protected data routes remained HTTP 401 and `/operations/home` returned HTTP 404. The new home artifact is a Git review candidate, not evidence of live publication.
 - Neo should treat repository route wiring as evidenced, backend availability as protected/unproven, and visible `LIVE` or completion labels as presentation text pending claim review.
-- Next routing action is review of the PR bundle and blocked-route/status delta, not a new dashboard, task system or public deployment.
+- Next routing action is review of the PR bundle and candidate-route/status delta, not a new task system or public deployment.
 
 ### Next Neo action
 

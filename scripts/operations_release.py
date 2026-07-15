@@ -12,7 +12,7 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 REGISTRY_PATH = ROOT / "registry" / "operations_registry.json"
-ARTIFACT_PREFIXES = ("W", "Calc;", "Sim;")
+ARTIFACT_PREFIXES = ("W", "Calc;", "Sim;", "Home;")
 REQUIRED_POLICY = {
     "delivery": "static_readonly",
     "publish_gate": "manual_publish_gate",
@@ -136,6 +136,21 @@ def validate_registry(root: Path, registry: dict[str, Any]) -> list[str]:
     unknown = registered_artifacts - repository_artifacts(root)
     if unknown:
         errors.append(f"Registry references unknown artifacts: {', '.join(sorted(unknown))}")
+
+    home = next((surface for surface in surfaces if surface.get("surface_id") == "LS-OPS-HOME"), None)
+    if isinstance(home, dict) and isinstance(home.get("artifact"), str):
+        home_path = root / home["artifact"]
+        if home_path.is_file():
+            home_text = home_path.read_text(encoding="utf-8")
+            missing_ids = sorted(
+                surface["surface_id"]
+                for surface in surfaces
+                if isinstance(surface, dict)
+                and isinstance(surface.get("surface_id"), str)
+                and surface["surface_id"] not in home_text
+            )
+            if missing_ids:
+                errors.append(f"Operations home missing registry surfaces: {', '.join(missing_ids)}")
     return errors
 
 

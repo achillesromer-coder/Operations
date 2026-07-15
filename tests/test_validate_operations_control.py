@@ -106,7 +106,8 @@ class OperationsReleaseTests(unittest.TestCase):
             with zipfile.ZipFile(bundle_path) as archive:
                 names = set(archive.namelist())
             self.assertIn("operations-release-manifest.json", names)
-            self.assertEqual(len([name for name in names if name.startswith("surfaces/")]), 15)
+            self.assertIn("surfaces/Home; OPS", names)
+            self.assertEqual(len([name for name in names if name.startswith("surfaces/")]), 16)
             first_manifest = manifest_path.read_bytes()
             first_bundle = bundle_path.read_bytes()
             build_release(ROOT, registry, Path(directory))

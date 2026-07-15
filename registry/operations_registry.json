@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "registry_id": "ROMER-OPERATIONS-WEB-REVIEW",
-  "updated": "2026-07-15",
+  "updated": "2026-07-16",
   "authority": {
     "canonical_operations": "LS Desktop database and canonical workbook",
     "git_control": "GitHub Operations draft review branch",
@@ -173,11 +173,12 @@
     },
     {
       "surface_id": "LS-OPS-HOME",
-      "kind": "blocked_reference",
+      "kind": "operations_home",
       "title": "Operations Home",
       "route": "/operations/home",
-      "release_state": "blocked_missing_route",
-      "claim_boundary": "do_not_publish_from_bundle"
+      "artifact": "Home; OPS",
+      "release_state": "review_candidate",
+      "claim_boundary": "public_operations_index_only"
     },
     {
       "surface_id": "LS-LIBRARY",
