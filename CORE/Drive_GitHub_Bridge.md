@@ -69,8 +69,10 @@ Read internal repo files before writing. Prefer editing and expanding existing c
 
 ### Operations executable controls
 
-- `scripts/validate_operations_control.py` checks required bridge/ledger presence, authority wording, CORE identifiers and legacy canonical conflicts.
-- `.github/workflows/operations-control.yml` compiles and runs the validator with read-only permissions when Operations control surfaces change.
+- `scripts/validate_operations_control.py` checks required bridge/ledger presence, authority wording, CORE identifiers, legacy canonical conflicts, cross-platform Git paths and the static W1-W6 route markers.
+- The Windows-invalid `W6: PAL` path is normalised to `W6; PAL` without changing its content so the repository can be checked out by LS Desktop and other Windows operators.
+- `.github/workflows/operations-control.yml` compiles and tests the validator, then runs it with read-only permissions when control, route, calculator or simulator surfaces change.
+- Static route-marker validation proves repository wiring only. It does not prove that a backend is live, authorize a deployment or validate the user-facing `LIVE` labels.
 - The connector endpoint used in this pass exposes pull-request-triggered workflow runs only; absence of a returned run for direct pushes is not treated as proof of failure or success.
 
 ### Git review discipline
