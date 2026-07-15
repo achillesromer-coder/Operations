@@ -1,0 +1,48 @@
+name: Operations Control
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "CORE/**"
+      - "Agents/**"
+      - "scripts/**"
+      - ".github/workflows/operations-control.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "CORE/**"
+      - "Agents/**"
+      - "scripts/**"
+      - ".github/workflows/operations-control.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: operations-control-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: Validate CORE bridge and agent ledgers
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Compile validator
+        run: python -m py_compile scripts/validate_operations_control.py
+
+      - name: Validate Operations control surface
+        run: python scripts/validate_operations_control.py
