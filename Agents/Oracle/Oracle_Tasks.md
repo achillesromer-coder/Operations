@@ -1,7 +1,7 @@
 # Oracle Tasks
 
-Status: ACTIVE — readiness / provenance mode only
-Updated: 2026-07-05
+Status: ACTIVE — provenance and source-review mode
+Updated: 2026-07-15
 Owner: Neo oversight; Achilles audit
 Canonical authority: Drive CORE workbook
 
@@ -69,3 +69,36 @@ Blocked without explicit owner/Achilles authority:
 Selected operator state: Oracle readiness.
 Mode: provenance/source-map/classification readiness only.
 Delta: align Oracle landing ledger to visible Drive CORE carriers and latest extracted LightSpeed task-register batch without executing archive movement or classification finalisation.
+
+## ORA-0002 — NW-006 source authority and node identity review
+
+Status: READY / ACTIVE REVIEW
+Priority: P0
+Parent output: `NW-005`
+Workbook surface: `Next Workstream Launch Map!A32:T118`
+
+### Source matrix received
+
+The first packet contains 11 source-authority rows and 8 interface rows. Principal carriers include:
+
+- `CGX-FREEZE-001` and the two canonical workbooks;
+- Interface Control Doc Master;
+- National Commitments compact memory pack;
+- LinkDrive DataIndex v0.1;
+- ACHILLES Innovation Register;
+- ACHILLES Digital Twin Suite Master Index v0.1;
+- current Operations, LightSpeed and Data Git handoffs.
+
+### Oracle review duties
+
+1. Confirm each source ID, file/workbook identity, revision or commit and authority class.
+2. Reconcile duplicate node names across Mark, Luke, InterSol, Cognigrex, platform and governance references.
+3. Keep physical, software, data and governance nodes distinct.
+4. Preserve historical, proposed, future, scaffold and unknown states.
+5. Flag unsupported external-party, performance, compatibility and operational-readiness assertions.
+6. Verify that every proposed supply-chain and node-control field has a source priority, key, owner, gate and interpretation limit.
+7. Return accepted provenance and identity decisions through the existing workbook review and audit surfaces.
+
+### Completion criterion
+
+The source matrix is provenance-complete; node identities are deduplicated without role merging; proposed fields have traceable source and audit routes; and no historical or scaffold record is promoted as current operational fact.
