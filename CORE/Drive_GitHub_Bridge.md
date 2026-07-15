@@ -1,7 +1,7 @@
 # Operations Bridge
 
 Status: ACTIVE / GIT MATURATION ROUTED
-Updated: 2026-07-15
+Updated: 2026-07-16
 
 ## Current authority split
 
@@ -77,6 +77,13 @@ Read internal repo files before writing. Prefer editing and expanding existing c
 - `scripts/operations_release.py` validates complete artifact registration and builds a deterministic manifest plus ZIP review bundle. CI retains the bundle for 14 days as a review artifact; it does not publish it to LS Web.
 - Route review on 2026-07-15 observed public HTTP 200 responses for W1-W7, all tracked calculator/simulator routes, `/library`, `/gmat` and `/contact-us`; W1-W6 data routes and `/data/achilles` remained protected with HTTP 401; `/operations/home` returned HTTP 404. The registry now carries a static/read-only home review candidate, but that artifact is not live-route proof and cannot be represented as published before owner approval and a fresh audit.
 - The connector endpoint used in this pass exposes pull-request-triggered workflow runs only; absence of a returned run for direct pushes is not treated as proof of failure or success.
+
+### Drive NW-011 alignment - 2026-07-16
+
+- `Type1_Asteroid_Operating_Workbook / Next Workstream Launch Map!A1:T194` is ahead of the earlier Git handoff summary: 27 controls are present, with 17 mapped, 7 source-review, 2 gated and 1 ready.
+- `NW-006:NW-010` are complete in the Drive control plane. The packet contains 11 source authorities, 8 interfaces, 26 + 26 proposed fields, 18 canonical nodes, 7 vocabulary groups, 19 relations, 26 minimum interface fields and 16 blocking validators.
+- Creation readiness is 88.1%. `CRA-012` is the only hard blocker; `NW-004` and `RG-013` remain gated pending an explicit owner `PASS`, `PASS WITH NOTES` or `HOLD` decision.
+- Broad continuation language is not workbook-creation approval. No new workbook, public publication, mission selection, Drive mutation or deployment is authorised by this alignment.
 
 ### Git review discipline
 

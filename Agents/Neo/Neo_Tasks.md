@@ -1,7 +1,7 @@
 # Neo Tasks
 
 Status: ACTIVE
-Updated: 2026-07-15
+Updated: 2026-07-16
 Authority: Drive CORE workbook / Operations control / Achilles oversight
 
 ## NEO-0001 — CORE-B02 project-function divvy
@@ -80,32 +80,35 @@ No deletion, restructure, deployment, public publish, backend launch, wallet/tok
 
 ## NEO-0002 — Z01 supply-chain and Cognigrex source/interface launch
 
-Status: `NW-005 COMPLETE / NW-006 READY`
+Status: `NW-006:NW-010 COMPLETE / NW-011 READY`
 Priority: P0
 Workbook: `Type1_Asteroid_Operating_Workbook`
-Surface: `Next Workstream Launch Map!A1:T118`
+Surface: `Next Workstream Launch Map!A1:T194`
 Freeze parent: `CGX-FREEZE-001`
 
 ### Completed routed packet
 
-- 22 launch controls: 12 mapped, 7 source review, 2 gated and 1 ready.
+- 27 launch controls: 17 mapped, 7 source review, 2 gated and 1 ready.
 - 11 deduplicated source-authority rows.
 - 8 extracted mechanical, electrical, data, thermal, mission, capacity, governance and platform interfaces.
 - 26 proposed Interplanetary Supply Chain fields.
 - 26 proposed Cognigrex Node Control fields.
+- 18 canonical node identities and 7 shared controlled-vocabulary groups.
+- 19 cross-workbook relations, 26 minimum interface fields and 16 blocking validators.
 - Matrix IDs and both field-name sets are unique.
 - Formula scan: 0 `#REF!`, 0 `#N/A`.
-- Separate workbook creation remains blocked by `NW-004` and `RG-013`.
+- Control-plane creation readiness is 88.1%; `CRA-012` is the one hard blocker.
+- Separate workbook creation remains gated by `NW-004` and `RG-013` pending an explicit owner decision.
 
 ### Neo routing
 
-- Architect: dependency, interface and workbook-boundary review.
-- Morpheus: historical design and claim review.
-- Oracle: source identity, node identity and provenance reconciliation.
-- Smith: queue only accepted review actions and persistence updates.
-- Trinity: remain deferred until field models pass review.
-- Achilles: retain source, creation and release gates.
+- Architect: preserve the accepted relation, interface and validator contracts in any later scaffold decision.
+- Morpheus: continue residual inherited-planning-language review without reopening NW-006.
+- Oracle: close residual alias and source-depth notes under `CRA-001`, `CRA-004` and `CRA-009`.
+- Smith: queue only accepted persistence actions and keep external writeback gated.
+- Trinity: align the existing operator home to NW-011; do not create another dashboard.
+- Achilles: retain the explicit owner creation gate and no-selection freeze.
 
 ### Active next action
 
-Execute `NW-006`: close source and claim ambiguities without promoting historical design assertions, external-party references, performance figures or digital-twin scaffolds into current operational facts. Preserve unknown/proposed states and keep the two future workbooks uncreated until the schema and key review is accepted.
+Hold at `NW-011` until the owner records `PASS`, `PASS WITH NOTES` or `HOLD`. Broad continuation wording is not creation approval. Continue residual alias/source-depth and inherited-claim review in the existing control plane; keep the two future workbooks uncreated and preserve unknown/proposed states.

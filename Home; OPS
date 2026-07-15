@@ -1061,8 +1061,8 @@
       <section class="metric-band" aria-label="Operations metrics">
         <div class="metric">
           <div class="metric-label">Launch controls</div>
-          <div class="metric-value copper">22</div>
-          <div class="metric-note">12 mapped / 7 source review</div>
+          <div class="metric-value copper">27</div>
+          <div class="metric-note">17 mapped / 7 source review</div>
         </div>
         <div class="metric">
           <div class="metric-label">Source authorities</div>
@@ -1096,30 +1096,30 @@
             <span class="status-dot" title="Active review"></span>
           </div>
           <div class="lane-row">
-            <span class="lane-code">NW-005</span>
-            <span class="lane-name">Source/interface matrix</span>
+            <span class="lane-code">NW-006</span>
+            <span class="lane-name">Source and claim review</span>
             <span class="lane-state ready">COMPLETE</span>
           </div>
           <div class="lane-row">
-            <span class="lane-code">NW-006</span>
-            <span class="lane-name">Provenance and claim review</span>
-            <span class="lane-state active">ACTIVE</span>
+            <span class="lane-code">NW-010</span>
+            <span class="lane-name">Technical scaffold blockers</span>
+            <span class="lane-state ready">COMPLETE</span>
           </div>
           <div class="lane-row">
-            <span class="lane-code">NW-004</span>
-            <span class="lane-name">Workbook creation gate</span>
-            <span class="lane-state closed">CLOSED</span>
+            <span class="lane-code">NW-011</span>
+            <span class="lane-name">Owner creation decision</span>
+            <span class="lane-state active">READY</span>
           </div>
           <div class="lane-row">
-            <span class="lane-code">RG-013</span>
-            <span class="lane-name">Release gate</span>
-            <span class="lane-state closed">CLOSED</span>
+            <span class="lane-code">NW-004 / RG-013</span>
+            <span class="lane-name">Canonical workbook creation</span>
+            <span class="lane-state closed">GATED</span>
           </div>
 
           <div class="packet-stats">
-            <div class="packet-stat"><strong>26</strong><span>Supply-chain fields</span></div>
-            <div class="packet-stat"><strong>26</strong><span>Node-control fields</span></div>
-            <div class="packet-stat"><strong>3 / 7 / 11</strong><span>M1 / M2 / M3 m3</span></div>
+            <div class="packet-stat"><strong>88.1%</strong><span>Control readiness</span></div>
+            <div class="packet-stat"><strong>1</strong><span>Hard blocker</span></div>
+            <div class="packet-stat"><strong>26 + 26</strong><span>Proposed fields</span></div>
             <div class="packet-stat"><strong>None</strong><span>Mission selection</span></div>
           </div>
         </div>
