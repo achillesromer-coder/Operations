@@ -1,7 +1,7 @@
 # Achilles Tasks
 
 Status: ACTIVE
-Updated: 2026-07-15
+Updated: 2026-07-21
 Authority: Drive CORE workbook / Operations control / Achilles audit
 
 ## ACH-0001 — CORE-B01 extraction and continuity audit
@@ -126,3 +126,48 @@ Old collaborator references remain proposed or unconfirmed. Historical performan
 ### Current Achilles action
 
 Audit `NW-006` with Morpheus and Oracle. Preserve unknown/proposed states, keep the no-selection freeze intact, and release no workbook-creation decision until the source and schema packet passes review.
+
+## ACH-0003 — Römer foundational operations canon gate
+
+Status: ACTIVE / OPERATIONS-FIRST
+Priority: P0
+Drive authority: LinkDrive/DataIndex task, source, innovation and control registers updated 2026-07-21.
+
+### Canon separation
+
+- The Digital Twin Suite is the canonical **what** for each major capability.
+- Cognigrex is the canonical **how** for calculation, comparison, routing and learning.
+- Operations is the integrated current-state and execution-governance view.
+
+### Unknown-resolution doctrine
+
+1. Never guess.
+2. Assemble the definitive knowns.
+3. Calculate with an appropriate method and stated uncertainty.
+4. Compare with valid empirical evidence.
+5. Retain disagreements as reconciliation records rather than deleting either side.
+6. Route unresolved analysis through Cognigrex to Neo, then Achilles, then the owner only when doctrine or intent is required.
+
+### Claim-promotion gate
+
+A result may enter canon when it is empirically verified, or when it is independently supported by both a mathematical proof lane and a separate reasoning proof lane. All proof receipts, limits and source identities must remain traceable.
+
+### Current evidence classifications
+
+- RFS and EMFF have an owner-observed analogue success: metal particles visibly moved or were guided through a mixed medium using cymatic and magnetic boards.
+- The observation is uninstrumented and non-quantitative. Frequency, energy, density, duration, geometry, distance and uncertainty were not recorded.
+- It is sufficient to seed the operational parameter model, but not to support performance, purity, throughput, capture-efficiency or energy-efficiency claims.
+- The earliest located owner-authored POC is Canva design `DAGiIiFwqmU`; the later `DAGx_6mCG1A` PDF import is a derivative source.
+- MPL means Maximum Probable Loss and routes to `https://romer.industries/MPL`; the `Romer-MPL` repository currently contains N^3/GeoMatrices material and is not the MPL calculator authority.
+
+### Archive and discoverability gate
+
+- Use explicit states such as `SOURCE_GAP`, `MISSING_REQUIRED`, `OLD_LOCAL_PATH` and `HELD`; do not leave blank placeholders.
+- Archive before any disposal decision.
+- Require a retained canonical copy, hash, useful-material extraction, reference scan, recovery path and explicit approval.
+- The two Free Flow Solenoid workbooks are byte-identical comparison candidates; no movement or deletion is authorised.
+- Slack remains an audit chronology, not the sole doctrine authority. Current-state links must exist outside Slack before any purge.
+
+### Held scope
+
+Collaborator and Mission 1 population remain structure-only and held. EML#F remains external, Raphael Lite remains deferred, and N^3 remains GeoMatrices.
