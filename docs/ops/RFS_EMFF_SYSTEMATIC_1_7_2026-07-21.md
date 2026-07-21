@@ -81,18 +81,33 @@ Data/Cognigrex review: `achillesromer-coder/Data` draft PR #6.
 
 LightSpeed executable review: `achillesromer-coder/LightSpeed` draft PR #14.
 
+## Current cross-system receipts
+
+- The live LinkDrive/DataIndex workbook now contains `18_RFS_EMFF_Systematic_1_7` and TASK-036 through TASK-042.
+- The retained Slack ACR3 handoff canvas contains the review links, test receipt, Twin-sync blocker and purge hold.
+- Local RFS/EMFF and Solenoid working copies contain specialised parameter/evidence, equation/test and routing/reconciliation sheets.
+- Those local Office working copies are `FORMAT_REVIEW_REQUIRED`: the available editor warned that unsupported workbook extensions and conditional-format features may be removed. They are not Drive authorities and were not uploaded as parallel masters.
+
 ## Legacy quarantine
 
 The legacy LightSpeed RFS theory and runner are preserved. Unsourced material resonance tables, claimed empirical extraction-energy relationships, assumed extraction efficiency/rate, equipment-safety threshold and ROI/value outputs are marked `LEGACY_UNVERIFIED` until source, dimensional and empirical review succeeds. They are not deleted and are not accepted as canon by this run.
+
+## MPL code-authority result
+
+- The five connected GitHub repositories are Raphael, Romer-MPL, LightSpeed, Operations and Data.
+- Searches found no source match for `Maximum Probable Loss` or `probable loss` in the connected application repositories.
+- The current LightSpeed public-route manifests do not contain an `/MPL` implementation route.
+- `achillesromer-coder/Romer-MPL` contains the `N3_Trinity_Probability_Well_v1_1` package and is therefore explicitly excluded from Maximum Probable Loss code changes.
+- Operational MPL code authority remains `SOURCE_GAP`. No code was created or modified under the wrong repository.
 
 ## Current blockers
 
 - Instrumented test records do not yet exist.
 - Exact POC page/section provenance and all oldest-chat deltas still require source-level extraction.
-- RFS & EMFF and Free Flow Solenoid Stack Twin files need in-place specialised-sheet updates.
+- RFS & EMFF and Free Flow Solenoid Stack specialised working copies exist locally, but in-place Drive sync is blocked by Office-file write support/authorization and package-level format-preservation review.
 - Twin Master raw XLSX replacement path remains connector-blocked; validated candidate exists locally.
-- Slack retention manifest is not yet complete.
-- MPL functional code source still requires exact repository/path verification before modification.
+- Slack authority markers are present, but the message-level retention manifest, reference scan and recovery proof remain incomplete; purge stays held.
+- MPL functional code source remains unidentified outside the connected repositories.
 
 ## Non-actions
 
