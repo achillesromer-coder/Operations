@@ -1,7 +1,7 @@
 # Oracle Tasks
 
 Status: ACTIVE — provenance and source-review mode
-Updated: 2026-07-15
+Updated: 2026-07-21
 Owner: Neo oversight; Achilles audit
 Canonical authority: Drive CORE workbook
 
@@ -102,3 +102,38 @@ The first packet contains 11 source-authority rows and 8 interface rows. Princip
 ### Completion criterion
 
 The source matrix is provenance-complete; node identities are deduplicated without role merging; proposed fields have traceable source and audit routes; and no historical or scaffold record is promoted as current operational fact.
+
+## ORA-0003 — Römer foundational source and evidence reconciliation
+
+Status: ACTIVE / EVIDENCE-CLASSIFIED
+Priority: P0
+Drive sources: `SRC-042` through `SRC-050`
+
+### Current authority decisions
+
+- `DAGiIiFwqmU` is the earliest located owner-authored POC and current source authority.
+- `DAGx_6mCG1A` is a later derivative or import and must retain lineage to the original.
+- The RFS/EMFF owner observation is `Observed / uninstrumented`: visible directional particle movement, with no recorded quantities or operating parameters.
+- Historical chats are reconstruction context, not proof.
+- IGP Commercialisation and Growth Report V4 remains `SOURCE_GAP`.
+- MPL means Maximum Probable Loss at `https://romer.industries/MPL`.
+- `Romer-MPL` currently contains N^3/GeoMatrices material and must not be used as the MPL calculator authority.
+
+### Evidence handling
+
+For every RFS/EMFF variable, preserve:
+
+1. source identity and revision;
+2. observed, calculated, inferred, proposed or verified class;
+3. units and uncertainty;
+4. method and controls;
+5. supporting mathematical and reasoning proofs;
+6. empirical confirmation state;
+7. conflicts and reconciliation result;
+8. public-claim limit.
+
+### Retention review
+
+- The two Free Flow Solenoid files are byte-identical and remain retention candidates only.
+- Slack canvases are audit records; add current-state or archive markers before considering purge.
+- No source is disposed of until useful material, references, canonical copy, hash and recovery route are established and Achilles approval is recorded.
