@@ -1,7 +1,7 @@
 # Neo Tasks
 
 Status: ACTIVE
-Updated: 2026-07-15
+Updated: 2026-07-21
 Authority: Drive CORE workbook / Operations control / Achilles oversight
 
 ## NEO-0001 — CORE-B02 project-function divvy
@@ -101,3 +101,34 @@ Freeze parent: `CGX-FREEZE-001`
 ### Active next action
 
 Execute `NW-006`: close source and claim ambiguities without promoting historical design assertions, external-party references, performance figures or digital-twin scaffolds into current operational facts. Preserve unknown/proposed states and keep the two future workbooks uncreated until the schema and key review is accepted.
+
+## NEO-0003 — Römer Twin operational-population loop
+
+Status: ACTIVE / STRUCTURE-READY
+Priority: P0
+Drive tasks: `TASK-027` through `TASK-034`
+
+### Routing doctrine
+
+- The Twin Suite owns what the capability is.
+- Cognigrex owns how calculations, comparisons and learning are performed.
+- Neo decomposes each operational unknown into evidence, calculation, reasoning and tool lanes.
+- Verified outputs return to CORE and the owning Twin; they do not remain only in chat or Slack.
+
+### RFS/EMFF first lane
+
+1. Oracle establishes source identity and evidence class.
+2. Smith builds bounded parameter and test matrices from known variables.
+3. Technical and physics tools calculate expected ranges and uncertainty.
+4. An independent reasoning lane checks assumptions, dimensional consistency and falsification.
+5. Neo routes mismatches to reconciliation rather than choosing a convenient result.
+6. Achilles promotes only after empirical proof or independent mathematics plus reasoning proof.
+
+Initial fields: material, medium, density, particle distribution, excitation frequency, duration, input energy, geometry, field strength or current, distance, duty cycle, observed response, transfer path, controls, uncertainty and falsification criteria.
+
+### Current holds
+
+- Mark V: route source discovery and authority mapping; do not invent design detail.
+- Collaborators and Mission 1: create field structure only; values remain `HELD`.
+- MPL: route to Maximum Probable Loss at `https://romer.industries/MPL`; do not use Romer-MPL or N^3 GeoMatrices as calculator authority.
+- Slack purge: route retention extraction and archive marking only; no message or canvas disposal without Achilles approval.
