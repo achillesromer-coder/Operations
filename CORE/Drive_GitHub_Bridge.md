@@ -132,29 +132,60 @@ Legacy Type1 FreeCAD values — 60 m total height, 18 m Watch Tower envelope and
 
 ### Data review lane
 
-Draft Data PR #7 on `data/intersol-watchtower-twin-v0-1` now carries:
+Draft Data PR #7 on `data/intersol-watchtower-twin-v0-1` initially established the object/edge field contracts, source geometry extraction, semantic queue and basis-of-design controls. It has since been extended with source roof geometry, Solar Hull/living/OT/P∞ controls, the five-face Pad004 frame and A/C binding queue, and Australian standards applicability evidence.
 
-- object-registry field schema;
-- edge-graph field schema;
-- twin-boundary document;
-- source-locked `watchtower_fcstd_geometry_extract_v0_1.json`;
-- FCStd extraction document;
-- `watchtower_semantic_binding_queue_v0_1.json`;
-- Watch Tower basis-of-design field schema;
-- source-locked basis-of-design seed cases.
-
-The semantic-binding queue deliberately leaves final E confirmation, Left/Right cluster assignment, `L1..L4` / `R1..R4` numbering and exact A/C face coordinates null until owner binding is available. No structural cable edge is created until both canonical endpoints are resolved.
-
-The basis-of-design lane may now be structured against the immutable FCStd geometry revision, but numerical loads, current standard versions, design factors, cable properties, security ratings and acceptance thresholds remain unset pending authoritative engineering inputs and review.
+No structural cable edge is created until both canonical endpoints are resolved. Numerical engineering values remain attributable and review-gated.
 
 ### Gate return
 
 - G0: **READY / LOCKED**.
-- G1: **MATERIAL / ACTIVE** — source/hash/body/tower/head/nine-pole geometry extracted; semantic pole numbering and A/C edge endpoints remain open.
-- G2: basis-of-design schema work may proceed, but engineering proof remains blocked.
+- G1: source geometry is substantially constrained; remaining state is semantic/owner binding.
+- G2: control/source architecture is structured, but project applicability and engineering proof remain blocked.
 - G3-G7: held by their applicable technical/evidence/review dependencies.
-- P∞: foundation started through immutable FCStd hash and Drive/Git receipts; semantic-map versioning, derived-export hashes, inspection/revalidation cadence and rollback/as-built lifecycle remain open.
+- P∞: event-driven source/semantic/derived/specialist lifecycle controls are established; as-built/inspection/calibration evidence remains future.
 
-Next execution gate is semantic, not file discovery: bind the two extracted four-pole clusters and their P1..P4 members to the owner's Left/Right/L1..L4/R1..R4 convention; confirm the unique heavy/tall pole as `WT-E`; then place exact A/C face nodes on source-locked `WT-T` and generate the first attributable cable-edge/catenary graph.
+## Watch Tower convergence addendum — 2026-08-13
 
-No build, deployment, public release, structural-compliance, blast/ballistic, Solar Hull performance or destructive action is authorised by this update.
+Canonical Drive now carries Watch Tower sheets `104` through `115`, sources `SRC-068..073`, tasks through `TASK-064`, and builds through `BUILD-019`.
+
+### A/C endpoint frame
+
+Direct `Pad004` BREP extraction proves that the tower shaft is a **five-sided equal-edge vertical prism**. Five source side faces `WT-T-SF1..SF5` are each approximately `2.712128561 m` wide over Z `13.3..68.3 m`.
+
+The owner topology remains exactly four anchors at A and exactly four at C. Therefore `WT-AC-DEC-001` must explicitly define:
+
+- A.Z and C.Z, with C above A;
+- four of five source shaft faces used at each node level;
+- mapping of A-F1..F4 and C-F1..F4 to those faces;
+- face-local anchor position/rule `u`;
+- intended cable target pairing after pole semantics are bound.
+
+No fifth anchor, default excluded face, face-centre position, node elevation or cable target is inferred. Geometric direction diagnostics show NW pole candidates closest to SF4, SE candidates closest to SF2, and E near the SF1/SF5 direction bisector; these are not cable assignments.
+
+### Roof geometry
+
+The selected primary wing top substrate faces in the exact FCStd are planar at local Z `9.1 m`, each with area approximately `438.3310988 m²` and boundary dimensions `33.0 m × 13.282760569 m`.
+
+The accepted shallow-curved Solar Hull roof remains separate owner design intent. `WT-ROOF-DEC-001` requires an explicit choice between a separately versioned curved overlay above the current planar source substrates and a new authoritative CAD revision that modifies/replaces those faces while preserving the current FCStd as prior evidence. No curvature is reverse-engineered from a render.
+
+### G2 Australian applicability sources
+
+`115_WATCHTOWER_STANDARDS_APPLICABILITY_v0_1` and `SRC-073` separate official source currency from actual project applicability. Candidate source families were checked from official ABCB/NCC and Standards Australia sources on 2026-08-13. No authorised site, jurisdiction, building classification or permit timing is fixed, so no NCC edition, standard, design value or compliance state is promoted for WT-001.
+
+At site/classification lock, the jurisdiction/NCC/referenced-document sweep must be repeated and discipline/certifier reviewers must mark each source applicable or not applicable before numerical engineering use.
+
+### Cross-repo state
+
+- Data PR #7: open/draft/mergeable at `20fb0308b88dcf1c911207e53962139687a8eaf8`, 28 commits / 27 changed files / 2039 additions / 0 deletions; Data Integrity run #48 passed.
+- LightSpeed PR #35: open/draft/mergeable; Watch Tower tests 8/8, full Vitest 21/21, TypeScript/Vite build and routing passed. Internal-source mode only; semantic/public modes remain blocked.
+- LightSpeed CI reports one high-severity npm audit finding. Exact advisory/package attribution remains unresolved under `TASK-062`; no broad automatic dependency mutation was performed.
+
+### Current gate posture
+
+- **G0 READY / LOCKED**
+- **G1 SOURCE-CONSTRAINED / OWNER-DECISION ACTIVE** — pole semantics, `WT-AC-DEC-001` and `WT-ROOF-DEC-001` are the primary remaining owner decisions.
+- **G2 CONTROL + OFFICIAL-SOURCE ARCHITECTURE STRUCTURED / PROJECT APPLICABILITY + ENGINEERING PROOF HOLD**
+- **G3-G7 BLOCKED / CONTROLLED**
+- **P∞ FOUNDATION STRUCTURED**
+
+No build, deployment, public release, compliance/rating claim, fifth A/C anchor, inferred cable edge, inferred face exclusion, render-derived curvature, site/jurisdiction applicability, secret mutation or destructive action is authorised by this bridge.
