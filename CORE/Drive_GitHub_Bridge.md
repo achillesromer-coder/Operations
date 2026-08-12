@@ -1,7 +1,7 @@
 # Operations Bridge
 
 Status: ACTIVE / FINAL MASTER PUSH PREPARED
-Updated: 2026-07-06
+Updated: 2026-08-13 — InterSol Watch Tower bounded schema update
 
 ## Current authority split
 
@@ -87,3 +87,35 @@ Blocked outside current connector capability:
 ## Current no-go actions
 
 No deletion, destructive restructure, deployment, public publish, backend launch, OpenAI key/secret mutation, wallet/token/mint/payment/custody activation, unsupported public claim, or secondary Z activation from this bridge.
+
+## InterSol Watch Tower bounded twin update — 2026-08-13
+
+Canonical Drive control has been extended **in place** in `Type 1 Romer Cognigrex`; no parallel master workbook was created.
+
+New/updated control objects include:
+
+- `INF-003` — InterSol Watch Tower / Mission Base-Control Tower.
+- `DIM-WT-001..014` — owner-current topology/material/roof/living/security/legacy-placeholder controls.
+- `BPC-011..015` — parametric assembly, cable/node graph, living layer, protected envelope and Solar Hull roof layers.
+- `WT-001` — digital-asset qualification row with G0 ready, G1 active and implementation gates held.
+- `GTM-WT-001-G0..G7` + `Pinf` — bounded gate/test matrix.
+- `104_WATCHTOWER_OBJECT_REG_v0_1` — stable object registry.
+- `105_WATCHTOWER_EDGE_GRAPH_v0_1` — stable edge/state schema with unresolved cable targets explicitly held.
+- `TASK-056..061`, `BUILD-012..017`, `HAND-011..012` — extraction, modelling, validation and controlled-export queue.
+
+Current topology boundary:
+
+- central tower `WT-T`;
+- exactly two primary tower cable-node elevations `WT-A` and `WT-C`;
+- four face anchors at each level;
+- physical `WT-E` pole referenced by current FreeCAD/top-view evidence but exact coordinates/equivalence unresolved;
+- mirrored `WT-L1..L4` and `WT-R1..R4` pole families;
+- exact cable targets remain `TARGET_FCSTD_UNRESOLVED` until attributable current FCStd extraction.
+
+Legacy Type1 FreeCAD values — 60 m total height, 18 m Watch Tower envelope and +250 m X relation — remain explicitly quarantined as placeholder provenance and are not current design values.
+
+GitHub Data review branch `data/intersol-watchtower-twin-v0-1` carries only stable field contracts and interpretation boundaries. Draft Data PR #7 (`InterSol Watch Tower digital-twin schema v0.1`) contains two schema files plus the twin-boundary document. It contains no guessed coordinates, member sizes, cable pretension, security rating, Solar Hull performance, site, approval or deployment claim.
+
+Next execution gate: locate/read the exact current FCStd, hash/revision it, bind source coordinates into the Drive object/edge registries, and only then create resolved machine data and bounded G2 engineering inputs.
+
+No build, deployment, public release or destructive action is authorised by this update.
