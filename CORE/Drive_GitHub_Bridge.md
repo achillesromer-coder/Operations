@@ -1,7 +1,7 @@
 # Operations Bridge
 
 Status: ACTIVE / FINAL MASTER PUSH PREPARED
-Updated: 2026-08-13 — InterSol Watch Tower bounded schema update
+Updated: 2026-08-13 — InterSol Watch Tower current-FCStd source lock
 
 ## Current authority split
 
@@ -92,30 +92,69 @@ No deletion, destructive restructure, deployment, public publish, backend launch
 
 Canonical Drive control has been extended **in place** in `Type 1 Romer Cognigrex`; no parallel master workbook was created.
 
-New/updated control objects include:
+Current control objects include:
 
 - `INF-003` — InterSol Watch Tower / Mission Base-Control Tower.
 - `DIM-WT-001..014` — owner-current topology/material/roof/living/security/legacy-placeholder controls.
 - `BPC-011..015` — parametric assembly, cable/node graph, living layer, protected envelope and Solar Hull roof layers.
-- `WT-001` — digital-asset qualification row with G0 ready, G1 active and implementation gates held.
+- `WT-001` — digital-asset qualification row.
 - `GTM-WT-001-G0..G7` + `Pinf` — bounded gate/test matrix.
 - `104_WATCHTOWER_OBJECT_REG_v0_1` — stable object registry.
-- `105_WATCHTOWER_EDGE_GRAPH_v0_1` — stable edge/state schema with unresolved cable targets explicitly held.
-- `TASK-056..061`, `BUILD-012..017`, `HAND-011..012` — extraction, modelling, validation and controlled-export queue.
+- `105_WATCHTOWER_EDGE_GRAPH_v0_1` — edge/state schema with unresolved cable endpoints explicitly held.
+- `106_WATCHTOWER_VISUAL_LOCK_v0_1` — artistic/material/render profile only.
+- `107_WATCHTOWER_FCSTD_EXTRACT_v0_1` — source-locked current FreeCAD extraction table.
+- `TASK-056..061`, `BUILD-012..017`, `HAND-011..013` — extraction, modelling, validation and controlled-export queue.
 
-Current topology boundary:
+### Current FCStd source lock
 
-- central tower `WT-T`;
-- exactly two primary tower cable-node elevations `WT-A` and `WT-C`;
-- four face anchors at each level;
-- physical `WT-E` pole referenced by current FreeCAD/top-view evidence but exact coordinates/equivalence unresolved;
-- mirrored `WT-L1..L4` and `WT-R1..R4` pole families;
-- exact cable targets remain `TARGET_FCSTD_UNRESOLVED` until attributable current FCStd extraction.
+Exact source recovered:
 
-Legacy Type1 FreeCAD values — 60 m total height, 18 m Watch Tower envelope and +250 m X relation — remain explicitly quarantined as placeholder provenance and are not current design values.
+- file: `InterSol - Watch Tower In Site Footprint.FCStd`;
+- source size: 48,879,924 bytes;
+- SHA-256: `c476f9f2f9946ab8e99e58dd399aa7b02bac630c5d9336b80ef66f5f2a397321`;
+- FreeCAD Body label: `Launch Tower`;
+- tip: `Pad086`;
+- coordinate state: local CAD, not geodetic.
 
-GitHub Data review branch `data/intersol-watchtower-twin-v0-1` carries only stable field contracts and interpretation boundaries. Draft Data PR #7 (`InterSol Watch Tower digital-twin schema v0.1`) contains two schema files plus the twin-boundary document. It contains no guessed coordinates, member sizes, cable pretension, security rating, Solar Hull performance, site, approval or deployment claim.
+Direct OpenCascade/BREP extraction resolves:
 
-Next execution gate: locate/read the exact current FCStd, hash/revision it, bind source coordinates into the Drive object/edge registries, and only then create resolved machine data and bounded G2 engineering inputs.
+- overall body envelope: approximately `51.449401 × 75.923913 × 81.529903 m`;
+- local Z range: `-4.904951 .. 76.624951 m`;
+- main tower shaft `Pad004`: `55.000 m`, from local Z `13.300 .. 68.300 m`;
+- observation/control head: continues to approximately Z `76.620 m`;
+- nine distinct external vertical pole lines: one unique materially larger/taller pole candidate plus two four-pole wing clusters.
 
-No build, deployment, public release or destructive action is authorised by this update.
+This geometry count is consistent with the owner-current `WT-E + WT-L1..L4 + WT-R1..R4` topology. The current FCStd uses generic Pad/Pocket labels, so the exact semantic mapping from the two four-pole geometry clusters to `L1..L4` / `R1..R4` remains held instead of inferred.
+
+No distinct cable solids or labelled `WT-A` / `WT-C` node objects were found in the current FCStd. This is recorded as a negative geometry finding; it does **not** remove the current topology rule of exactly two primary tower cable-node elevations with four face anchors each.
+
+Legacy Type1 FreeCAD values — 60 m total height, 18 m Watch Tower envelope and +250 m X relation — remain quarantined as placeholder provenance and are not used as current geometry.
+
+### Data review lane
+
+Draft Data PR #7 on `data/intersol-watchtower-twin-v0-1` now carries:
+
+- object-registry field schema;
+- edge-graph field schema;
+- twin-boundary document;
+- source-locked `watchtower_fcstd_geometry_extract_v0_1.json`;
+- FCStd extraction document;
+- `watchtower_semantic_binding_queue_v0_1.json`;
+- Watch Tower basis-of-design field schema;
+- source-locked basis-of-design seed cases.
+
+The semantic-binding queue deliberately leaves final E confirmation, Left/Right cluster assignment, `L1..L4` / `R1..R4` numbering and exact A/C face coordinates null until owner binding is available. No structural cable edge is created until both canonical endpoints are resolved.
+
+The basis-of-design lane may now be structured against the immutable FCStd geometry revision, but numerical loads, current standard versions, design factors, cable properties, security ratings and acceptance thresholds remain unset pending authoritative engineering inputs and review.
+
+### Gate return
+
+- G0: **READY / LOCKED**.
+- G1: **MATERIAL / ACTIVE** — source/hash/body/tower/head/nine-pole geometry extracted; semantic pole numbering and A/C edge endpoints remain open.
+- G2: basis-of-design schema work may proceed, but engineering proof remains blocked.
+- G3-G7: held by their applicable technical/evidence/review dependencies.
+- P∞: foundation started through immutable FCStd hash and Drive/Git receipts; semantic-map versioning, derived-export hashes, inspection/revalidation cadence and rollback/as-built lifecycle remain open.
+
+Next execution gate is semantic, not file discovery: bind the two extracted four-pole clusters and their P1..P4 members to the owner's Left/Right/L1..L4/R1..R4 convention; confirm the unique heavy/tall pole as `WT-E`; then place exact A/C face nodes on source-locked `WT-T` and generate the first attributable cable-edge/catenary graph.
+
+No build, deployment, public release, structural-compliance, blast/ballistic, Solar Hull performance or destructive action is authorised by this update.
