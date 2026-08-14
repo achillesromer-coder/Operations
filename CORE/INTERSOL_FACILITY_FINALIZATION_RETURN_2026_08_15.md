@@ -15,7 +15,7 @@ Canonical new surfaces:
 - `SRC-075..079`
 - `TASK-065..068`
 - `BUILD-020..023`
-- `ART-017..020`
+- `ART-017..021`
 
 ## Data dependency stack
 
@@ -26,9 +26,9 @@ The facility-finalisation tranche is intentionally stacked above it:
 - Data PR #8
 - head branch: `data/intersol-facility-finalization-v0-1`
 - base branch: `data/intersol-watchtower-twin-v0-1`
-- current head at return: `f9bc748e70751c95bf2103279439279d06a428a9`
+- current head at return: `da60d2be883e4f9ba2a39ae7124fce9db4984df9`
 - open / draft / mergeable
-- seven added files / 276 additions / zero deletions
+- seven changed/new files / 240 additions / zero deletions across eight commits
 - no pull-request-triggered workflow run returned for the current stacked head; no CI proof is claimed.
 
 Files in the stacked tranche:
@@ -41,9 +41,11 @@ Files in the stacked tranche:
 6. `data/intersol/watchtower/optimization/watchtower_candidate_enumeration_v0_1.json`
 7. `data/intersol/facility/intersol_facility_bod_seed_v0_1.json`
 
+The BOD seed now mirrors **all 18 facility/interface families**, including governance/interface BODs for Web4/COIN and NFT/public representation rather than misclassifying them as physical structural assemblies.
+
 ## Facility-wide architecture
 
-The current design rule is **conventional/certifiable core first; bounded Römer innovation overlay second**. The facility finalisation matrix now covers site/civil/hydrology, Watch Tower, repair/integration warehouse, launch/landing infrastructure, roads/conveyors/logistics, water, R&D/public/living buildings, Eco-Grex, acoustics, energy/storage, OT/sensors, mission/hazard states, COIN/NFT representation, future aviation and Luke IV external interfaces.
+The current design rule is **conventional/certifiable core first; bounded Römer innovation overlay second**. The finalisation/BOD architecture covers site/civil/hydrology, Watch Tower structure/cables/roof, repair/integration warehouse, launch/landing infrastructure, roads/conveyors/logistics, water, R&D/public/living buildings, Eco-Grex, acoustics, energy/storage, OT/sensors, mission/hazard states, COIN provenance, NFT/public representation, future aviation and Luke IV external interfaces.
 
 Historical InterSol dimensions and staging remain owner-history/comparator evidence only. They are not automatically inherited into current engineering.
 
@@ -95,9 +97,10 @@ The older LightSpeed/EMC² economic-token/NFT strategy is preserved as historica
 
 1. Keep Data PR #7 and stacked PR #8 draft and unmerged.
 2. Generate bounded Watch Tower candidate-analysis receipts only when attributable cable/material/site/discipline inputs exist.
-3. Continue source reconciliation and BOD preparation for warehouse, logistics, water and launch-state interfaces without inheriting historical dimensions automatically.
-4. Retarget/rebase/revalidate Data PR #8 only after the underlying Watch Tower tranche is accepted.
-5. Keep LightSpeed semantic/public and economic/value layers blocked until their independent security/evidence/legal gates close.
+3. Populate the 18 BOD families from current attributable sources; retain nulls where the authorised site, current programme or discipline evidence is absent.
+4. Prioritise current-source reconciliation for warehouse, logistics, water and launch-state interfaces rather than inheriting historical dimensions automatically.
+5. Retarget/rebase/revalidate Data PR #8 only after the underlying Watch Tower tranche is accepted.
+6. Keep LightSpeed semantic/public and economic/value layers blocked until their independent security/evidence/legal gates close.
 
 ## No-go
 
