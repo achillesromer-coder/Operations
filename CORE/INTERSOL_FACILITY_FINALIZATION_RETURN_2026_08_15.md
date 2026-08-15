@@ -1,118 +1,103 @@
 # InterSol Facility Finalisation Control Return — 2026-08-15
 
-Status: **CONTROL RETURN / NO BUILD OR ECONOMIC ACTIVATION**
+Status: **CONTROL RETURN / PROGRAMME POPULATED / NO BUILD, PUBLIC RELEASE OR ECONOMIC ACTIVATION**
 
 ## Authority
 
-Google Drive `Type 1 Romer Cognigrex` remains canonical. This Operations record is a routing/control reflection only; it does not replace Drive data or Data schemas.
+Google Drive `Type 1 Romer Cognigrex` remains canonical. Operations reflects routing/control only; Data carries machine-readable execution manifests; neither replaces the Drive programme/control rows.
 
-Canonical surfaces for this tranche:
+Canonical InterSol surfaces now extend through:
 
 - `116_INFRA_FINALIZATION_MATRIX_v0_1`
 - `117_T1_25_DESIGN_DOCTRINE_v0_1`
 - `118_WT_OPTIMIZATION_ENVELOPE_v0_1`
 - `119_WEB4_INFRA_PROVENANCE_v0_1`
 - `120_INTERSOL_HIST_COMPARATOR_v0_1`
-- `SRC-075..080`
-- `TASK-065..069`
-- `BUILD-020..024`
-- `ART-017..022`
+- `121_INTERSOL_SPACE_PROGRAM_v0_1`
+- `122_HUMAN_FACTORS_SAFETY_v0_1`
+- `123_ENV_ACOUSTIC_LIGHT_v0_1`
+- `124_ADJACENCY_FLOW_MATRIX_v0_1`
+- `125_IMPLEMENTATION_STATES_v0_1`
+- `126_INTERSOL_STANDARDS_APPLICABILITY_v0_1`
+- sources through `SRC-090`
+- tasks through `TASK-074`
+- builds through `BUILD-030`
+- artifacts through `ART-028`
 
-## Data dependency stack
+## Source / dependency stack
 
-Underlying Watch Tower source tranche remains Data PR #7 on `data/intersol-watchtower-twin-v0-1`, source geometry SHA-256 `c476f9f2f9946ab8e99e58dd399aa7b02bac630c5d9336b80ef66f5f2a397321`.
+Underlying Watch Tower source tranche remains Data PR #7 on `data/intersol-watchtower-twin-v0-1`, exact source geometry SHA-256 `c476f9f2f9946ab8e99e58dd399aa7b02bac630c5d9336b80ef66f5f2a397321`.
 
-The facility-finalisation tranche is intentionally stacked above it:
+Facility/programme tranche remains intentionally stacked above it as Data PR #8 on `data/intersol-facility-finalization-v0-1`. Current head is `566780942494ff340ae48587cc60617443f5288f`, open/draft/mergeable/unmerged, with 16 commits / 14 changed files / 502 additions / 0 deletions. No pull-request-triggered workflow run is returned for this head, so no CI proof is claimed.
 
-- Data PR #8
-- head branch: `data/intersol-facility-finalization-v0-1`
-- base branch: `data/intersol-watchtower-twin-v0-1`
-- current head at return: `01d443bd3753d3922643e017a61c8cf9f380af3f`
-- open / draft / mergeable
-- 10 commits / 8 changed-new files / 274 additions / zero deletions
-- no pull-request-triggered workflow run returned for the current stacked head; no CI proof is claimed.
+## Historical inheritance firewall
 
-The Data tranche contains the facility matrix, T1-25 doctrine, Watch Tower optimisation envelope, COIN provenance map, optimisation receipt schema, deterministic Watch Tower candidate enumeration, complete 18-family BOD seed and historical comparator register.
+Sheet `120` and `intersol_historical_comparator_v0_1.json` preserve historical owner dimensions, topology, staging and cost snapshots as comparison evidence only. The historic warehouse, road, pad and mission-control concepts may seed scenario studies; they do not establish current geometry, vehicle interfaces, programme dates, cost estimates, site coordinates or approvals.
 
-## Facility-wide architecture
+Any historical value entering a current BOD requires an explicit re-adoption receipt with current site/programme/engineering evidence, responsible decision owner, review path and revalidation trigger.
 
-The current design rule is **conventional/certifiable core first; bounded Römer innovation overlay second**. The finalisation/BOD architecture covers all 18 current physical/interface families: site/civil/hydrology, Watch Tower structure/cables/roof, repair/integration warehouse, launch/landing infrastructure, roads/conveyors/logistics, water, R&D/public/living buildings, Eco-Grex, acoustics, energy/storage, OT/sensors, mission/hazard states, COIN provenance, NFT/public representation, future aviation and Luke IV external interfaces.
+## Current space programme
 
-The BOD seed is null-safe: unavailable site, programme, material, load, hazard and approval inputs remain unset rather than guessed.
+Sheet `121` now defines 48 programme objects spanning command/operations, R&D/validation/human factors, industrial/integration/QA/logistics, human amenities/safety/wellbeing, admin/public/knowledge, habitation and plant/site support.
 
-## Historical comparator / inheritance firewall
+Key functions include mission control, Watch Tower control, briefing/debrief, incident coordination, secure comms/OT, dry/wet/electronics/metrology/materials labs, acoustic measurement and reverberation/material chambers, a controlled sensory/biofield-labelled R&D chamber, human-factors simulator, heavy repair/integration, clean integration, fabrication, NDT, receiving/quarantine, dirty utility, conditional hazardous-chemical and energy-test spaces, sanitary/restroom amenities, accessible sanitary facilities, change/showers, first aid, emergency eyewash/safety-shower nodes, break/hydration, quiet/rest, fatigue/sleep, private wellbeing, offices, training, public evidence, documentation, residency, housekeeping, plant/service, muster and waste functions.
 
-Drive sheet `120_INTERSOL_HIST_COMPARATOR_v0_1` and Data `intersol_historical_comparator_v0_1.json` now quarantine attributable historical owner information for controlled comparison.
+Historical wording `R&D and faculty facilities` is retained as source provenance. Current owner semantics resolve the present design requirement as **SANITARY / AMENITIES / RESTROOMS**. This semantic correction does not establish fixture counts or areas.
 
-Historical records include:
+Counts, areas, capacities and ratings remain unset until current occupancy, site, equipment/process, hazard and building-classification inputs exist.
 
-- repair warehouse envelope: 250m × 40m, raised 3m, centre/east/west heights 22/20/24m;
-- garage-door concept: 16m × 15m, 6m centre gap, two north and two south;
-- historical road geometries: 750m-long Falcon-, Starship- and Super-Heavy-compatible routes with 15–16m widths and historical level changes;
-- two 75m Falcon-comparable landing pads with crane/relay/foundation concept;
-- broader three-landing-pad / two-operational-tower topology and single repair-house line of work;
-- initial warehouse-room mission monitoring followed by a dedicated west-side mission-control/air-control tower intended to oversee pads and a possible remote airstrip;
-- Phase-1 water infrastructure and Phase-2 eco-rehabilitation sequencing;
-- future airstrip, research, living and community functions;
-- antiparallel repair-line workflow;
-- separate conflicting historical programme snapshots;
-- historical cost totals and line-item concentrations.
+## Human factors / safety baseline
 
-These are **not current dimensions, schedules, budgets, vehicle interfaces, site coordinates or approvals**. Conflicting programme snapshots remain separate rather than being blended into a synthetic schedule. A historical value may enter a current BOD only through a named re-adoption decision with current programme/site/engineering evidence, decision owner, relevant review and revalidation trigger.
+Sheet `122` defines 25 control families including sanitation/hygiene, accessibility, first aid, emergency wash, chemical management, clean/dirty and food/contamination separation, PPE/change, ergonomics, fatigue/shift, workplace noise, lighting, indoor environment, fire/egress, electrical safety, lockout/maintenance, emergency planning, public/security zoning, biosecurity, research ethics, privacy/sensors, wayfinding, housekeeping, material/allergen/odour and water/cross-connection protection.
 
-## T1-25 doctrine
+Emergency eyewash/safety shower is trigger-based from actual SDS/exposure risk and detailed layout. A welfare shower never substitutes for emergency decontamination equipment. Smart systems may monitor or prompt but cannot replace physical access, egress, isolation, hygiene, emergency equipment or manual fallback.
 
-`T1-25` means certified-core plus lifecycle/service/innovation reserve. The `+25` label is **not** a blanket code, load, resistance, structural safety, water-storage, ecological-offset, energy-output or financial multiplier.
+## Acoustic / lighting / sensory / indoor-environment architecture
 
-Hard safety/compliance constraints are non-tradeable. Approximate 25% service/interface reserve or a 75/25 durable/experimental visual balance may be used as explicit scenario/design heuristics only where technically and economically justified.
+Sheet `123` defines 18 measurable control/R&D objects. Conventional task/comfort/safety baselines are commissioned first; adaptive lighting, active acoustics, biophilic systems and sensory experiments are separately bounded overlays with measurement, manual override and rollback.
 
-## Watch Tower optimisation unlock
+The programme includes speech-critical control-room acoustics, quiet/rest/sleep acoustics, acoustic measurement chamber, reverberation/material chamber, task lighting, integrative/circadian-supportive lighting studies, responsible exterior/night lighting, thermal/IAQ, process ventilation, vibration, biophilic layers, temporal facility modes and post-occupancy learning.
 
-Source geometry authority and owner topology are unchanged:
+The `Sensory / Biofield R&D Chamber` retains owner terminology as an R&D label only. It is a controlled test environment for independently measurable light, sound, vibration, thermal, airflow, IAQ, timing and biophilic/context variables. No human energy field, therapeutic, diagnostic or clinical effect is assumed. Human-participant studies require appropriate protocol, consent/privacy, ethics governance and reproducibility before any operational design promotion.
 
-- exactly two tower cable-node elevations A and C;
-- exactly four anchors at A and four at C;
-- source Pad004 has five side faces;
-- no fifth anchor;
-- no canonical cable edge is inferred from azimuth or nearest-face diagnostics.
+## Adjacency / flow architecture
 
-Provisional analysis defaults permit deterministic candidate generation:
+Sheet `124` contains 30 relationships controlling public/restricted transitions; mission-control support; lab/food separation; chemical/emergency-wash access; acoustic/sensory isolation; receiving→quarantine→repair→fabrication/inspection→clean-integration flow; downstream dirty utility/waste flow; PPE/change; sanitary distribution; first-aid reach; residency separation; curated public R&D views; plant/quiet-space isolation; potable/reuse-water separation; heavy-vehicle/pedestrian segregation; launch-hazard separation; and Eco-Grex exclusions around egress/security/cables/critical maintenance.
 
-- A_zeta exploratory `0.20..0.50`, preferred `0.30..0.45`;
-- C_zeta exploratory `0.55..0.90`, preferred `0.65..0.80`;
-- on current Pad004 these arithmetic transforms give A preferred `29.80..38.05m` and C preferred `49.05..57.30m`, but no anchor height is selected by those ranges;
-- independent four-of-five face exclusion at A and C: 25 base pairs;
-- face-local `u` exploratory `-0.70..+0.70`; `u=0` is a control candidate, not a default;
-- centre-outward numbering within each source four-pole cluster: `1` nearest T through `4` outermost;
-- actual L/R display identity waits for the controlled approach/site datum; source cluster identity remains stable;
-- cable graph candidates may be generated and hard-filtered but remain non-canonical until structural/owner promotion;
-- cable states: `TAUT_REFERENCE`, `NOMINAL_SLACK`, `WEATHER_SLACK`, `FAILSAFE_ISOLATED`; numerical sag remains unset.
+The historical single-line repair-house workflow is retained as a candidate functional principle. Historic dimensions do not define present layout.
 
-Roof treatment is provisionally **Option A**: retain the exact planar source substrates and create separately hashed shallow-curved overlays. Candidate study contains one planar control plus `1.5/3/5/7.5%` rise/span cases across transverse, longitudinal and gentle-biaxial families. No render-derived radius is permitted.
+## Implementation and longitudinal reanalysis
 
-Optimisation uses hard-constraint pruning followed by Pareto ranking. A safety/compliance failure cannot be hidden by weighted aesthetics, ecology, energy or cost.
+Sheet `125` establishes the sequence:
 
-## Eco-Grex and acoustic integration
+`P0 source/site foundation → P1 safe occupied core → P2 technical operations → P3 mission/control → P4 adaptive environment → P5 acoustic R&D → P6 human/sensory R&D → P7 Eco-Grex/living integration → P8 energy R&D → P9 public/education → P10 residency/community → P∞ continuous assurance`.
 
-High ecological integration is the provisional facility direction **outside critical operational envelopes**. Egress, security, launch-hazard, critical cable-access and critical-maintenance zones remain exclusion constraints. Local species, media, wet mass, windage, irrigation, fire and biosecurity values remain site-evidence dependent.
+Operational states include NORMAL, PRE_LAUNCH/HIGH_HAZARD, LAUNCH_LOCKOUT, ABORT/INCIDENT, POST_EVENT_INSPECTION, MAINTENANCE, QUIET_RESEARCH and SLEEP/RECOVERY.
 
-Acoustic harmonisation means measured optimisation toward stated environmental, human, structural or ecological objectives. Active/resonant acoustic work remains isolated R&D and cannot compromise communications, wildlife, structure or WHS.
+P30/P90/P365 are optional internal learning checkpoints only, not statutory inspection intervals. Material events, incidents, equipment/process changes, source/standard changes, calibration drift, persistent occupant issues and ecological/maintenance events trigger reanalysis. Every promoted smart/R&D configuration retains a tested route back to the accepted baseline.
 
-## Web4 / COIN boundary
+## Standards / source applicability
 
-Current operating default is COIN-first and non-monetary. Physical assets, twins, tests, inspections and sensor observations may become provenance/authority/receipt objects. Optional public integrity anchors or non-financial representation objects remain separately gated.
+Sheet `126` maps candidate/current source families for building/NCC, sanitary, accessibility, laboratories, emergency wash, hazardous chemicals/first aid, lighting/integrative lighting, indoor environment, noise, electrical, fire/egress, OT/cyber and human-research evidence boundaries.
 
-The older LightSpeed/EMC² economic-token/NFT strategy is preserved as historical lineage only. No mint, sale, transfer, custody, redemption, yield, payment, public value bridge, land/physical title, IP licence, revenue right, certification, resource right or regulatory exemption is created by the current control architecture.
+Source currency and technical relevance do not establish InterSol legal/project applicability or compliance. Site, approval date, use/classification, occupancy, process/equipment, hazards and certifier/discipline decisions remain required before numerical design use.
+
+## T1-25 / Web4 boundary
+
+T1-25 remains certified/conventional core plus lifecycle/service/innovation reserve; `+25` is not a blanket code, load, safety, ecology, energy or financial multiplier.
+
+COIN remains provenance/authority/receipt first and non-monetary. Room/program revisions, tests, inspections, calibration and post-occupancy changes may be linked through evidence receipts. Legacy EMC²/LightSpeed economic-token/NFT strategy remains historical and disabled pending an explicit future legal/product/AML-tax-custody-security gate.
 
 ## Next routed work
 
-1. Keep Data PR #7 and stacked PR #8 draft and unmerged.
-2. Generate bounded Watch Tower candidate-analysis receipts only when attributable cable/material/site/discipline inputs exist.
-3. Populate the 18 current BOD families from attributable sources, retaining nulls where authorised site/programme/discipline evidence is absent.
-4. Use HST comparator records during warehouse/logistics/water/launch/site studies only through explicit re-adoption receipts; never inherit them silently.
-5. Retarget/rebase/revalidate Data PR #8 only after the underlying Watch Tower tranche is accepted.
-6. Keep LightSpeed semantic/public and economic/value layers blocked until their independent security/evidence/legal gates close.
+1. Keep Data PR #7 and stacked PR #8 draft/unmerged.
+2. Populate room counts/areas, amenities fixture counts, emergency-wash locations, plant capacities and environmental/acoustic/light targets only after current occupancy/site/process/equipment/hazard/classification data exist.
+3. Use the 48-space programme and 30-flow matrix as the input to later site-specific block planning/adjacency optimisation.
+4. Establish acoustic-chamber dimensions and performance targets only from selected test methods/equipment and structural/vibration context.
+5. Treat sensory/biofield-labelled studies as controlled human/environment research and promote only reproducible measured findings.
+6. Cross-analyse commissioned non-safety settings through P30/P90/P365/seasonal/event-driven learning while preserving professional/statutory inspection requirements and rollback.
+7. Retarget/rebase/revalidate Data PR #8 after the underlying Watch Tower tranche is accepted.
 
 ## No-go
 
-No destructive source change, deployment, public release, current-site/partner/licence claim, engineering certification, Solar Hull performance claim, ecological outcome claim, sensor capability claim, render-derived engineering geometry, canonical cable-edge inference, current schedule/budget inheritance from archives, or economic token activation is authorised by this return.
+No destructive source change; no site/partner/licence inference; no current area/count/fixture or emergency-wash placement without BOD inputs; no engineering certification/rating; no Solar Hull or ecological performance claim; no healing-frequency/biofield/clinical claim; no canonical cable edge from geometry alone; no render-derived engineering geometry; no current schedule/budget inherited from archives; no deployment/public release; no secret mutation; and no economic-token activation is authorised by this return.
