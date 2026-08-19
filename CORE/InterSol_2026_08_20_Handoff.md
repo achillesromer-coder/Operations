@@ -1,6 +1,6 @@
 # InterSol owner-decision handoff — 2026-08-20
 
-Drive `Type 1 Romer Cognigrex` remains canonical. Current owner decisions extend through `OD-039`; Cognigrex progression rules through `CPR-017`; the new modular infrastructure interface is `145_MODULAR_SHELL_INTERFACE_v0_1`; tasks extend through `TASK-091`.
+Drive `Type 1 Romer Cognigrex` remains canonical. Current owner decisions extend through `OD-039`; Cognigrex progression rules through `CPR-017`; the new modular infrastructure interface is `145_MODULAR_SHELL_INTERFACE_v0_1`; tasks extend through `TASK-091` and current build queue through `BUILD-042`.
 
 ## Material delta
 - Free Flow terrestrial outer casing is removable/replaceable for ongoing testbed progression.
@@ -13,7 +13,7 @@ Drive `Type 1 Romer Cognigrex` remains canonical. Current owner decisions extend
 - Cognigrex materially completed sweeps return both deep technical synthesis and concise owner/operator decision brief from the same immutable evidence set.
 
 ## Current machine-review lane
-Data PR #8 contains `owner_decisions_2026_08_20_delta_v0_1.json` and `modular_shell_interface_contract_v0_1.json`; branch remains draft/unmerged.
+Data PR #8 now carries the 2026-08-20 decision delta and modular-shell contract at head `a49c3bae6791ef7419916dc4173bce50d2d636e0`: 40 commits / 30 changed files / 985 additions / 0 deletions; draft/open/mergeable/unmerged. Drive remains the detailed authority.
 
 ## Boundary
 No numerical/rated structural, blast, glazing, weatherproofing, Free Flow performance, actuator reliability, laboratory-classification or site-specific claim is created by this handoff. Engineering, site, process, fire/electrical/hydraulic/access/security and regulatory gates remain in force.
