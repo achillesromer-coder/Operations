@@ -1,49 +1,61 @@
 {
-  "version": "0.1",
-  "status": "scaffold",
-  "rule": "Operations owns operator-facing /operations/wn workspaces. Each workspace pairs with a Data repo /wn/data dataspace.",
+  "version": "0.2",
+  "status": "interface_contract",
+  "authority": {
+    "operations_role": "operator-facing integration and routing",
+    "canonical_data": "owning Drive/Type-1/project canon",
+    "execution_routing": "LightSpeed/Cognigrex and identified specialist tools",
+    "rule": "A listed workspace or dataspace route is an interface target, not deployment proof. Reuse existing model/data owners and preserve provenance."
+  },
   "workspaces": [
     {
       "id": "W1",
       "name": "Incoming Deposit Analysis",
       "workspace_route": "/operations/w1",
       "dataspace_route": "/w1/data",
-      "function": "Deposit proxy, target body, material disposition, field handoff and source readiness."
+      "function": "Deposit proxy, target-body, material-disposition, field-handoff and source-readiness operator view.",
+      "implementation_state": "VERIFY_CURRENT_SURFACE"
     },
     {
       "id": "W2",
       "name": "Luke II Catch / Hold",
       "workspace_route": "/operations/w2",
       "dataspace_route": "/w2/data",
-      "function": "Catch/hold logic, electromagnetic capture state, Luke handoff and station envelope."
+      "function": "Catch/hold logic, electromagnetic capture state, Luke handoff and station-envelope operator view.",
+      "implementation_state": "VERIFY_CURRENT_SURFACE"
     },
     {
       "id": "W3",
       "name": "RFS & EMFF",
       "workspace_route": "/operations/w3",
       "dataspace_route": "/w3/data",
-      "function": "RFS/EMFF field configurations, sweep testing, demonstrator lineage and power envelope."
+      "function": "RFS/EMFF configurations, sweeps, test evidence and bounded power/field outputs from owning evidence/model lanes.",
+      "implementation_state": "VERIFY_CURRENT_SURFACE"
     },
     {
       "id": "W4",
       "name": "Interplanetary Supply Chain",
       "workspace_route": "/operations/w4",
       "dataspace_route": "/w4/data",
-      "function": "Supply-chain topology, return-chain logic, payload movement and route burden."
+      "function": "Supply-chain topology, return-chain logic, payload movement and route-burden operator view.",
+      "implementation_state": "VERIFY_CURRENT_SURFACE"
     },
     {
       "id": "W5",
       "name": "Mission Planning / GMAT / MPL",
       "workspace_route": "/operations/w5",
       "dataspace_route": "/w5/data",
-      "function": "GMAT/export planning, Maximum Probable Loss, range/disposition compaction and mission summaries."
+      "function": "Integrates receipted mission/GMAT outputs with Romer-MPL Maximum Probable Loss and related compact risk/disposition summaries without conflating model authorities.",
+      "implementation_state": "VERIFY_CURRENT_SURFACE",
+      "method_boundary": "GMAT propagation/state/event semantics remain distinct from MPL risk/loss methodology; both require source/configuration receipts."
     },
     {
       "id": "W6",
       "name": "Asset Library / Publication",
       "workspace_route": "/operations/w6",
       "dataspace_route": "/w6/data",
-      "function": "Asset library, final source-pack staging, publication readiness and evidence index."
+      "function": "Asset/reference library, source-pack staging, publication readiness and evidence-index operator view.",
+      "implementation_state": "VERIFY_CURRENT_SURFACE"
     }
   ]
 }
