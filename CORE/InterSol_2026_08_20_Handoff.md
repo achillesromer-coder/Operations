@@ -49,6 +49,29 @@ The Type-1 object tree continues past architecture into installed operating cons
 
 `SG-017..020` and `ZPR-017..020` preserve this expansion as no-placeholder architecture while explicitly holding route geometry, loads, ratings, quantities, selected products, installed evidence and professional acceptance.
 
+## 2026-09-14 continuation — archival constituent close
+
+A broader prior-chat/Library/current-canon pass has now been folded into the same hierarchy. No additional warehouse building or room family was created: previously implicit historical functions were decomposed into child objects under the existing rooms.
+
+Current Drive additions:
+- `ICA-070` incoming-hardware safeing / tear-down workcell;
+- `ICA-071` recovered-component triage / inspection / requalification / controlled reuse;
+- `ICA-073` returned/recovered material receiving and characterisation, conditional on an activated return/custody pathway;
+- `ICA-074` material/feedstock → selected process → manufactured component → inspection/release qualification loop;
+- `ICA-075` controlled special-process repair/fabrication family.
+
+`ICA-072` is intentionally unused. It has no active semantic or physical authority and must not be populated solely to create sequential numbering.
+
+Room bindings were extended across `ISP-017`, `ISP-019`, `ISP-020`, `ISP-021`, `ISP-022` and `ISP-023`, while existing clean-integration, crane, QA, stores and other families remain their current owners rather than being duplicated.
+
+`IOC-014..018` now provide the corresponding object-graph closure for Chain Hill, the warehouse child graph, recovered-component genealogy, material-to-component qualification and warehouse lifecycle/commissioning.
+
+`SG-024` / `ZPR-024` establish the persistent archive-to-current completeness rule: recursively recover attributable legacy functions; map them to current owners, bounded children or explicit superseded states; collapse aliases; and preserve obsolete brands, dimensions, costs, dates, providers and site assumptions only as historical comparators unless current evidence separately re-adopts them.
+
+`DAC-008` now distinguishes two closure depths: ISP-031 remains the first full file-level room constituent exemplar, while Warehouse/Chain Hill has reached family/object-graph closure. Selected products, native geometry, exact quantities, installed instances and physical qualification remain open.
+
+The detailed registers now support 74 active assembly families and 21 active SG/ZPR closure pairs. Direct cell reconciliation of the executive `154` KPI surface was rejected by its write path, so explicit correction receipts are attached to the stale KPI/parity cells; the detailed owner registers remain controlling.
+
 ## 2026-09-14 current machine-review pointer
 
-Use `CORE/Drive_GitHub_Bridge.md` as the current Operations routing reflection. Canonical detail remains in Drive `Type 1 Romer Cognigrex`, particularly sheets 116, 121, 135, 149, 151, 152, 153 and 154. This Operations branch remains review/draft lineage until separately accepted; it does not create deployment, commissioning or public-release authority.
+Use `CORE/Drive_GitHub_Bridge.md` as the current Operations routing reflection. Canonical detail remains in Drive `Type 1 Romer Cognigrex`, particularly sheets 116, 121, 135, 146, 147, 149, 151, 152, 153, 154 and 160–162. This Operations branch remains review/draft lineage until separately accepted; it does not create deployment, commissioning or public-release authority.
