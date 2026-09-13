@@ -1,10 +1,16 @@
 # Operations Bridge
 
 Status: ACTIVE / FINAL MASTER PUSH PREPARED
-Updated: 2026-09-14 — InterSol corpus-wide archival/object consolidation
+Updated: 2026-09-14
+Update note: InterSol corpus-wide archival/object consolidation
 
 ## Authority
 Google Drive `Type 1 Romer Cognigrex` remains canonical. Existing Watch Tower source-geometry authority and prior bridge history remain unchanged.
+
+### Authority contract
+- Canonical task/index authority: Google Drive ACR3 and the owning Type 1 registers remain the task, evidence and reviewed-state authority.
+- Git execution/control surface: this Operations repository and its reviewed branches implement routing, control and reproducible execution lineage without superseding Drive canon.
+- GitHub should not create a parallel task system; Git records implementation and control lineage against the canonical task/index authority.
 
 ## 2026-08-20 InterSol addendum
 
