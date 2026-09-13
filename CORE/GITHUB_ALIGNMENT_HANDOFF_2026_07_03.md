@@ -1,7 +1,8 @@
 # GitHub Alignment Handoff — 2026-07-03
 
 Status: CANONICAL CONTINUITY / Z01 OWNER DECISION READY
-Updated: 2026-07-16 source, schema, relation and creation-readiness closeout
+Updated: 2026-09-14
+Update note: source, schema, relation and creation-readiness closeout retained; ISO date normalized during Operations control repair.
 
 ## Decisions recorded
 
