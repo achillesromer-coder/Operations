@@ -126,3 +126,52 @@ Old collaborator references remain proposed or unconfirmed. Historical performan
 ### Current Achilles action
 
 Audit `NW-006` with Morpheus and Oracle. Preserve unknown/proposed states, keep the no-selection freeze intact, and release no workbook-creation decision until the source and schema packet passes review.
+
+## ACR3 handoff delta — Achilles Analysis growth & daily execution — 2026-09-14
+
+Status: `QUEUED FOR ACR3 RECONCILIATION / PROJECT EXIT HANDOFF READY`
+Authority: Drive ACR3 `12_Cross_Corpus_Handoff`, row `HANDOFF-ACHILLES-GROWTH-EXEC-20260914`
+Canonical register: https://docs.google.com/spreadsheets/d/1AgAhLPNtrO91C_-ea7EdOkOsyXrCCYvFVvmDSGq8uls/edit
+
+This is an execution-facing delta only. It is not a new canonical task register and must be reconciled into existing ACR3/CORE owners before promotion.
+
+### Owner decisions carried forward
+
+- Monetary foundation: target the first ~AUD 2M plus successful Mission 1 as the threshold for full-time focus and self-sustaining programme growth.
+- Technical priority: EMFF manipulation and supply-chain control first; RFS second; substitute proven energy technologies where appropriate rather than forcing unnecessary energy novelty; AI emphasis on governance and directional growth.
+- Founder capability growth: marketing, funding securement, interpersonal relationships and network-building are explicit development priorities.
+- Mission 1 minimal proof loop: RFS + EMFF sample return, tagging/Mark V, then economic/decentralised-system test. Maglev is not a primary Mission 1 dependency.
+- Strategic telos remains fixed: interplanetary Type-1, egalitarian and ecologically harmonious development; methods and implementation practices remain adaptive.
+- Human core function retained: reasoning and judgment.
+- Personal mastery objective: sustained fulfilment and capability growth that enables others to pursue the same.
+
+### 1% daily operating cadence
+
+Run one bounded 3-hour cycle when available:
+
+1. **Plan — 1 hour:** identify the single highest-leverage blocker between Mission 1 closure and monetary runway; scope one durable artifact.
+2. **Do — 1 hour:** execute one tangible output without scope expansion.
+3. **Document — 1 hour:** preserve artifact, decision/source log, changed assumptions, next obvious step and receipt path.
+
+Daily compounding is preferred over oversized milestone-only goals: minimum repeatable habits should advance reasoning, technical execution, relationship capital and physical/personal capacity.
+
+### Reconciliation queue — use existing owners, do not create parallel masters
+
+1. Capital pathway / ~AUD 2M thesis with credible funding routes, use-of-funds, runway and milestone gates.
+2. Mission 1 dependency and gate matrix from target selection through RFS/EMFF extraction, tagged sample return, verification and economic-system test.
+3. EMFF manipulation, control, transport and supply-chain falsification/test plan.
+4. RFS experimental matrix after EMFF control/supply-chain dependencies are sufficiently bounded.
+5. Marketing/funding/network relationship cadence with measurable daily/weekly actions.
+6. Daily evidence/decision receipt template tied back to the appropriate Drive/CORE authority surface.
+
+### Hard guards
+
+- Drive ACR3/CORE remains canonical; this Git file is a bridge.
+- Do not create a parallel master, duplicate task register or duplicate authority hierarchy.
+- Preserve the owner's assertion that the system has been researched/proofed as an owner position, but do **not** use it to close current physical, TRL, measurement, calibration, site, manufacturing, certification or empirical-evidence gates without attributable source evidence and provider/physical readback.
+- Configured, queued, digital-twin, simulation, derivative, workflow or CI states do not prove physical execution or measured performance.
+- No merge, deploy, release, publication, destructive cleanup, token/mint/value action or other external execution is authorised by this handoff alone.
+
+### Successor instruction
+
+Consume the ACR3 row first and reconcile this delta into existing owners. Then choose the highest-leverage blocker between Mission 1 closure and monetary runway, run one `1h Plan -> 1h Do -> 1h Document` cycle, and return exactly one durable artifact plus its source/decision log and next-step receipt. Preserve reversibility, provenance and evidence-state labels throughout.
