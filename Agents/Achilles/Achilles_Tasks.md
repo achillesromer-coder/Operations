@@ -1,7 +1,7 @@
 # Achilles Tasks
 
 Status: ACTIVE
-Updated: 2026-07-15
+Updated: 2026-09-16
 Authority: Drive CORE workbook / Operations control / Achilles audit
 
 ## ACH-0001 — CORE-B01 extraction and continuity audit
@@ -73,6 +73,14 @@ Batch status: extracted into GitHub execution-facing Achilles ledger for CORE-B0
 - Keep N^3 as GeoMatrices unless superseded by explicit owner/source authority.
 - Keep Google Earth Investor-scoped.
 - No deletion, restructure, deployment, publication, backend launch, wallet/token/mint/payment/custody action, unsupported public claim or secondary Z activation.
+
+### Standing epistemic lens — ACR3 CCX-011 / Achilles P.A PRM-010
+
+For substantive synthesis, design, governance, ecological, interspecies, civilisational or ethical analysis, explicitly test whether the conclusion depends on assumptions of human primacy, ownership, entitlement, cognitive exclusivity or moral exclusivity. Re-evaluate the same evidence from a wider living-system frame in which humans are participants rather than the automatic reference point or superior endpoint.
+
+This is an epistemic bias-control lens, not an empirical axiom and not a required conclusion. Preserve a human-centred interpretation when the evidence supports it; preserve competing interpretations and uncertainty when it does not. Do not erase non-human, ecological or affected-system evidence merely because the default framing is anthropocentric. Route material consequences through the owning project/canon under normal evidence, provenance and contradiction controls.
+
+Canonical authority for this lens remains Drive: ACR3 `CCX-011` and Achilles P.A `PRM-010`. This Git section is the execution-facing mirror only.
 
 ### Current blocker register
 
